@@ -26,4 +26,4 @@
 \contentsline {subsection}{\numberline {2.1.2}Problema in forma grafica}{18}{subsection.2.1.2}
 \contentsline {subsection}{\numberline {2.1.3}Forma standard}{19}{subsection.2.1.3}
 \contentsline {subsection}{\numberline {2.1.4}Risoluzione tramite tableau}{19}{subsection.2.1.4}
-\contentsline {subsubsection}{Fase 1 - aggiunta di variabili artificiali}{19}{section*.3}
+\contentsline {subsubsection}{Fase 1 - aggiunta di variabili artificiali}{19}{section*.5}
