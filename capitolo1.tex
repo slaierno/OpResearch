@@ -1,0 +1,836 @@
+\chapter{18/03/2014}
+
+\section{Esercizio 1}
+
+Sia dato - in linguaggio naturale - il seguente problema di ottimizzazione:
+\begin{enumerate}
+\item Un'azienda realizza due tipi di prodotti X e Y; 
+\item Il profitto di 1T di prodotto Y è doppio di quello di 1T di prodotto X; 
+\item La produzione di 1T di qualsiasi prodotto richiede 2 ore; 
+\item Non si può comunque produrre per più di 9 ore;
+\item Non si possono produrre più di 2T di Y; 
+\item La produzione di X non può superare di più di una tonnellata la produzione di Y;
+\end{enumerate}
+Si modelli il problema come un problema di programmazione lineare, lo si porti in forma standard, si realizzi una rappresentazione grafica del problema e si ottimizzi la funzione di profitto attraverso il \textbf{metodo del simplesso} affinché \textbf{si ottenga il massimo profitto dalla produzione dei prodotti} nel rispetto dei vincoli assegnati. Si utilizzi la \textit{regola di Dantzig} per scegliere le basi su cui fare pivot.
+
+\subsection{Modellizzazione}
+Si indichi con:
+\begin{itemize}
+\item $x_1$ il numero di tonnellate di prodotto X;
+\item $x_2$ il numero di tonnellate di prodotto Y.
+\end{itemize}
+Lo scopo del nostro problema è di massimizzare i profitti ottenuti dalla produzione. Anche se non siamo a conoscenza degli esatti profitti dati da ogni prodotto, abbiamo comunque a disposizione la relazione data dalla proposizione 2, cioè la variabile $x_2$ rende il doppio della variabile $x_1$. Possiamo quindi esprimere così la funzione di profitto:
+$$
+\max z = x_1 + 2x_2
+$$
+
+Modelliamo ora i vincoli espressi dal problema.
+
+Le relazione 3 e 4 ci impongono di non produrre per più di 9 ore, considerando che ogni tonnellata di prodotto richiede 2 ore per essere prodotta. Perciò il vincolo sarà espresso come:
+$$
+2x_1 + 2x_2 \leq 9
+$$
+La relazione 5 è molto semplice, indica semplicemente che non potremo produrre più di due tonnellate di prodotto Y:
+$$
+x_2 \leq 2
+$$
+L'ultima relazione (6) ci impone un limite superiore alla produzione del prodotto X, che non deve superare di più di una tonnellata la produzione del prodotto Y. Perciò:
+$$
+x_1 \leq x_2 + 1
+$$
+Infine imponiamo il vincolo, implicito, che la produzione non può essere negativa:
+$$
+x_1,x_2 \geq0
+$$
+Il modello matematico può essere quindi così riassunto:
+\begin{align*}
+\max z	&= x_1+2x_2 \\
+\st\;\;2& x_1+2x_2 \leq 9\\
+	  	& x_2 \leq 2\\
+	  	& x_1 \leq x_2 + 1\\
+	  	& x_1,x_2 \geq 0
+\end{align*}
+
+\subsection{Problema in forma grafica}
+
+In figura \vref{fig:graph1} è rappresentato graficamente il problema presentato. In giallo è rappresentato il politopo $P$ e sono stati chiamati $\alpha,\beta,\gamma,\delta,\varepsilon$ i suoi cinque vertici, i quali sappiamo corrispondere ognuno ad una BFS.
+Inoltre in figura è riportato il verso del gradiente della funzione obiettivo. Ricordiamo che è necessario che il politopo $P$ sia limitato nella direzione del gradiente o, più precisamente, che sia limitato nella direzione opposta al gradiente dopo aver trasformato la funzione obiettivo in una funzione di minimo. Ovviamente i due casi sono gli stessi, basti osservare che il problema è espresso equivalentemente dalle equazioni:
+\begin{align*}
+\max z&=x_1+2x_2 \\
+\min \varphi=-z&=-x_1-2x_2
+\end{align*}
+I gradienti delle due funzioni $z$ e $\varphi$ sono perciò:
+\begin{align*}
+\nabla(z)&=\left(\frac{\partial z}{\partial x},\frac{\partial z}{\partial y}\right) = \left(1,2\right) \\
+\nabla(\varphi)&=\left(\frac{\partial\varphi}{\partial x},\frac{\partial\varphi}{\partial y}\right) = -\nabla(z) = \left(-1,-2\right)
+\end{align*}
+I due vettori sono ovviamente uno l'opposto dell'altro e di conseguenza il gradiente di $z$ cresce dove decresce quello di $\varphi$. I problemi sono quindi equivalenti.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+\addplot
+[domain=0:4.5, samples=10, thick, blue, name path=2x2y9]
+{-x+(9/2)} node [pos=0.15,pin={75:{\color{blue}$2x_1+2x_2=9$}}, inner sep=0pt] {};
+\addplot
+[domain=1:5, samples=10, thick, red, name path=yx-1]
+{x-1} node [pos=0.7, anchor=east, pin={165:{\color{red}$x_1=x_2+1$}}, inner sep=0pt] {};
+\addplot
+[domain=0:5, samples = 10, thick, purple, name path=y2]
+{2} node [pos=0.1, anchor=north, pin={90:{\color{purple}$x_2=2$}}, inner sep= 0pt] {};
+\addplot[thick, fill=yellow, fill opacity=0.5] fill between [of=2x2y9 and AX, soft clip={domain=0:11/4},];
+\addplot[white] fill between [of=2x2y9 and y2];
+\addplot[pattern=north west lines, pattern color=red!10] fill between [reverse=true, of=AX and UP, soft clip={domain=0:5}];
+\addplot[white] fill between [of=yx-1 and AX];
+\addplot[pattern=north east lines, pattern color=blue!10] fill between [of=AX and 2x2y9, soft clip={domain=0:5}];
+\addplot[pattern=vertical lines, pattern color=purple!10] fill between [of=AX and y2];
+%\node [label={[above right=-6pt]45:$\alpha$}, name intersections={of=AX and AY, by=alp}] at (alp) {$\bullet$};
+%\node [label={[below right=-6pt]-45:$\beta$}, name intersections={of=AY and y2, by=bet}] at (bet) {$\bullet$};
+%\node [label={[above right=-6pt]45:$\gamma$}, name intersections={of=y2 and 2x2y9, by=gam}] at (gam) {$\bullet$};
+%\node [name intersections={of=2x2y9 and yx-1, by=del}, label={[right=-4pt]0:$\delta$}] at (del) {$\bullet$};
+%\node [name intersections={of=yx-1 and AX, by=eps}, label={[above=-6pt]90:$\epsilon$}] at (eps) {$\bullet$};
+\intse{AX}{AY}{$\alpha$}{alp};
+\intse{AY}{y2}{$\beta$}{bet};
+\intne{y2}{2x2y9}{$\gamma$}{gam};
+\inte{2x2y9}{yx-1}{$\delta$}{del};
+\intn{yx-1}{AX}{$\varepsilon$}{eps};
+\node at (axis cs:1,1) {$P$};
+\addplot[-latex, thick] coordinates
+           {(0,0) (1/2.24,2/2.24)} node [pos=1, anchor=north, label={90:{\small $\nabla z$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Rappresentazione cartesiana del problema di programmazione lineare}
+\label{fig:graph1}
+\end{figure}
+
+\subsection{Forma standard}
+Ricordiamo che un problema di \textbf{programmazione lineare in forma standard} è nella forma (matriciale):
+\begin{align*}
+\min c'x& \\
+Ax& = b \\
+x& \geq 0
+\end{align*}
+Cioè, la funzione obiettivo deve essere sotto forma di minimo (il che è molto semplice, dato che basta moltiplicarla per $-1$), i vincoli devono essere tutti espressi sotto forma di \textit{equazioni} e tutte le variabili devono essere positive.
+A tal scopo introduciamo una \textbf{variabile slack} per ogni disequazione con simbolo $\leq$.
+\begin{alignat*}{7}
+&\min \varphi = \quad && -x_1 \quad && -2x_2\\
+&\;\st  &&-2x_1		&&+2x_2 		&&+\pmb{x_3}	&&		 		&&\qquad\qquad		&&=1\\
+&	 	&&\qquad\qquad &&+x_2		&&\qquad\qquad	&& +\pmb{x_4}	&&					&&=2\\
+&	 	&&+x_1		&&-x_2 \qquad	&&				&&\qquad\qquad	&&+\pmb{x_5}		&&=1\\
+&		&&\quad\; x_1,	&&\quad\; x_2,		&&\quad\; x_3,		&&\quad\; x_4,		&&\quad\; x_5		&&\geq 0
+\end{alignat*}
+
+\subsection{Risoluzione tramite tableau}
+
+\subsubsection{Richiami (molto blandi) di teoria}
+Una \textbf{base} è determinata da una sottomatrice della matrice A dei vincoli, di dimensione $m\times n$, di $n$ colonne linearmente indipendenti (nel \textbf{tableau} la matrice A è quella delimitata dalle due righe disegnate). Spesso l'individuazione delle colonne della prima base è semplice perché l'introduzione di variabili slack o di variabili surplus crea nella nostra matrice delle colonne con tutti 0 e solo un 1, il che rende probabile la formazione di una sottomatrice \textbf{identità}.
+Ricordiamo che scelta una base $\mathcal{B}$ tale che:
+$$
+\mathcal{B}=A_{\beta(i)}; \quad i=1,\ldots,m
+$$
+ad essa è associata una \textbf{soluzione base} $x$ tale che:
+$$
+x=x_j; \quad j=1,\ldots,n \\
+x_j = 0 \forall j : A_j\not\in \mathcal{B}
+$$
+cioè il valore di una variabile non in base è 0. Questa è inoltre detta una soluzione \textbf{ammissibile} (\textbf{BFS}) se si trova nelle regione ammissibile determinata dai vincoli.
+
+Al tableau aggiungeremo in alto una riga che indicherà il \textbf{costo relativo} $\OL{c_j}$ della colonna $j$-esima. Basti sapere che se facciamo in modo che $\forall A_j \in \mathcal{B} : \OL{c_j} = 0$, avremo nella prima colonna il guadagno $-\varphi$ della funzione obiettivo e in tutti gli altri avremo effettivamente i costi relativi. Per una spiegazione del perché di questo fenomeno magico, si rimanda al testo o alle slide del docente.
+
+Si ricorda, infine, che la colonna $b$ dei termini noti verrà inserita a sinistra. Non è indispensabile, ma una semplice convenzione.
+
+\subsubsection{Risoluzione}
+
+Per realizzare il \textbf{tableau} è sufficiente ricordare le regole base. La matrice $A$ e la colonna $b$ si riportano fedelmente sotto la loro consueta forma di matrice. Le variabili $x_j$ sono i coefficienti della rispettiva variabile nella funzione obiettivo. Ovviamente per tutte le variabili slack e surplus, che sono state aggiunte artificialmente da noi, il loro valore è 0. 
+
+La prima colonna, una volta scelta una base che ha la forma di una matrice identità (e per ora assumeremo che sia sempre già pronta o facilmente costruibile) rappresenta banalmente la soluzione del sistema $Ix=b$ che altro non è che $b$ stesso.
+
+L'ultimo valore da inserire è quello di $-\varphi$, che varie a seconda delle colonne che assumeremo inizialmente come base. Se, come spesso accadrà, scegliamo tutte colonne associate a variabili slack o surplus, il loro valore non influirà sulla funzione obiettivo ed essendo tutte le altre variabili automaticamente nulle perché non sono in base, sarà nullo anche $-\varphi$. Il nostro caso attuale ricade in quest'ultimo descritto, ma se fosse stato altrimenti, avremmo semplicemente dovuto calcolare il valore di $-\varphi$ in base al valore delle variabili $x_1$ e $x_2$.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rcccccc}
+ & $-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$\OL{c_j}$ & \Sc{0} & -1 & -2 & 0 & 0 & 0 \\
+\cline{2-7}
+$x_3$ & \Sc{9} & 2 & 2 & 1 & 0 & 0 \\
+$x_4$ & \Sc{2} & 0 & 1 & 0 & 1 & 0 \\
+$x_5$ & \Sc{1} & 1 & -1 & 0 & 0 & 1 \\
+\end{tabular}
+\caption{Tableau iniziale. Vertice $\alpha(0,0)$}
+\label{tab:tab1}
+\end{table}
+
+In tabella \vref{tab:tab1} il tableau definitivo ricavato dal nostro problema. Si noti che le ultime 3 colonne formano già una matrice identità, perciò le assumeremo come base.
+\begin{align*}
+\mathcal{B}&=\{A_3,A_4,A_5\}\\
+x&=(0,0,9,2,1)
+\end{align*}
+
+Per sapere in che punto dello spazio originale a due dimensioni ci troviamo, è sufficiente guardare le variabili $x_1$ e $x_2$. \'E evidente che ci troviamo nell'origine, che appartiene al politopo $P$ trovato in precedenza e che in particolare è il \textbf{vertice} $\pmb{\alpha}$.
+Poiché non tutti i $\OL{c_j}$ sono non negativi, la nostra non è la BFS ottima e dobbiamo muoverci in una BFS migliore. Applicando la \textbf{regola di Dantzig}, facciamo entrare in base la colonna con il costo relativo maggiore in valore assoluto (cioè il "più negativo"). Nel nostro caso, prenderemo in considerazione quindi la colonna $\pmb{A_2}$.
+Per scegliere su quale elemento fare \textbf{pivoting}, dobbiamo ottenere il valore di $y_{\ell 2}$ tale che:
+$$
+\vartheta_{\max}=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}}
+$$
+Perciò, operando con gli elementi nel tableau:
+\begin{align*}
+\vartheta_{\max}=\min\left(\frac{9}{2},\frac{2}{1}\right)=\frac{2}{1}=\frac{y_{20}}{\pmb{y_{22}}}
+\end{align*}
+Faremo pivoting sull'elemento $y_{22}$ (cerchiato in tabella \vref{tab:tab2}). Il nostro scopo è ora far comparire uno 0 nella colonna dell'elemento pivot in tutte le righe tranne quella in cui si trova l'elemento pivot e far comparire un 1 in quest'ultima.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ & & $-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ & \Sc{0} & -1 & -2 & 0 & 0 & 0 \\
+\cline{3-8}
+$R_1$ & $x_3$ & \Sc{9} & 2 & 2 & 1 & 0 & 0 \\
+$R_2$ & $x_4$ & \Sc{2} & 0 & \C{1} & 0 & 1 & 0 \\
+$R_3$ & $x_5$ & \Sc{1} & 1 & -1 & 0 & 0 & 1 \\
+\end{tabular}
+\caption{Pivoting su $y_{22}$. $A_2$ entra in base e $A_4$ esce.}
+\label{tab:tab2}
+\end{table}
+
+Possiamo felicemente notare che $y_{22}=1$, perciò nulla da fare su $R_2$. Se così non fosse stato sarebbe bastato moltiplicare $R_2R$ per un coefficiente $h$. Algebricamente, per far comparire uno 0 in tutti gli altri elementi della colonna $A_2$, possiamo sostituire ad ogni riga la riga stessa sommata ad un'altra qualsiasi riga moltiplicata per un coefficiente $k$. Ovviamente la riga più comoda da sommare è la riga su cui stiamo facendo pivot $R_\ell$, avendo un comodissimo 1 nella colonna interessata. Perciò possiamo riassumere che l'operazione consentita su ogni riga $R_i$ e sulla riga di pivot $R_\ell$è:
+\begin{align*}
+R_\ell&\leftarrow hR_l \\
+R_i&\leftarrow R_i+kR_\ell
+\end{align*}
+Queste sono dette \textbf{operazioni elementari di riga}. Applicando le regole al nostra tableau, operiamo:
+\begin{align*}
+R_0&\leftarrow R_0 + 2R_2; \\
+R_1&\leftarrow R_1 - 2R_2; \\
+R_3&\leftarrow R_3 + R_2
+\end{align*}
+Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab3}.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ & & $-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ & \Sc{4} & -1 & 0 & 0 & 2 & 0 \\
+\cline{3-8}
+$R_1$ & $x_3$ & \Sc{5} & 2 & 0 & 1 & -2 & 0 \\
+$R_2$ & $x_2$ & \Sc{2} & 0 & 1 & 0 & 1 & 0 \\
+$R_3$ & $x_5$ & \Sc{3} & 1 & 0 & 0 & 1 & 1 \\
+\end{tabular}
+\caption{Secondo tableau. Vertice $\beta(0,2)$}
+\label{tab:tab3}
+\end{table}
+
+Ora che $A_4$ è entrato in base e $A_2$ ne è uscito, abbiamo una nuova base $\mathcal{B}$ e una nuova BFS $x$:
+\begin{align*}
+\mathcal{B}&=\{A_3,A_2,A_5\} \\
+x&=(0,2,5,0,3)
+\end{align*}
+Ci troviamo nel \textbf{vertice} $\pmb{\beta}$, ma questa non è ancora la BFS ottima. Possiamo osservare, infatti, che la colonna $A_1$ presenta un $\OL{c_j}$ negativo e sarà necessario fare ulteriormente pivoting su un elemento di questa. Otteniamo quindi il valore di $y_{\ell 1}$ tale che:
+\begin{align*}
+\vartheta_{\max}&=\min_{i:y_{i1}>0}\frac{y_{i0}}{y_{i1}}=\frac{y_{i0}}{y_{\ell 1}} \\
+\vartheta_{\max}&=\min\left(\frac{5}{2},\frac{3}{1}\right)=\frac{5}{2}=\frac{y_{10}}{\pmb{y_{11}}}
+\end{align*}
+Faremo pivoting sull'elemento $y_{11}$ (cerchiato in tabella \vref{tab:tab4}). 
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ & & $-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ & \Sc{4} & -1 & 0 & 0 & 2 & 0 \\
+\cline{3-8}
+$R_1$ & $x_3$ & \Sc{5} & \C{2} & 0 & 1 & -2 & 0 \\
+$R_2$ & $x_2$ & \Sc{2} & 0 & 1 & 0 & 1 & 0 \\
+$R_3$ & $x_5$ & \Sc{3} & 1 & 0 & 0 & 1 & 1 \\
+\end{tabular}
+\caption{Pivoting su $y_{11}$. $A_1$ entra in base e $A_3$ esce.}
+\label{tab:tab4}
+\end{table}
+
+Questa volta dobbiamo lavorare anche sulla riga dell'elemento pivot, dividendola per 2:
+$$
+R_1\rightarrow \frac{1}{2}R_1
+$$
+Partendo dal nuovo tableau in tabella \vref{tab:tab5}, facciamo pivoting sulle restanti righe in questo modo:
+\begin{align*}
+R_0&\rightarrow R_0 + R_1 \\
+R_3&\rightarrow R_3 - R_1
+\end{align*}
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ & & $-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ & \Sc{4} & -1 & 0 & 0 & 2 & 0 \\
+\cline{3-8}
+$R_1$ & $x_1$ & \Sc{$\frac{5}{2}$} & \C{1} & 0 & $\frac{1}{2}$ & -1 & 0 \\
+$R_2$ & $x_2$ & \Sc{2} & 0 & 1 & 0 & 1 & 0 \\
+$R_3$ & $x_5$ & \Sc{3} & 1 & 0 & 0 & 1 & 1 \\
+\end{tabular}
+\caption{Pivoting su $y_{11}$. $R_1$ divisa per 2.}
+\label{tab:tab5}
+\end{table}
+Il nostro nuovo tableau, quindi, è quello in tabella \vref{tab:tab6}. 
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ & & $-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ & \Sc{$\frac{13}{2}$} & 0 & 0 & $\frac{1}{2}$ & 1 & 0 \\
+\cline{3-8}
+%\hline
+$R_1$ & $x_1$ & \Sc{$\frac{5}{2}$} & 1 & 0 & $\frac{1}{2}$ & -1 & 0 \\
+$R_2$ & $x_2$ & \Sc{2} & 0 & 1 & 0 & 1 & 0 \\
+$R_3$ & $x_5$ & \Sc{$\frac{1}{2}$} & 0 & 0 & $-\frac{1}{2}$ & 2 & 1 \\
+\end{tabular}
+\caption{Terzo tableau. Vertice $\gamma\left(\frac{5}{2},2\right)$}
+\label{tab:tab6}
+\end{table}
+Notiamo che tutti i $\OL{c_j}$ sono non negativi, perciò ci troviamo nella \textbf{BFS ottima}. La base $\mathcal{B}$ e la soluzione $x$ sono quindi:
+\begin{align*}
+\mathcal{B}&={A_1,A_2,A_5} \\
+x&=\left(\frac{5}{2},2,0,0,\frac{1}{2}\right)
+\end{align*}
+La soluzione ottima è quella del vertice $\pmb{\gamma\left(\frac{5}{2},2\right)}$. Riassumendo, tutti i valori delle variabili in gioco sono i seguenti:
+\begin{align*}
+z&=-\varphi=\frac{13}{2}=6.5 \\
+x_1&=\frac{5}{2}=2.5 \\
+x_2&=2
+\end{align*}
+\subsection{Conclusione}
+La soluzione ottima consiste nel produrre $2.5$T di prodotto X e $2$T di prodotto Y, ottenendo un \textbf{profitto} pari a $6.5$ volte quello di $1$T di prodotto X.
+
+\section{Esercizio 2}
+
+Sia dato - in linguaggio naturale - il seguente problema di ottimizzazione:
+\begin{enumerate}
+\item Un'azienda chimica produce due composti, 1 e 2, composti da due sostanze chimiche A e B;
+\item Un lotto di composto 1 richiede $3$T di sostanza A e $3$T di sostanza B;
+\item Un lotto di composto 2 richiede $6$T di sostanza A e $3$T di sostanza B;
+\item Per motivi di mercato non si possono produrre più di 3 lotti di composto 1;
+\item Si hanno a disposizione $12$T di composto A e $9$T di composto B;
+\item Il profitto di un lotto di composto A è di $12\,000$\euro ;
+\item Il profitto di un lotto di composto B è di $15\,000$\euro .
+\end{enumerate}
+Si modelli il problema come un problema di programmazione lineare, lo si porti in forma standard, si realizzi una rappresentazione grafica del problema e si ottimizzi la funzione di profitto attraverso il \textbf{metodo del simplesso} affinché \textbf{si ottenga il massimo profitto dalla produzione dei prodotti} nel rispetto dei vincoli assegnati. Si utilizzi la \textit{regola di Bland} per scegliere le basi su cui fare pivot.
+
+\subsection{Modellizzazione}
+Si indichi con:
+\begin{itemize}
+\item $x_1$ il numero di lotti di composto 1;
+\item $x_2$ il numero di lotti di composto 2.
+\end{itemize}
+Lo scopo del nostro problema è di massimizzare i profitti ottenuti dalla produzione. Per comodità di rappresentazione, stabiliamo che la funzione di profitto $z$ esprima il profitto in \textbf{migliaia di euro}:
+$$
+\max z = 12x_1 + 15x_2
+$$
+
+Modelliamo ora i vincoli espressi dal problema.
+
+Dalle relazioni 3, 4 e 5 possiamo dedurre i seguenti vincoli:
+\begin{itemize}
+\item Servono $3$T di prodotto A per produrre un lotto di composto 1 e $6$T per produrre un lotto di composto 2. In tutto non possiamo utilizzare più di $12$T di prodotto A.
+\item Servono $3$T di prodotto B per produrre un lotto di composto 1 e $3$T per produrre un lotto di composto 2. In tutto non possiamo utilizzare più di $9$T di prodotto B.
+\end{itemize}
+\begin{align*}
+3x_1 + 6x_2 &\leq 12 \\
+3x_1 + 3x_2 &\leq 9
+\end{align*}
+La relazione 4 è così facilmente esprimibile:
+$$
+x_1 \leq 3
+$$
+Infine imponiamo il vincolo, implicito, che la produzione non può essere negativa:
+$$
+x_1,x_2 \geq0
+$$
+Il modello matematico può essere quindi così riassunto (sono state apportate semplificazione algebriche):
+\begin{align*}
+\max z	&= 12x_1+15x_2 \\
+\st\;\; & x_1+2x_2 \leq 4\\
+	  	& x_1+x_2 \leq 3\\
+	  	& x_1 \leq 3\\
+	  	& x_1,x_2 \geq 0
+\end{align*}
+
+\subsection{Problema in forma grafica}
+
+In figura \vref{fig:graph2} è rappresentato graficamente il problema presentato. In giallo è rappresentato il politopo $P$ e sono stati chiamati $\alpha,\beta,\gamma,\delta$ i suoi quattro vertici, i quali sappiamo corrispondere ognuno ad una BFS.
+Il gradiente della funzione obiettivo vale
+\begin{equation*}
+\nabla(z)=\left(\frac{\partial z}{\partial x},\frac{\partial z}{\partial y}\right) = \left(12,15\right) \\
+\end{equation*}
+Il politopo $P$ è, ovviamente, limitato nella direzione del gradiente (si fa notare che finora $P$ è sempre limitato in ogni direzione, quindi qualsiasi direzione avesse il gradiente non ci sarebbero problemi).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+\addplot
+[domain=0:4, samples=10, thick, blue, name path=x2y4]
+{-.5*x+2} node [pos=0.15,pin={75:{\color{blue}$x_1+2x_2=4$}}, inner sep=0pt] {};
+\addplot
+[domain=0:3, samples=10, thick, red, name path=xy3]
+{-x+3} node [pos=0.1, pin={75:{\color{red}$x_1+x_2=3$}}, inner sep=0pt] {};
+\addplot
+[domain=0:5, samples = 10, thick, purple, name path=x3]
+(3,x) node [pos=0.5, anchor=north, pin={0:{\color{purple}$x_1=3$}}, inner sep= 0pt] {};
+\addplot[thick, fill=yellow, fill opacity=0.5] fill between [of=x2y4 and AX, soft clip={domain=0:3}];
+\addplot[white] fill between [of=xy3 and UP];
+%\addplot[pattern=north east lines, pattern color=red!10] fill between [reverse=true, of=AX and UP, soft clip={domain=0:5}];
+%\addplot[white] fill between [of=xy3 and AX];
+\addplot[pattern=north east lines, pattern color=red!10] fill between [of=xy3 and AX];
+\addplot[pattern=vertical lines, pattern color=blue!10] fill between [of=x2y4 and AX];
+%\addplot[pattern=north east lines, pattern color=blue!10] fill between [of=AX and 2x2y9, soft clip={domain=0:5}];
+\addplot[pattern=horizontal lines, pattern color=purple!10] fill between [of=AY and x3];
+\intse{AX}{AY}{$\alpha$}{alp};
+\intne{AY}{x2y4}{$\beta$}{bet};
+\intne{x2y4}{xy3}{$\gamma$}{gam};
+\intne{xy3}{AX}{$\delta$}{del};
+\node at (axis cs:1.5,.5) {$P$};
+\addplot[-latex, thick] coordinates
+           {(0,0) (4/6.4,5/6.4)} node [pos=1, anchor=north, label={90:{\small $\nabla z$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Rappresentazione cartesiana del problema di programmazione lineare}
+\label{fig:graph2}
+\end{figure}
+
+\subsection{Forma standard}
+Ricordiamo che un problema di \textbf{programmazione lineare in forma standard} è nella forma (matriciale):
+\begin{align*}
+\min c'x& \\
+Ax& = b \\
+x& \geq 0
+\end{align*}
+Trasformiamo la funzione obiettivo $z$ in $\varphi$ tale che:
+\begin{equation*}
+\varphi=-\frac{z}{3}=-4x_1-5x_2
+\end{equation*}
+Quindi introduciamo una \textbf{variabile slack} per ogni disequazione con simbolo $\leq$. Otterremo infine:
+\begin{alignat*}{7}
+&\min \varphi = \quad && -4x_1 \quad && -5x_2\\
+&\;\st  &&+x_1		&&+2x_2 		&&+\pmb{x_3}	&&		 		&&\qquad\qquad		&&=4\\
+&	 	&&+x_1		&&+x_2			&&\qquad\qquad	&& +\pmb{x_4}	&&					&&=3\\
+&	 	&&+x_1		&&\qquad\qquad	&&				&&\qquad\qquad	&&+\pmb{x_5}		&&=3\\
+&		&&\quad\; x_1,	&&\quad\; x_2,		&&\quad\; x_3,		&&\quad\; x_4,		&&\quad\; x_5		&&\geq 0
+\end{alignat*}
+
+\subsection{Risoluzione tramite tableau}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rcccccc}
+			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$\OL{c_j}$ 	& \Sc{0} 	& -4 	& -5 	& 0 	& 0 	& 0 \\
+\cline{2-7}
+$x_3$ 		& \Sc{4} 	& 1 	& 2 	& 1 	& 0 	& 0 \\
+$x_4$ 		& \Sc{3} 	& 1 	& 1		& 0 	& 1 	& 0 \\
+$x_5$ 		& \Sc{3} 	& 1 	& 0 	& 0 	& 0 	& 1 \\
+\end{tabular}
+\caption{Tableau iniziale. Vertice $\alpha(0,0)$}
+\label{tab:tab21}
+\end{table}
+
+In tabella \vref{tab:tab21} il tableau ricavato dal nostro problema. Si noti che le ultime 3 colonne formano già una matrice identità, perciò le assumeremo come base.
+\begin{align*}
+\mathcal{B}&=\{A_3,A_4,A_5\}\\
+x&=(0,0,4,3,3)
+\end{align*}
+Ci troviamo nell'origine, che appartiene al politopo $P$ trovato in precedenza e che in particolare è il \textbf{vertice} $\pmb{\alpha}$.
+Poiché non tutti i $\OL{c_j}$ sono non negativi, la nostra non è la BFS ottima e dobbiamo muoverci in una BFS migliore. Applicando la \textbf{regola di Bland}, facciamo entrare in base la colonna con l'indice minore. Nel nostro caso, prenderemo in considerazione quindi la colonna $\pmb{A_1}$.
+Per scegliere su quale elemento fare \textbf{pivoting}, dobbiamo ottenere il valore di $y_{\ell 1}$ tale che:
+$$
+\vartheta_{\max}=\min_{i:y_{i1}>0}\frac{y_{i0}}{y_{i1}}=\frac{y_{i0}}{y_{\ell 1}}
+$$
+Perciò, operando con gli elementi nel tableau:
+\begin{align*}
+\vartheta_{\max}=\min\left(\frac{4}{1},\frac{3}{1},\frac{3}{1}\right)=\frac{3}{1}=\frac{y_{20}}{\pmb{y_{21}}}=\frac{y_{30}}{\pmb{y_{31}}}
+\end{align*}
+Abbiamo un \textbf{pareggio} tra gli elementi $y_{21}$ e $y_{31}$.Seguendo la \textbf{regola di Bland}, sceglieremo come pivot l'elemento che farà uscire dalla base la variabile con l'\textbf{indice minore}%
+\footnote{Si fa notare che l'utilizzo della \textbf{regola di Bland} evita i casi di \textbf{loop} in presenza di basi degeneri durante l'algoritmo del simplesso. Questa proprietà è dimostrabile ma la dimostrazione esula dai nostri scopi.}.
+Faremo quindi pivoting sull'elemento $y_{21}$ (cerchiato in tabella \vref{tab:tab22}) poiché farà uscire dalla base la variabile $x_4$. Il nostro scopo è ora far comparire uno 0 nella colonna dell'elemento pivot in tutte le righe tranne quella in cui si trova l'elemento pivot e far comparire un 1 in quest'ultima.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& -4 	& -5 	& 0 	& 0 	& 0 \\
+\cline{3-8}
+$R_1$ & $x_3$ 		& \Sc{4} 	& 1 	& 2 	& 1 	& 0 	& 0 \\
+$R_2$ & $x_4$ 		& \Sc{3} 	& \C{1}	& 1		& 0 	& 1 	& 0 \\
+$R_3$ & $x_5$ 		& \Sc{3} 	& 1 	& 0 	& 0 	& 0 	& 1 \\
+\end{tabular}
+\caption{Pivoting su $y_{21}$. $A_1$ entra in base e $A_4$ esce.}
+\label{tab:tab22}
+\end{table}
+Poiché $y_{21}=1$ non c'è nulla da fare su $R_2$. Applichiamo le operazioni elementari di riga al nostro tableau come segue:
+\begin{align*}
+R_0&\leftarrow R_0 + 4R_2; \\
+R_1&\leftarrow R_1 - R_2; \\
+R_3&\leftarrow R_3 - R_2
+\end{align*}
+Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab23}.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{12} 	& 0 	& -1 	& 0 	& 4 	& 0 \\
+\cline{3-8}
+$R_1$ & $x_3$ 		& \Sc{1} 	& 0 	& 1 	& 1 	& -1 	& 0 \\
+$R_2$ & $x_1$ 		& \Sc{3} 	& 1		& 1		& 0 	& 1 	& 0 \\
+$R_3$ & $x_5$ 		& \Sc{0} 	& 0 	& -1 	& 0 	& -1 	& 1 \\
+\end{tabular}
+\caption{Secondo tableau. Vertice $\delta(3,0)$}
+\label{tab:tab23}
+\end{table}
+
+Ora che $A_1$ è entrato in base e $A_4$ ne è uscito, abbiamo una nuova base $\mathcal{B}$ e una nuova BFS $x$:
+\begin{align*}
+\mathcal{B}&=\{A_3,A_1,A_5\} \\
+x&=(3,0,1,0,0)
+\end{align*}
+Ci troviamo nel \textbf{vertice} $\pmb{\delta}$, ma questa non è ancora la BFS ottima. Inoltre, ci troviamo nel caso di una \textbf{base degenere}: la variabile $x_5$, che è in base, ha valore nullo. Questo non dovrebbe comunque crearci problemi in quanto stiamo applicando la regola di Bland.
+L'unica colonna ad avere un $\OL{c_j}$ negativo è $A_2$ ed è su questa che cercheremo l'elemento di pivot $y_{\ell 2}$:
+\begin{align*}
+\vartheta_{\max}&=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}} \\
+\vartheta_{\max}&=\min\left(\frac{1}{1},\frac{3}{1}\right)=\frac{1}{1}=\frac{y_{10}}{\pmb{y_{12}}}
+\end{align*}
+Faremo pivoting sull'elemento $y_{12}$ (cerchiato in tabella \vref{tab:tab24}). 
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{12} 	& 0 	& -1 	& 0 	& 4 	& 0 \\
+\cline{3-8}
+$R_1$ & $x_3$ 		& \Sc{1} 	& 0 	& \C{1}	& 1 	& -1 	& 0 \\
+$R_2$ & $x_1$ 		& \Sc{3} 	& 1		& 1		& 0 	& 1 	& 0 \\
+$R_3$ & $x_5$ 		& \Sc{0} 	& 0 	& -1 	& 0 	& -1 	& 1 \\
+\end{tabular}
+\caption{Pivoting su $y_{12}$. $A_2$ entra in base e $A_3$ esce.}
+\label{tab:tab24}
+\end{table}
+Le operazione di pivoting saranno:
+\begin{align*}
+R_0&\rightarrow R_0 + R_1 \\
+R_2&\rightarrow R_2 - R_1 \\
+R_3&\rightarrow R_3 + R_1
+\end{align*}
+Il nostro nuovo tableau, quindi, è quello in tabella \vref{tab:tab25}. 
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{13} 	& 0 	& 0 	& 1 	& 3 	& 0 \\
+\cline{3-8}
+$R_1$ & $x_2$ 		& \Sc{1} 	& 0 	& 1 	& 1 	& -1 	& 0 \\
+$R_2$ & $x_1$ 		& \Sc{2} 	& 1		& 0		& -1 	& 2 	& 0 \\
+$R_3$ & $x_5$ 		& \Sc{1} 	& 0 	& 0 	& 1 	& -2 	& 1 \\
+\end{tabular}
+\caption{Terzo tableau. Vertice $\gamma(2,1)$}
+\label{tab:tab25}
+\end{table}
+Notiamo che tutti i $\OL{c_j}$ sono non negativi, perciò ci troviamo nella \textbf{BFS ottima}. La base $\mathcal{B}$ e la soluzione $x$ sono quindi:
+\begin{align*}
+\mathcal{B}&={A_2,A_1,A_5} \\
+x&=(2,1,0,0,1)
+\end{align*}
+La soluzione ottima è quella del vertice $\pmb{\gamma(2,1)}$. Riassumendo, tutti i valori delle variabili in gioco sono i seguenti:
+\begin{align*}
+z&=-3\varphi=-3(-13)=39 \\
+x_1&=2 \\
+x_2&=1
+\end{align*}
+\subsection{Conclusione}
+La soluzione ottima consiste nel produrre $2$ lotti di composto 1 e $1$ lotto di composto 2, ottenendo un \textbf{profitto} pari a $39\,000$\euro .
+
+\section{Esercizio 3}
+
+Sia dato - in linguaggio naturale - il seguente problema di ottimizzazione:
+\begin{enumerate}
+\item Un'azienda produce due tipi di composto A e B;
+\item Il profitto del composto A è il doppio di quello del composto B;
+\item Per motivi di mercato non si possono produrre più di $2$T di composto A;
+\item Ogni tonnellata di ogni composto contiene $1$Q di sostanza base;
+\item Ho a disposizione $3$Q di sostanza base;
+\item $1$T di composto A contiene $1$Q di sostanza chimica;
+\item $1$T di composto B contiene $2$Q di sostanza chimica;
+\item Ho a disposizione $5$Q di sostanza chimica.
+\end{enumerate}
+Si modelli il problema come un problema di programmazione lineare, lo si porti in forma standard, si realizzi una rappresentazione grafica del problema e si ottimizzi la funzione di profitto attraverso il \textbf{metodo del simplesso} affinché \textbf{si ottenga il massimo profitto dalla produzione dei prodotti} nel rispetto dei vincoli assegnati. Si utilizzi la \textit{regola di Dantzig} per scegliere le basi su cui fare pivot.
+
+\subsection{Modellizzazione}
+Si indichi con:
+\begin{itemize}
+\item $x_1$ il numero di tonnellate di composto 1;
+\item $x_2$ il numero di tonnellate di composto 2.
+\end{itemize}
+Lo scopo del nostro problema è di massimizzare i profitti ottenuti dalla produzione. Anche se non siamo a conoscenza degli esatti profitti dati da ogni prodotto, abbiamo comunque a disposizione la relazione data dalla proposizione 2, cioè la variabile $x_1$ rende il doppio della variabile $x_2$. Possiamo quindi esprimere così la funzione di profitto:
+$$
+\max z = 2x_1 + x_2
+$$
+
+Modelliamo ora i vincoli espressi dal problema.
+
+La relazione 3 è così facilmente esprimibile:
+$$
+x_1 \leq 2
+$$
+Dalle relazioni 4 e 5 possiamo dedurre il seguente vincolo:
+\begin{equation*}
+x_1 + x_2 \leq 3
+\end{equation*}
+Dalle relazioni 6, 7 e 8 possiamo dedurre il seguente vincolo:
+\begin{equation*}
+x_1 + 2x_2 \leq 5
+\end{equation*}
+Infine imponiamo il vincolo, implicito, che la produzione non può essere negativa:
+$$
+x_1,x_2 \geq0
+$$
+Il modello matematico può essere quindi così riassunto (sono state apportate semplificazione algebriche):
+\begin{align*}
+\max z	&= 2x_1+x_2 \\
+\st\;\; & x_1 \leq 2\\
+	  	& x_1+x_2 \leq 3\\
+		& x_1+2x_2 \leq 5\\
+	  	& x_1,x_2 \geq 0
+\end{align*}
+
+\subsection{Problema in forma grafica}
+
+In figura \vref{fig:graph3} è rappresentato graficamente il problema presentato. In giallo è rappresentato il politopo $P$ e sono stati chiamati $\alpha,\beta,\gamma,\delta,\varepsilon$ i suoi cinque vertici, i quali sappiamo corrispondere ognuno ad una BFS.
+Il gradiente della funzione obiettivo vale
+\begin{equation*}
+\nabla(z)=\left(\frac{\partial z}{\partial x},\frac{\partial z}{\partial y}\right) = \left(2,1\right) \\
+\end{equation*}
+Il politopo $P$ è, ovviamente, limitato nella direzione del gradiente (si fa notare che finora $P$ è sempre limitato in ogni direzione, quindi qualsiasi direzione avesse il gradiente non ci sarebbero problemi).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+\addplot
+[domain=0:4, samples=10, thick, blue, name path=x2y5]
+{-.5*x+2.5} node [pos=0.8,pin={75:{\color{blue}$x_1+2x_2=5$}}, inner sep=0pt] {};
+\addplot
+[domain=0:3, samples=10, thick, red, name path=xy3]
+{-x+3} node [pos=0.2, pin={85:{\color{red}$x_1+x_2=3$}}, inner sep=0pt] {};
+\addplot
+[domain=0:5, samples = 10, thick, purple, name path=x2]
+(2,x) node [pos=0.5, anchor=north, pin={0:{\color{purple}$x_1=2$}}, inner sep= 0pt] {};
+\addplot[thick, fill=yellow, fill opacity=0.5] fill between [of=x2y5 and AX, soft clip={domain=0:3}];
+\addplot[white] fill between [of=xy3 and UP];
+%\addplot[pattern=north east lines, pattern color=red!10] fill between [reverse=true, of=AX and UP, soft clip={domain=0:5}];
+\addplot[white] fill between [of=x2 and AX];
+\addplot[pattern=north east lines, pattern color=red!10] fill between [of=xy3 and AX];
+\addplot[pattern=vertical lines, pattern color=blue!10] fill between [of=x2y5 and AX];
+%\addplot[pattern=north east lines, pattern color=blue!10] fill between [of=AX and 2x2y9, soft clip={domain=0:5}];
+\addplot[pattern=horizontal lines, pattern color=purple!10] fill between [of=AY and x2];
+\intse{AX}{AY}{$\alpha$}{alp};
+\intse{AY}{x2y5}{$\beta$}{bet};
+\intne{x2y5}{xy3}{$\gamma$}{gam};
+\inte{xy3}{x2}{$\delta$}{del};
+\intne{x2}{AX}{$\varepsilon$}{eps};
+\node at (axis cs:1,1) {$P$};
+\addplot[-latex, thick] coordinates
+           {(0,0) (2/2.24,1/2.24)} node [pos=.7, anchor=south, label={0:{\small $\nabla z$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Rappresentazione cartesiana del problema di programmazione lineare}
+\label{fig:graph3}
+\end{figure}
+
+\subsection{Forma standard}
+Ricordiamo che un problema di \textbf{programmazione lineare in forma standard} è nella forma (matriciale):
+\begin{align*}
+\min c'x& \\
+Ax& = b \\
+x& \geq 0
+\end{align*}
+Trasformiamo la funzione obiettivo $z$ in $\varphi$ tale che:
+\begin{equation*}
+\varphi=-z=-2x_1-x_2
+\end{equation*}
+Quindi introduciamo una \textbf{variabile slack} per ogni disequazione con simbolo $\leq$. Otterremo infine:
+\begin{alignat*}{7}
+&\min \varphi = \quad && -2x_1 \quad\; && -x_2 \quad\;\; && \qquad\qquad && \qquad\qquad && \qquad\qquad && \\
+&\;\st  &&+x_1			&&		 		&&+\pmb{x_3}	&&		 		&&					&&=2\\
+&	 	&&+x_1			&&+x_2			&&				&& +\pmb{x_4}	&&					&&=3\\
+&	 	&&+x_1			&&+2x_2			&&				&&				&&+\pmb{x_5}		&&=5\\
+&		&&\quad\; x_1,	&&\quad\; x_2,	&&\quad\; x_3,	&&\quad\; x_4,	&&\quad\; x_5		&&\geq 0
+\end{alignat*}
+
+\subsection{Risoluzione tramite tableau}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rcccccc}
+			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$\OL{c_j}$ 	& \Sc{0} 	& -2 	& -1 	& 0 	& 0 	& 0 \\
+\cline{2-7}
+$x_3$ 		& \Sc{2} 	& 1 	& 0 	& 1 	& 0 	& 0 \\
+$x_4$ 		& \Sc{3} 	& 1 	& 1		& 0 	& 1 	& 0 \\
+$x_5$ 		& \Sc{5} 	& 1 	& 2 	& 0 	& 0 	& 1 \\
+\end{tabular}
+\caption{Tableau iniziale. Vertice $\alpha(0,0)$}
+\label{tab:tab31}
+\end{table}
+
+In tabella \vref{tab:tab31} il tableau ricavato dal nostro problema. Si noti che le ultime 3 colonne formano già una matrice identità, perciò le assumeremo come base.
+\begin{align*}
+\mathcal{B}&=\{A_3,A_4,A_5\}\\
+x&=(0,0,2,3,5)
+\end{align*}
+Ci troviamo nell'origine, che appartiene al politopo $P$ trovato in precedenza e che in particolare è il \textbf{vertice} $\pmb{\alpha}$.
+Poiché non tutti i $\OL{c_j}$ sono non negativi, la nostra non è la BFS ottima e dobbiamo muoverci in una BFS migliore. Applicando la \textbf{regola di Dantzig}, facciamo entrare in base la colonna il cui $\OL{c_j}$ è maggiore in valore assoluto. Nel nostro caso, prenderemo in considerazione quindi la colonna $\pmb{A_1}$.
+Per scegliere su quale elemento fare \textbf{pivoting}, dobbiamo ottenere il valore di $y_{\ell 1}$ tale che:
+$$
+\vartheta_{\max}=\min_{i:y_{i1}>0}\frac{y_{i0}}{y_{i1}}=\frac{y_{i0}}{y_{\ell 1}}
+$$
+Perciò, operando con gli elementi nel tableau:
+\begin{align*}
+\vartheta_{\max}=\min\left(\frac{2}{1},\frac{3}{1},\frac{5}{1}\right)=\frac{2}{1}=\frac{y_{10}}{\pmb{y_{11}}}
+\end{align*}
+Faremo pivoting sull'elemento $y_{11}$ (cerchiato in tabella \vref{tab:tab32}). Il nostro scopo è ora far comparire uno 0 nella colonna dell'elemento pivot in tutte le righe tranne quella in cui si trova l'elemento pivot e far comparire un 1 in quest'ultima.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& -2 	& -1 	& 0 	& 0 	& 0 \\
+\cline{3-8}
+$R_1$ & $x_3$ 		& \Sc{2} 	& \C{1}	& 0 	& 1 	& 0 	& 0 \\
+$R_2$ & $x_4$ 		& \Sc{3} 	& 1		& 1		& 0 	& 1 	& 0 \\
+$R_3$ & $x_5$ 		& \Sc{5} 	& 1 	& 2 	& 0 	& 0 	& 1 \\
+\end{tabular}
+\caption{Pivoting su $y_{11}$. $A_1$ entra in base e $A_3$ esce.}
+\label{tab:tab32}
+\end{table}
+Poiché $y_{11}=1$ non c'è nulla da fare su $R_1$. Applichiamo le operazioni elementari di riga al nostro tableau come segue:
+\begin{align*}
+R_0&\leftarrow R_0 + 2R_2; \\
+R_2&\leftarrow R_2 - R_1; \\
+R_3&\leftarrow R_3 - R_1
+\end{align*}
+Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab33}.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{4} 	& 0 	& -1 	& 2 	& 0 	& 0 \\
+\cline{3-8}
+$R_1$ & $x_1$ 		& \Sc{2} 	& 1 	& 0 	& 1 	& 0 	& 0 \\
+$R_2$ & $x_4$ 		& \Sc{1} 	& 0		& 1		& -1 	& 1 	& 0 \\
+$R_3$ & $x_5$ 		& \Sc{3} 	& 0 	& 2 	& -1 	& 0 	& 1 \\
+\end{tabular}
+\caption{Secondo tableau. Vertice $\varepsilon(2,0)$}
+\label{tab:tab33}
+\end{table}
+
+Ora che $A_1$ è entrato in base e $A_3$ ne è uscito, abbiamo una nuova base $\mathcal{B}$ e una nuova BFS $x$:
+\begin{align*}
+\mathcal{B}&=\{A_1,A_4,A_5\} \\
+x&=(2,0,0,1,3)
+\end{align*}
+Ci troviamo nel \textbf{vertice} $\pmb{\varepsilon}$, ma questa non è ancora la BFS ottima.
+L'unica colonna ad avere un $\OL{c_j}$ negativo è $A_2$ ed è su questa che cercheremo l'elemento di pivot $y_{\ell 2}$:
+\begin{align*}
+\vartheta_{\max}&=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}} \\
+\vartheta_{\max}&=\min\left(\frac{1}{1},\frac{3}{2}\right)=\frac{1}{1}=\frac{y_{20}}{\pmb{y_{22}}}
+\end{align*}
+Faremo pivoting sull'elemento $y_{22}$ (cerchiato in tabella \vref{tab:tab34}). 
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{4} 	& 0 	& -1 	& 2 	& 0 	& 0 \\
+\cline{3-8}
+$R_1$ & $x_1$ 		& \Sc{2} 	& 1 	& 0 	& 1 	& 0 	& 0 \\
+$R_2$ & $x_4$ 		& \Sc{1} 	& 0		& \C{1}	& -1 	& 1 	& 0 \\
+$R_3$ & $x_5$ 		& \Sc{3} 	& 0 	& 2 	& -1 	& 0 	& 1 \\
+\end{tabular}
+\caption{Pivoting su $y_{22}$. $A_2$ entra in base e $A_4$ esce.}
+\label{tab:tab34}
+\end{table}
+Le operazioni di pivoting saranno:
+\begin{align*}
+R_0&\rightarrow R_0 + R_2 \\
+R_3&\rightarrow R_3 - 2R_2
+\end{align*}
+Il nostro nuovo tableau, quindi, è quello in tabella \vref{tab:tab35}. 
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{5} 	& 0 	& 0 	& 1 	& 1 	& 0 \\
+\cline{3-8}
+$R_1$ & $x_1$ 		& \Sc{2} 	& 1 	& 0 	& 1 	& 0 	& 0 \\
+$R_2$ & $x_2$ 		& \Sc{1} 	& 0		& \C{1}	& -1 	& 1 	& 0 \\
+$R_3$ & $x_5$ 		& \Sc{1} 	& 0 	& 0 	& 1 	& -2 	& 1 \\
+\end{tabular}
+\caption{Terzo tableau. Vertice $\delta(2,1)$}
+\label{tab:tab35}
+\end{table}
+Notiamo che tutti i $\OL{c_j}$ sono non negativi, perciò ci troviamo nella \textbf{BFS ottima}. La base $\mathcal{B}$ e la soluzione $x$ sono quindi:
+\begin{align*}
+\mathcal{B}&={A_2,A_1,A_5} \\
+x&=(2,1,0,0,1)
+\end{align*}
+La soluzione ottima è quella del vertice $\pmb{\delta(2,1)}$. Riassumendo, tutti i valori delle variabili in gioco sono i seguenti:
+\begin{align*}
+z&=-\varphi=5 \\
+x_1&=2 \\
+x_2&=1
+\end{align*}
+\subsection{Conclusione}
+La soluzione ottima consiste nel produrre $2$T di composto A e $1$T di composto B ottenendo un \textbf{profitto} pari a 5 volte il profitto di $1$T di composto B.

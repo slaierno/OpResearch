@@ -1,0 +1,238 @@
+
+\chapter{31/03/2014}
+
+I problemi saranno posti in maniera leggermente diversa, cioè quella fornita sul pdf reperibile sul sito del docente al seguente link: \url{http://www.or.deis.unibo.it/staff_pages/martello/testi_esercizi_ottimizzazione.pdf}.
+Inoltre, anche se durante l'esercitazione non è stata trovata la soluzione dei problemi duali, dato che il metodo per individuarli è stato spiegato dal prof. nella lezione subito successiva, ho ritenuto opportuno e interessante cercarle io stesso e inserirle in questo eserciziario. A maggior ragione, le soluzioni dei duali \textbf{potrebbero essere errate}, per cui chiedo ad ognuno di provare a rivederle e comunicarmi gli eventuali errori trovati.
+Inoltre, ho deciso - in maniera del tutto personale e arbitraria - di preporre la rappresentazione grafica alla risoluzione con tableau negli esercizi di ottimizzazione. L'unico motivo è che mi piace avere un'idea un po' più concreta di quello che sta succedendo sul piano geometrico.
+
+\section{Esercizio 1}
+Un'azienda chimica produce due tipi di composto, A e B, che danno lo stesso profitto, utilizzando una sostanza base della quale sono disponibili 8 quintali. Ogni tonnellata di composto (indipendentemente dal tipo) contiene un quintale di sostanza base. Il numero di tonnellate di composto A prodotto deve superare di almeno una unità il numero di tonnellate di composto B prodotto. Per problemi di stoccaggio non si possono produrre più di 6 tonnellate di composto A. Si associ la variabile $x_1$ al composto A e la variabile $x_2$ al composto B.
+\begin{enumerate}
+\item Definire il modello LP che determina la funzione di massimo profitto.
+\item Porre il modello in forma standard e risolverlo con il metodo delle due fasi e la regola di Bland, introducendo il minimo numero di variabili artificiali. Dire esplicitamente qual è la soluzione trovata.
+\item Disegnare con cura la regione ammissibile.
+\item Costruire il duale del modello definito al punto 2 e ricavarne le soluzioni ottime.
+\item Imporre il vincolo di interezza sulle variabili (supporre che non si possano produrre frazioni di tonnellate) e risolvere il problema con il metodo branch-and-bound. [\textit{Questo punto non sarà analizzato perché in data di stesura del documento (04/04/2014) l'argomento non è ancora stato trattato dal prof}]
+\end{enumerate}
+
+\subsection{Modellizzazione}
+
+Si indichi con:
+\begin{itemize}
+\item $x_1$ il numero di tonnellate di composto A;
+\item $x_2$ il numero di tonnellate di composto B.
+\end{itemize}
+Lo scopo del nostro problema è di massimizzare i profitti ottenuti dalla produzione. Anche se non siamo a conoscenza degli esatti profitti dati da ogni prodotto, sappiamo che entrambi i composti portano allo stesso profitto. Possiamo quindi esprimere così la funzione di profitto:
+$$
+\max z = x_1 + x_2
+$$
+
+Modelliamo ora i vincoli espressi dal problema.
+Il modello matematico può essere quindi così riassunto (sono state apportate semplificazione algebriche):
+\begin{align*}
+\max z	&= 2x_1+x_2 \\
+\st\;\;	& x_1+x_2 \leq 8\\
+		& x_1 \geq x_2 + 1\\
+		& x_1 \leq 6 \\
+	  	& x_1,x_2 \geq 0
+\end{align*}
+
+\subsection{Problema in forma grafica}
+
+In figura \vref{fig:graph4} è rappresentato graficamente il problema presentato. In giallo è rappresentato il politopo $P$ e sono stati chiamati $\alpha,\beta,\gamma,\delta$ i suoi cinque quattro, i quali sappiamo corrispondere ognuno ad una BFS.
+Il gradiente della funzione obiettivo vale
+\begin{equation*}
+\nabla(z)=\left(\frac{\partial z}{\partial x},\frac{\partial z}{\partial y}\right) = \left(1,1\right) \\
+\end{equation*}
+Il politopo $P$ è, ovviamente, limitato nella direzione del gradiente (si fa notare che finora $P$ è sempre limitato in ogni direzione, quindi qualsiasi direzione avesse il gradiente non ci sarebbero problemi).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+\addplot
+[domain=0:8, samples=10, thick, blue, name path=xy8]
+{-x+8} node [pos=0.2,pin={75:{\color{blue}$x_1+x_2=8$}}, inner sep=0pt] {};
+\addplot
+[domain=0:8, samples=10, thick, red, name path=xy1]
+{x-1} node [pos=0.8, pin={-85:{\color{red}$x_1=x_2+1$}}, inner sep=0pt] {};
+\addplot
+[domain=0:8, samples = 10, thick, purple, name path=x6]
+(6,x) node [pos=0.3, anchor=north, pin={0:{\color{purple}$x_1=6$}}, inner sep= 0pt] {};
+\addplot[thick, fill=yellow, fill opacity=0.5] fill between [of=xy1 and AX, soft clip={domain=1:6}];
+\addplot[white] fill between [of=xy8 and UP];
+%\addplot[pattern=north east lines, pattern color=red!10] fill between [reverse=true, of=AX and UP, soft clip={domain=0:5}];
+\addplot[white] fill between [of=x6 and AX];
+\addplot[pattern=north east lines, pattern color=blue!10] fill between [of=xy8 and AX];
+\addplot[pattern=north west lines, pattern color=red!10] fill between [of=xy1 and AX];
+%\addplot[pattern=north east lines, pattern color=blue!10] fill between [of=AX and 2x2y9, soft clip={domain=0:5}];
+\addplot[pattern=horizontal lines, pattern color=purple!10] fill between [of=AY and x6];
+\ints{AX}{xy1}{$\alpha$}{alp};
+\ints{xy1}{xy8}{$\beta$}{bet};
+\intw{xy8}{x6}{$\gamma$}{gam};
+\intnw{x6}{AX}{$\delta$}{del};
+\node at (axis cs:4.5,1.5) {$P$};
+\addplot[-latex, thick] coordinates
+           {(0,0) (1/1.414,1/1.414)} node [pos=.3, anchor=south, label={45:{\small $\nabla z$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Rappresentazione cartesiana del problema di programmazione lineare}
+\label{fig:graph4}
+\end{figure}
+
+Possiamo osservare che anche solo dal grafico è facilmente intuibile dove si troverà la soluzione ottima. Il gradiente $\nabla z$ è \textbf{perpendicolare} allo spigolo $\OL{\beta \gamma}$, da ciò potremmo dedurre che non esiste una soluzione ottima, ma che ve ne sono infinite e tutte posizionate su questo spigolo. Riprenderemo questa considerazione in seguito, dopo aver risolto il problema con il metodo del simplesso.
+
+\subsection{Forma standard}
+Ricordiamo che un problema di \textbf{programmazione lineare in forma standard} è nella forma (matriciale):
+\begin{align*}
+\min c'x& \\
+Ax& = b \\
+x& \geq 0
+\end{align*}
+Trasformiamo la funzione obiettivo $z$ in $\varphi$ tale che:
+\begin{equation*}
+\varphi=-z=-x_1-x_2
+\end{equation*}
+Quindi introduciamo una \textbf{variabile slack} per ogni disequazione con simbolo $\leq$ e una \textbf{variabile surplus} per ogni disequazione con simbolo $\geq$. Otterremo infine:
+\begin{alignat*}{7}
+&\min \varphi = \quad && -x_1 \quad\; && -x_2 \quad\;\; && \qquad\qquad && \qquad\qquad && \qquad\qquad && \\
+&\;\st  &&+x_1			&&+x_2	 		&&+\pmb{x_3}	&&		 		&&					&&=8\\
+&	 	&&+x_1			&&-x_2			&&				&& -\pmb{x_4}	&&					&&=1\\
+&	 	&&+x_1			&&				&&				&&				&&+\pmb{x_5}		&&=6\\
+&		&&\quad\; x_1,	&&\quad\; x_2,	&&\quad\; x_3,	&&\quad\; x_4,	&&\quad\; x_5		&&\geq 0
+\end{alignat*}
+
+\subsection{Risoluzione tramite tableau}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rcccccc}
+			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$\OL{c_j}$ 	& \Sc{0} 	& -1 	& -1 	& 0 	& 0 	& 0 \\
+\cline{2-7}
+$R_1$ 		& \Sc{8} 	& 1 	& 1 	& 1 	& 0 	& 0 \\
+$R_2$		& \Sc{1} 	& 1 	& -1	& 0 	& -1 	& 0 \\
+$R_3$		& \Sc{6} 	& 1 	& 0 	& 0 	& 0 	& 1 \\
+\end{tabular}
+\caption{Tableau iniziale.}
+\label{tab:tab41}
+\end{table}
+
+In tabella \vref{tab:tab41} il tableau ricavato dal nostro problema. A differenza dei precedenti esercizi, la fortuna non è dalla nostra parte e non abbiamo nessuna sottomatrice identità a disposizione da utilizzare come base ammissibile.
+Si potrebbe \textit{erroneamente} pensare che per ottenere una BFS sia sufficiente operare $R_2\leftarrow -1\cdot R_2$. Ma si fa subito notare che così facendo otterremo come base:
+\begin{align*}
+\mathcal{B}&=\{A_3,A_4,A_5\}\\
+x&=(0,0,8,1,6)
+\end{align*}
+Questa \textbf{non è una BFS} in quanto ricade \textit{all'esterno} del politopo $P$. Per ottenere una BFS di partenza, quindi, ricorriamo alla \textbf{fase 1 del metodo del simplesso}.
+
+\subsubsection{Fase 1 - aggiunta di variabili artificiali}
+
+Per ottenere una BFS aggiungiamo un numero $n'\leq m$ di variabili artificiali tali da riuscire ad ottenere una BFS nel nuovo problema con $m$ vincoli e $n+n'$ variabili. Ipoteticamente, potremmo aggiungere sempre $n'=m$ variabili artificiali tali da formare già loro una sottomatrice identità nel tableau, ma tale metodo risulterebbe molto sconveniente nel caso in cui i vincoli e le variabili fossero centinaia o migliaia. Inoltre, ma non meno importante, la traccia dell'esercizio richiede esplicitamente di \textbf{introdurre il minore numero di variabili artificiali}.
+
+Per ridurre al minimo le variabili artificiali $x_i^a,\quad i=1,\cdots,n'$ è sufficiente aggiungerne una per ogni colonna della matrice identità mancante nel tableau originale. Nel nostro caso manca solo la seconda colonna e sarà quella che introdurremo con l'\textit{unica} variabile artificiale $x^a$, trasformando il secondo vincolo in:
+$$
+x_1 - x_2 - x_4 + x^a = 1
+$$
+Il nostro scopo, dopo l'introduzione di $x^a$, sarà quello di \textbf{eliminarla} dalla base. Per far ciò bisogna fare in modo che questa valga zero e quindi introduciamo, a tale scopo, una nuova funzione obiettivo da minimizzare $\psi$ tale che:
+$$
+\psi = \sum_{i=1}^{n'}x_i^a = x^a
+$$
+Scriviamo il nuovo tableau in tabella \vref{tab:tab42} e applichiamo il simplesso per ottimizzare la nostra funzione $\psi$.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 0 	& 0 	& 0 	& 0 	& \Sc{0}& 1\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{8} 	& 1		& 1 	& 1 	& 0 	& \Sc{0}& 0 \\
+$R_2$ & $x^a$ 		& \Sc{1} 	& 1		& -1	& 0 	& -1 	& \Sc{0}& 1 \\
+$R_3$ & $x_5$ 		& \Sc{6} 	& 1 	& 0 	& 0 	& 0 	& \Sc{1}& 0 \\
+\end{tabular}
+\caption{Nuovo tableau con la variabile artificiale $x^a$.}
+\label{tab:tab42}
+\end{table}
+Abbiamo una sottomatrice identità formata dalla base:
+$$
+\mathcal{B}={A_3,A_6,A_5}
+$$
+Per avere a avere a disposizione i valori delle coordinate della BFS del nuovo problema, è necessario che:
+$$
+y_{ij}=0 \quad \forall i,j:A_j\in\mathcal{B},i\neq j
+$$
+Condizione vera per ogni valore tranne $y_{06}$ che provvediamo ad annullare tramite l'operazione elementare di riga:
+$$
+R_0\leftarrow R_0 - R_2
+$$
+Nel nuovo tableau in figura \vref{tab:tab43} faremo pivoting sull'unica colonna con $\OL{c_j}<0$, cioè su $A_1$.
+Per scegliere su quale elemento fare \textbf{pivoting}, dobbiamo ottenere il valore di $y_{\ell 1}$ tale che:
+$$
+\vartheta_{\max}=\min_{i:y_{i1}>0}\frac{y_{i0}}{y_{i1}}=\frac{y_{i0}}{y_{\ell 1}}
+$$
+Perciò, operando con gli elementi nel tableau:
+$$
+\vartheta_{\max}=\min\left(\frac{8}{1},\frac{1}{1},\frac{6}{1}\right)=\frac{1}{1}=\frac{y_{20}}{\pmb{y_{21}}}
+$$
+Faremo pivoting sull'elemento $y_{21}$ (cerchiato in tabella). Il nostro scopo è ora far comparire uno 0 nella colonna dell'elemento pivot in tutte le righe tranne quella in cui si trova l'elemento pivot e far comparire un 1 in quest'ultima.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{-1} 	& -1 	& 1 	& 0 	& 1 	& \Sc{0}& 0\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{8} 	& 1		& 1 	& 1 	& 0 	& \Sc{0}& 0 \\
+$R_2$ & $x^a$ 		& \Sc{1} 	& \C{1} & -1	& 0 	& -1 	& \Sc{0}& 1 \\
+$R_3$ & $x_5$ 		& \Sc{6} 	& 1 	& 0 	& 0 	& 0 	& \Sc{1}& 0 \\
+\end{tabular}
+\caption{Pivoting su $y_21$. $A_1$ entra in base e $A_6$ esce.}
+\label{tab:tab43}
+\end{table}
+Poiché $y_{21}=1$ non c'è nulla da fare su $R_2$. Applichiamo le operazioni elementari di riga al nostro tableau come segue:
+\begin{align*}
+R_0&\leftarrow R_0 + R_2; \\
+R_1&\leftarrow R_1 - R_2; \\
+R_3&\leftarrow R_3 - R_2.
+\end{align*}
+Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab44}.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 0 	& 0 	& 0 	& 0 	& \Sc{0}& 1\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{7} 	& 0		& 2 	& 1 	& 1 	& \Sc{0}& -1 \\
+$R_2$ & $x_1$ 		& \Sc{1} 	& 1		& -1	& 0 	& -1 	& \Sc{0}& 1 \\
+$R_3$ & $x_5$ 		& \Sc{5} 	& 0 	& 1 	& 0 	& 1 	& \Sc{1}& -1 \\
+\end{tabular}
+\caption{Secondo tableau. Vertice $\alpha(1,0)$}
+\label{tab:tab44}
+\end{table}
+Siamo giunti alla soluzione ottima, essendo $\OL{c_j}>0 \quad\forall j$. Inoltre la variabile artificiale $x^a$ non è più in base. La nuova base e la nuova soluzione sono:
+\begin{align*}
+\mathcal{B}&=\{A_3,A_1,A_5\} \\
+x&=(1,0,7,0,5,0)
+\end{align*}
+Siamo nel vertice $\alpha(1,0)$ e quindi in una BFS da cui possiamo partire per la \textbf{fase 2} del metodo del simplesso.
+
+
+
+
+
