@@ -231,8 +231,243 @@ Siamo giunti alla soluzione ottima, essendo $\OL{c_j}>0 \quad\forall j$. Inoltre
 x&=(1,0,7,0,5,0)
 \end{align*}
 Siamo nel vertice $\alpha(1,0)$ e quindi in una BFS da cui possiamo partire per la \textbf{fase 2} del metodo del simplesso.
+\subsubsection{Fase 2 - Simplesso}
+Per questa fase useremo come tableau di partenza quello in tabella \vref{tab:tab44} sostituendo la funzione obiettivo fittizia $\psi$ utilizzata in precedenza con la nostra vera funzione obiettivo $\varphi$. Manterremo la variabile artificiale (che si fa notare non cambia in alcun modo il nostro problema in quanto non faremo mai entrare in base) perché, come vedremo poi, il suo costo relativo finale sarà utile ai fini della soluzione del problema duale.
+Il tableau così ottenuto è quello in tabella \vref{tab:tab45}
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& -1 	& -1 	& 0 	& 0 	& \Sc{0}& 0\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{7} 	& 0		& 2 	& 1 	& 1 	& \Sc{0}& -1 \\
+$R_2$ & $x_1$ 		& \Sc{1} 	& 1		& -1	& 0 	& -1 	& \Sc{0}& 1 \\
+$R_3$ & $x_5$ 		& \Sc{5} 	& 0 	& 1 	& 0 	& 1 	& \Sc{1}& -1 \\
+\end{tabular}
+\caption{Secondo tableau. Vertice $\alpha(1,0)$ e funzione obiettivo $\varphi$.}
+\label{tab:tab45}
+\end{table}
+Per applicare il simplesso, dobbiamo fare in modo che:
+$$
+y_{ij}=0 \quad\forall i,j:j\in\mathcal{B}, i\neq j
+$$
+L'elemento $y_{01}$ è l'unico a non essere nullo. Ovviamo al problema con l'operazione di riga:
+$$
+R_0\leftarrow R_0 + R_1
+$$
+Otteniamo quindi il tableau in tabella \vref{tab:tab46}.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{1} 	& 0 	& -2 	& 0 	& -1 	& \Sc{0}& 1\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{7} 	& 0		& 2 	& 1 	& 1 	& \Sc{0}& -1 \\
+$R_2$ & $x_1$ 		& \Sc{1} 	& 1		& -1	& 0 	& -1 	& \Sc{0}& 1 \\
+$R_3$ & $x_5$ 		& \Sc{5} 	& 0 	& 1 	& 0 	& 1 	& \Sc{1}& -1 \\
+\end{tabular}
+\caption{Secondo tableau. Vertice $\alpha(1,0)$}
+\label{tab:tab46}
+\end{table}
+Per fare pivoting sceglieremo la colonna $A_2$ in base alla regola di Bland (avremmo scelto la stessa colonna anche con la regola di Dantzig). Cerchiamo quindi l'elemento pivot $y_{\ell 2}$.
+\begin{align*}
+\vartheta_{\max}&=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}} \\
+\vartheta_{\max}&=\min\left(\frac{7}{2},\frac{5}{1}\right)=\frac{7}{2}=\frac{y_{10}}{\pmb{y_{12}}}
+\end{align*}
+Faremo pivoting sull'elemento $y_{12}$ (cerchiato in tabella \vref{tab:tab47}). 
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{1} 	& 0 	& -2 	& 0 	& -1 	& \Sc{0}& 1\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{7} 	& 0		& \C{2}	& 1 	& 1 	& \Sc{0}& -1 \\
+$R_2$ & $x_1$ 		& \Sc{1} 	& 1		& -1	& 0 	& -1 	& \Sc{0}& 1 \\
+$R_3$ & $x_5$ 		& \Sc{5} 	& 0 	& 1 	& 0 	& 1 	& \Sc{1}& -1 \\
+\end{tabular}
+\caption{Terzo tableau. Vertice $\alpha(1,0)$}
+\label{tab:tab47}
+\end{table}
+Le operazioni elementari di riga, \textbf{in ordine}, sono:
+\begin{align*}
+R_0&\leftarrow R_0 + R_1 \\
+R_1&\leftarrow \frac{R_1}{2} \\
+R_2&\leftarrow R_2 + R_1 \\
+R_3&\leftarrow R_3 - R_1
+\end{align*}
+Otterremo il tableau in tabella \vref{tab:tab48}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\sm}{$\frac{7}{2}$}
+	\newcommand{\nm}{$\frac{9}{2}$}
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\tm}{$\frac{3}{2}$}
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{8} 	& 0 	& 0 	& 1 	& 0 	& \Sc{0}& 0\\
+\cline{3-9}
+$R_1$ & $x_2$ 		& \Sc{\sm}	& 0		& 1		& \um 	& \um 	& \Sc{0}& -\um \\
+$R_2$ & $x_1$ 		& \Sc{\nm} 	& 1		& 0		& \um	& -\um 	& \Sc{0}& \um \\
+$R_3$ & $x_5$ 		& \Sc{-\tm}	& 0 	& 0 	& -\um 	& \um 	& \Sc{1}& -\um \\
+\end{tabular}
+}
+\caption{Quarto tableau. Vertice $\beta(\frac{9}{2},\frac{7}{2})$. $A_2$ entra in base al posto di $A_3$, che esce.}
+\label{tab:tab48}
+\end{table}
 
+Siamo giunti alla soluzione ottima, essendo $\OL{c_j}>0 \quad\forall j$. La nuova base e la nuova soluzione sono:
+\begin{align*}
+\mathcal{B}&=\{A_2,A_1,A_5\} \\
+x&=(1,0,7,0,5,0)
+\end{align*}
+Siamo nel vertice $\beta(\frac{9}{2},\frac{7}{2})$ ed appartiene, come previsto durante l'analisi geometrica, allo spigolo $\OL{\beta\gamma}$. Il valore della soluzione ottima è $\varphi=-8$, proviamo ora a calcolare il valore della soluzione con il vertice $\gamma(6,2)$:
+$$
+\varphi(6,2)=-6-2=-8
+$$
+Anche il vertice $\gamma$ è una soluzione ottima del nostro problema. Da ciò possiamo desumere che l'intero spigolo $\OL{\beta\gamma}$ è composto da infinite soluzioni ottime. D'altronde, spostandoci lungo $\OL{\beta\gamma}$ avanzeremo in direzione perpendicolare al gradiente della funzione obiettivo e il valore della soluzione non può cambiare.
+Si fa notare infine che la nostra funzione obiettivo iniziale è:
+$$
+z=-\varphi=8
+$$
 
+\subsection{Soluzione del problema primale}
+La soluzione ottima consiste nel produrre $4.5$T di composto A e $3.5$T di composto B ottenendo un profitto pari a 8 volte quello di $1$T di composto A (o di composto B, equivalentemente).
 
-
-
+\subsection{Costruzione del problema duale}
+Riportiamo, per comodità, il problema primale espresso in forma standard.
+\begin{alignat*}{7}
+&\min \varphi = \quad && -x_1 \quad\; && -x_2 \quad\;\; && \qquad\qquad && \qquad\qquad && \qquad\qquad && \\
+&\;\st  &&+x_1			&&+x_2	 		&&+\pmb{x_3}	&&		 		&&					&&=8\\
+&	 	&&+x_1			&&-x_2			&&				&& -\pmb{x_4}	&&					&&=1\\
+&	 	&&+x_1			&&				&&				&&				&&+\pmb{x_5}		&&=6\\
+&		&&\quad\; x_1,	&&\quad\; x_2,	&&\quad\; x_3,	&&\quad\; x_4,	&&\quad\; x_5		&&\geq 0
+\end{alignat*}
+Ricordiamo che le regole base per la creazione del problema duale (considereremo solo quelle in grassetto nel caso di problemi primali in forma standard):
+\begin{itemize}
+\item \textbf{Ad ogni vincolo corrisponde una variabile duale};
+\item \textbf{Ad ogni vincolo di uguaglianza, la rispettiva variabile duale è una variabile libera};
+\item Ad ogni vincolo di non minoranza corrisponde una variabile duale non negativa;
+\item \textbf{Ad ogni variabile non negativa nel primale corrisponde un vincolo con relazione di non maggioranza nel duale};
+\item Ad ogni variabile libera nel primale corrisponde un vincolo di uguaglianza nel duale.
+\end{itemize}
+In dettaglio, ridefiniamo in questo modo il generico problema primale in forma standard:
+\begin{align*}
+\min c'x& \\
+Ax& = b \\
+x& \geq 0
+\end{align*}
+Sia $\pi$ il vettore delle variabili duali, il problema duale è il seguente:
+\begin{align*}
+\max \pi'b& \\
+\pi'A& \leq c' \\
+\pi'&\gtreqless 0
+\end{align*}
+Ove, i vettori $x,\pi,b,c$ e la matrice $A$ sono:
+\begin{align*}
+x'&=
+\begin{bmatrix}
+x_1 & x_2 & x_3 & x_4 & x_5
+\end{bmatrix} \\
+\pi'&=
+\begin{bmatrix}
+\pi_1 & \pi_2 & \pi_3
+\end{bmatrix} \\
+b'&=
+\begin{bmatrix}
+8 & 1 & 6
+\end{bmatrix} \\
+c'&=
+\begin{bmatrix}
+-1 & -1 & 0 & 0 & 0
+\end{bmatrix} \\
+A&=
+\begin{bmatrix}
+1  & 1  & 1  & 0  & 0 \\
+1  & -1 & 0  & -1 & 0 \\
+1  & 0  & 0  & 0  & 1 \\
+\end{bmatrix}
+\end{align*}
+Da ciò, il corrispondente problema duale con la sua funzione obiettivo $\xi$:
+\begin{alignat*}{7}
+&\max \xi = \quad && +8\pi_1 \quad\; && +\pi_2 \quad\;\; && +6\pi_3 \quad\;\; && \\
+&\;\st  &&+\pi_1		&&+\pi_2 		&&+\pi_3		&& \leq -1\\
+&	 	&&+\pi_1		&&-\pi_2 		&&				&& \leq -1\\
+&	 	&&+\pi_1		&&				&&				&& \leq 0 \\
+&	 	&&				&&-\pi_2		&&				&& \leq 0 \\
+&	 	&&				&&				&&+\pi_3		&& \leq 0 \\
+&		&&\quad\;\pi_1,	&&\quad\;\pi_2,	&&\quad\;\pi_3,	&& \gtreqless 0
+\end{alignat*}
+Per trovare la soluzione del problema duale non è necessario trasformarlo in forma standard e applicare il metodo del simplesso. Il tableau del problema primale sul quale abbiamo applicato il metodo del simplesso contiene tutte le informazioni per avere la soluzione del problema duale.
+\subsubsection{Richiami (sempre molto blandi) di teoria}
+Per ottenere dal tableau del problema primale la soluzione del problema duale, è sufficiente ricordare che il problema duale è ottenuto a partire dal \textbf{criterio di ottimalità}.
+Per questo motivo, il costo relativo nel tableau finale - corrispondente alla soluzione ottima - è così esprimibile:
+$$
+\OL{c_j}=c_j-z_j=c_j-\pi'A_j \quad \forall j
+$$
+Se consideriamo le colonne $A_j$ corrispondenti alla base iniziale $\mathcal{B}_0$ di partenza del primo tableau - ricordando che è una matrice identità - possiamo ottenere:
+$$
+\OL{c_j}=c_j-\pi_j \quad \forall j:A_j\in\mathcal{B}_0
+$$
+Applicando un semplice passaggio algebrico:
+$$
+\pi_j=c_j-\OL{c_j}
+$$
+Ove $c_j$ è il costo iniziale nel primo tableau e $\OL{c_j}$ il costo relativo nel tableau finale.
+Nel caso in cui abbiamo fatto uso di variabili artificiali e della fase 1 del metodo del simplesso, allora per tale variabile - il cui costo è $c_j=0$ - vale:
+$$
+\pi_j=-\OL{c_j}
+$$
+\textit{È importante ricordare che bisogna utilizzare il primo tableau con le variabili artificiali ma con il vettore dei costi originario in cui le variabili artificiali hanno costo nullo.}
+\subsection{Soluzione del problema duale}
+Riportiamo nuovamente i tableau iniziale e finale rispettivamente nelle tabella \vref{tab:tab49} e \vref{tab:tab410}.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& -1 	& -1 	& 0 	& 0 	& \Sc{0}& 0\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{8} 	& 1		& 1 	& 1 	& 0 	& \Sc{0}& 0 \\
+$R_2$ & $x^a$ 		& \Sc{1} 	& 1		& -1	& 0 	& -1 	& \Sc{0}& 1 \\
+$R_3$ & $x_5$ 		& \Sc{6} 	& 1 	& 0 	& 0 	& 0 	& \Sc{1}& 0 \\
+\end{tabular}
+\caption{Nuovo tableau con la variabile artificiale $x^a$.}
+\label{tab:tab49}
+\end{table}
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\sm}{$\frac{7}{2}$}
+	\newcommand{\nm}{$\frac{9}{2}$}
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\tm}{$\frac{3}{2}$}
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{8} 	& 0 	& 0 	& 1 	& 0 	& \Sc{0}& 0\\
+\cline{3-9}
+$R_1$ & $x_2$ 		& \Sc{\sm}	& 0		& 1		& \um 	& \um 	& \Sc{0}& -\um \\
+$R_2$ & $x_1$ 		& \Sc{\nm} 	& 1		& 0		& \um	& -\um 	& \Sc{0}& \um \\
+$R_3$ & $x_5$ 		& \Sc{-\tm}	& 0 	& 0 	& -\um 	& \um 	& \Sc{1}& -\um \\
+\end{tabular}
+}
+\caption{Tableau finale.}
+\label{tab:tab410}
+\end{table}
+La base iniziale è $\mathcal{B}_1={A_3,A_6,A_5}$. Applicando delle semplici sottrazioni, ricaviamo la soluzione del problema duale:
+\begin{align*}
+\pi_1&=c_3-\OL{c_3}=-1 \\
+\pi_2&=c_6-\OL{c_6}=0 \\
+\pi_3&=c_5-\OL{c_5}=0
+\end{align*}
+Perciò, la soluzione del problema duale è il vettore;
+$$
+\pi'=
+\begin{bmatrix}
+-1 & 0 & 0
+\end{bmatrix}
+$$
+Per verificare la correttezza dei calcoli, applichiamo la soluzione alla funzione obiettivo del problema duale:
+$$
+\xi(-1,0,0)=8(-1)+0+6(0)=-8
+$$
+Il risultato è, come atteso, lo stesso del problema primale.
