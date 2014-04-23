@@ -1,7 +1,7 @@
 
 \chapter{31/03/2014}
 
-I problemi saranno posti in maniera leggermente diversa, cioè quella fornita sul pdf reperibile sul sito del docente al seguente link: \url{http://www.or.deis.unibo.it/staff_pages/martello/testi_esercizi_ottimizzazione.pdf}.
+I problemi saranno posti in maniera leggermente diversa, cioè quella fornita sul pdf reperibile sul sito del docente al seguente link (se il testo è effettivamente disponibile, s'intende): \url{http://www.or.deis.unibo.it/staff_pages/martello/testi_esercizi_ottimizzazione.pdf}.
 Inoltre, anche se durante l'esercitazione non è stata trovata la soluzione dei problemi duali, dato che il metodo per individuarli è stato spiegato dal prof. nella lezione subito successiva, ho ritenuto opportuno e interessante cercarle io stesso e inserirle in questo eserciziario. A maggior ragione, le soluzioni dei duali \textbf{potrebbero essere errate}, per cui chiedo ad ognuno di provare a rivederle e comunicarmi gli eventuali errori trovati.
 Inoltre, ho deciso - in maniera del tutto personale e arbitraria - di preporre la rappresentazione grafica alla risoluzione con tableau negli esercizi di ottimizzazione. L'unico motivo è che mi piace avere un'idea un po' più concreta di quello che sta succedendo sul piano geometrico.
 
@@ -39,7 +39,7 @@ Il modello matematico può essere quindi così riassunto (sono state apportate sem
 
 \subsection{Problema in forma grafica}
 
-In figura \vref{fig:graph4} è rappresentato graficamente il problema presentato. In giallo è rappresentato il politopo $P$ e sono stati chiamati $\alpha,\beta,\gamma,\delta$ i suoi cinque quattro, i quali sappiamo corrispondere ognuno ad una BFS.
+In figura \vref{fig:graph4} è rappresentato graficamente il problema presentato. In giallo è rappresentato il politopo $P$ e sono stati chiamati $\alpha,\beta,\gamma,\delta$ i suoi quattro vertici, i quali sappiamo corrispondere ognuno ad una BFS.
 Il gradiente della funzione obiettivo vale
 \begin{equation*}
 \nabla(z)=\left(\frac{\partial z}{\partial x},\frac{\partial z}{\partial y}\right) = \left(1,1\right) \\
@@ -172,7 +172,7 @@ $R_3$ & $x_5$ 		& \Sc{6} 	& 1 	& 0 	& 0 	& 0 	& \Sc{1}& 0 \\
 \end{table}
 Abbiamo una sottomatrice identità formata dalla base:
 $$
-\mathcal{B}={A_3,A_6,A_5}
+\mathcal{B}=\{A_3,A_6,A_5\}
 $$
 Per avere a avere a disposizione i valori delle coordinate della BFS del nuovo problema, è necessario che:
 $$
@@ -202,7 +202,7 @@ $R_1$ & $x_3$ 		& \Sc{8} 	& 1		& 1 	& 1 	& 0 	& \Sc{0}& 0 \\
 $R_2$ & $x^a$ 		& \Sc{1} 	& \C{1} & -1	& 0 	& -1 	& \Sc{0}& 1 \\
 $R_3$ & $x_5$ 		& \Sc{6} 	& 1 	& 0 	& 0 	& 0 	& \Sc{1}& 0 \\
 \end{tabular}
-\caption{Pivoting su $y_21$. $A_1$ entra in base e $A_6$ esce.}
+\caption{Pivoting su $y_{21}$. $A_1$ entra in base e $A_6$ esce.}
 \label{tab:tab43}
 \end{table}
 Poiché $y_{21}=1$ non c'è nulla da fare su $R_2$. Applichiamo le operazioni elementari di riga al nostro tableau come segue:
@@ -459,7 +459,7 @@ La base iniziale è $\mathcal{B}_1={A_3,A_6,A_5}$. Applicando delle semplici sott
 \pi_2&=c_6-\OL{c_6}=0 \\
 \pi_3&=c_5-\OL{c_5}=0
 \end{align*}
-Perciò, la soluzione del problema duale è il vettore;
+Perciò, la soluzione del problema duale è il vettore:
 $$
 \pi'=
 \begin{bmatrix}
@@ -471,3 +471,543 @@ $$
 \xi(-1,0,0)=8(-1)+0+6(0)=-8
 $$
 Il risultato è, come atteso, lo stesso del problema primale.
+
+\subsubsection{Vincolo di interezza}
+
+\textit{Sezione in fase di allestimento...ci rivediamo appena il prof. spiegherà i metodi per la ILP}.
+
+\section{Esercizio 2}
+
+Sia dato il seguente modello matematico di un problema di LP:
+\begin{align*}
+\min z	&= 2x_1+x_2 \\
+\st\;\;	& x_1+x_2 \leq 2\\
+		& 2x_1+3x_2\geq 6\\
+	  	& x_1,x_2 \geq 0
+\end{align*}
+\begin{itemize}
+\item Si rappresenti accuratamente il problema in forma grafica;
+\item Si ricavi la forma standard;
+\item Si risolva il problema tramite il metodo del simplesso a due fasi utilizzando il minor numero di variabili artificiali.
+\end{itemize}
+
+\subsection{Problema in forma grafica}
+
+In figura \vref{fig:graph5} è rappresentato graficamente il problema presentato. In giallo è rappresentato il politopo $P$ e sono stati chiamati $\alpha,\beta,\gamma$ i suoi tre vertici, i quali sappiamo corrispondere ognuno ad una BFS.
+Il gradiente della funzione obiettivo vale
+\begin{equation*}
+\nabla(z)=\left(\frac{\partial z}{\partial x},\frac{\partial z}{\partial y}\right) = \left(2,1\right) \\
+\end{equation*}
+Poiché questa volta il problema è rappresentato sotto forma di minimo, saremo interessati alla limitazione del politopo nella direzione \textbf{opposta} al gradiente. A tal fine utilizziamo una funzione obiettivo ausiliaria $\varphi$ tale che:
+\begin{equation*}
+\varphi = -z \Rightarrow \nabla\varphi = -\nabla z = (-2,-1)
+\end{equation*}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },xtick={1,2,3}]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+
+\foreach \q in {1,...,6} {
+	\ifthenelse{\q < 2}{\newcommand{\x}{2}}{\newcommand{\x}{\q}}
+	\addplot [domain=(\x/2)-1:(\q/2), samples=10, ultra thin, purple] {-2*x+\q};
+	}
+
+\addplot
+[domain=0:2.01, samples=10, thick, blue, name path=xy2]
+{-x+2} node [pos=0.2,pin={75:{\color{blue}$x_1+x_2=2$}}, inner sep=0pt] {};
+
+\addplot
+[domain=0:3.01, samples=10, thick, red, name path=2x3y6]
+{-(2/3)*x+2} node [pos=0.5, pin={75:{\color{red}$2x_1+3x_2=6$}}, inner sep=0pt] {};
+\addplot[thick, fill=yellow, fill opacity=0.5] fill between [of=2x3y6 and AX];
+\addplot[white] fill between [of=xy2 and AX];
+%\addplot[pattern=north east lines, pattern color=red!10] fill between [reverse=true, of=AX and UP, soft clip={domain=0:5}];
+\addplot[pattern=north east lines, pattern color=blue!10] fill between [of=xy2 and UP];
+\addplot[pattern=vertical lines, pattern color=red!10] fill between [of=2x3y6 and AX];
+\intne{AY}{xy2}{$\alpha$}{alp};
+\intne{AX}{2x3y6}{$\beta$}{bet};
+\intne{xy2}{AX}{$\gamma$}{gam};
+\node at (axis cs:1.8,0.5) {$P$};
+\addplot[-latex, thick] coordinates
+           {(2/2.236,1/2.236) (0,0)} node [pos=.3, anchor=south, label={45:{\small $\nabla\varphi$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Rappresentazione cartesiana del problema di programmazione lineare}
+\label{fig:graph5}
+\end{figure}
+
+Osservando il fascio di rette perpendicolari al gradiente si può intuire che la nostra soluzione ottima si troverà nel vertice $\alpha$.
+
+\subsection{Forma standard}
+
+Aggiungendo una variabile slack e una variabile surplus, il problema in forma standard si presenta così:
+\begin{alignat*}{6}
+&\min z = \quad && +2x_1 \quad\; && +x_2 \quad\;\; && \qquad\qquad && \qquad\qquad && \\
+&\;\st  &&+x_1			&&+x_2	 		&&+\pmb{x_3}	&&		 		&&=2\\
+&	 	&&+2x_1			&&+3x_2			&&				&& -\pmb{x_4}	&&=6\\
+&		&&\quad\; x_1,	&&\quad\; x_2,	&&\quad\; x_3,	&&\quad\; x_4,	&&\geq 0
+\end{alignat*}
+
+\subsection{Risoluzione tramite tableau}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rccccc}
+			&$-z$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ \\
+$\OL{c_j}$ 	& \Sc{0} 	& 2 	& 1 	& 0 	& 0 \\
+\cline{2-6}
+$R_1$ 		& \Sc{2} 	& 1 	& 1 	& 1 	& 0\\
+$R_2$		& \Sc{6} 	& 2 	& 3		& 0 	& -1 \\
+\end{tabular}
+\caption{Tableau iniziale.}
+\label{tab:tab411}
+\end{table}
+
+In tabella \vref{tab:tab411} il tableau ricavato dal nostro problema. Non abbiamo nessuna sottomatrice identità a disposizione da utilizzare come base ammissibile quindi ricorriamo alla \textbf{fase 1 del metodo del simplesso} per ottenere una BFS di partenza.
+
+\subsubsection{Fase 1 - aggiunta di variabili artificiali}
+
+Manca solo la seconda colonna della matrice identità con cui formare la BFS di partenza e la che introdurremo con l'\textit{unica} variabile artificiale $x^a$, trasformando il secondo vincolo in:
+$$
+2x_1 + 3x_2 - x_4 + x^a = 6
+$$
+Il nostro scopo, dopo l'introduzione di $x^a$, sarà quello di \textbf{eliminarla} dalla base. Per far ciò bisogna fare in modo che questa valga zero e quindi introduciamo, a tale scopo, una nuova funzione obiettivo da minimizzare $\psi$ tale che:
+$$
+\psi = \sum_{i=1}^{n'}x_i^a = x^a
+$$
+Scriviamo il nuovo tableau in tabella \vref{tab:tab412} e applichiamo il simplesso per ottimizzare la nostra funzione $\psi$.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 0 	& 0 	& 0 	& \Sc{0}& 1\\
+\cline{3-8}
+$R_1$ & $x_3$ 		& \Sc{2} 	& 1		& 1 	& 1 	& \Sc{0}& 0 \\
+$R_2$ & $x^a$ 		& \Sc{6} 	& 2		& 3		& 0 	&\Sc{-1}& 1 \\
+\end{tabular}
+\caption{Nuovo tableau con la variabile artificiale $x^a$.}
+\label{tab:tab42}
+\end{table}
+Abbiamo una sottomatrice identità formata dalla base:
+$$
+\mathcal{B}=\{A_3,A_5\}
+$$
+Per avere a avere a disposizione i valori delle coordinate della BFS del nuovo problema, è necessario che:
+$$
+y_{ij}=0 \quad \forall i,j:A_j\in\mathcal{B},i\neq j
+$$
+Condizione vera per ogni valore tranne $y_{05}$ che provvediamo ad annullare tramite l'operazione elementare di riga:
+$$
+R_0\leftarrow R_0 - R_2
+$$
+Nel nuovo tableau in figura \vref{tab:tab413} dobbiamo scegliere su quale colonna fare pivoting. Dato che la traccia non ci specifica nulla sulla regola da utilizzare \footnote{Oppure non ricordo se era stato specificato dal tutor all'inizio dell'esercizio durante la lezione [NdA]} applicheremo la regola di Dantzig e sceglieremo la colonna con il $\OL{c_j}$ più negativo, cioè $A_2$.
+Per scegliere su quale elemento fare \textbf{pivoting}, dobbiamo ottenere il valore di $y_{\ell 2}$ tale che:
+$$
+\vartheta_{\max}=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}}
+$$
+Perciò, operando con gli elementi nel tableau:
+$$
+\vartheta_{\max}=\min\left(\frac{2}{1},\frac{6}{3}\right)
+$$
+Abbiamo un pareggio. Applichiamo ora la regola di Bland per risolvere il pareggio, scegliendo tra gli elementi su cui fare pivot quello con l'indice di riga minore:
+$$
+\vartheta_{\max}=\frac{2}{1}=\frac{y_{10}}{\pmb{y_{12}}}
+$$
+Faremo pivoting sull'elemento $y_{12}$ (cerchiato in tabella). Il nostro scopo è ora far comparire uno 0 nella colonna dell'elemento pivot in tutte le righe tranne quella in cui si trova l'elemento pivot e far comparire un 1 in quest'ultima.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{-6} 	& -2 	& -3 	& 0 	& \Sc{1}& 0\\
+\cline{3-8}
+$R_1$ & $x_2$ 		& \Sc{2} 	& \C{1}	& 1 	& 1 	& \Sc{0}& 0 \\
+$R_2$ & $x^a$ 		& \Sc{6} 	& 2		& 3		& 0 	&\Sc{-1}& 1 \\
+\end{tabular}
+\caption{Pivoting su $y_{12}$. $A_2$ entra in base e $A_3$ esce.}
+\label{tab:tab413}
+\end{table}
+Poiché $y_{12}=1$ non c'è nulla da fare su $R_1$. Applichiamo le operazioni elementari di riga al nostro tableau come segue:
+\begin{align*}
+R_0&\leftarrow R_0 + 3R_1; \\
+R_2&\leftarrow R_2 - 3R_1.
+\end{align*}
+Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab414}.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 1 	& 0 	& 3 	& \Sc{1}& 0\\
+\cline{3-8}
+$R_1$ & $x_2$ 		& \Sc{2} 	& 1		& 1 	& 1 	& \Sc{0}& 0 \\
+$R_2$ & $x^a$ 		& \Sc{0} 	& -1	& 0		&\C{-3}	&\Sc{-1}& 1 \\
+\end{tabular}
+\caption{Secondo tableau. $x^a$ ancora in base.}
+\label{tab:tab414}
+\end{table}
+Siamo giunti alla soluzione ottima, ma non è ancora sufficiente. Possiamo osservare, infatti, che $x_3$ è subentrata in base al posto di $x_2$ e che quindi $x^a$ è ancora in base e noi non lo vogliamo. Se il problema fosse risolvibile dovrebbe esserlo \textit{a prescindere} dalla variabile artificiale, cioè dovremmo essere in grado di trovare una soluzione a questo tableau con $x^a$ fuori base.
+Non tutto è ancora perduto. Osserviamo che la base in cui ci troviamo ora è \textbf{degenere}, e possiamo fare entrare al posto di $x^a$ una qualsiasi altra variabile senza creare problemi. Qualsiasi operazione elementare di riga, in tal caso, non apporterebbe modifiche al valore di $-\psi$ e rimarremmo comunque in basi ottime.
+Possiamo fare pivot su qualsiasi elemento di $R_2$ purché non sia nullo (e purché non sia la stessa variabile artificiale, ovviamente). Questa volta sceglieremo $y_{23}$, consapevoli che sarebbero andati bene anche $y_{21}$ e $y_{24}$.
+Applichiamo le operazioni elementari di riga, \textbf{nell'ordine}, per completare l'operazione di pivoting:
+\begin{align*}
+R_0&\leftarrow R_0 + R_2 \\
+R_2&\leftarrow \frac{1}{3}R_2 \\
+R_1&\leftarrow R_1 + R_2
+\end{align*}
+Otteniamo il tableau in tabella \vref{tab:tab415}. È ancora un tableau ottimo (non poteva essere diversamente) e questa volta nessuna fastidiosa variabile artificiale è in base.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\ut}{$\frac{1}{3}$}
+	\newcommand{\dt}{$\frac{2}{3}$}
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 0 	& 0 	& 0 	& \Sc{0}& 1\\
+\cline{3-8}
+$R_1$ & $x_2$ 		& \Sc{2} 	& \dt	& 1 	& 0 	&\Sc{-\ut}& \ut \\
+$R_2$ & $x^3$ 		& \Sc{0} 	& -\ut	& 0		& 1 	&\Sc{-\ut}& 0 \\
+\end{tabular}\caption{Terzo tableau. $A_3$ entra in base al posto di $A_5$. Vertice $\alpha(0,2)$}
+}
+\label{tab:tab415}
+\end{table}
+La nuova base e la nuova soluzione sono:
+\begin{align*}
+\mathcal{B}&=\{A_2,A_3\} \\
+x&=(0,2,0,0,0)
+\end{align*}
+Siamo nel vertice $\alpha(0,2)$ e quindi in una BFS da cui possiamo partire per la \textbf{fase 2} del metodo del simplesso.
+\subsubsection{Fase 2 - Simplesso}
+Per questa fase useremo come tableau di partenza quello in tabella \vref{tab:tab415} sostituendo la funzione obiettivo fittizia $\psi$ utilizzata in precedenza con la nostra vera funzione obiettivo $z$. Manterremo la variabile artificiale (che si fa notare non cambia in alcun modo il nostro problema in quanto non faremo mai entrare in base) perché, come vedremo poi, il suo costo relativo finale sarà utile ai fini della soluzione del problema duale.
+Il tableau così ottenuto è quello in tabella \vref{tab:tab416}
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\ut}{$\frac{1}{3}$}
+	\newcommand{\dt}{$\frac{2}{3}$}
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-z$		& $x_1$ & $x_2$ & $x_3$ & $x_4$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 2 	& 1 	& 0 	& \Sc{0}& 0\\
+\cline{3-8}
+$R_1$ & $x_2$ 		& \Sc{2} 	& \dt	& 1 	& 0 	&\Sc{-\ut}& \ut \\
+$R_2$ & $x^3$ 		& \Sc{0} 	& -\ut	& 0		& 1 	&\Sc{-\ut}& 0 \\
+\end{tabular}\caption{Quarto tableau. Vertice $\alpha(0,2)$}
+}
+\label{tab:tab416}
+\end{table}
+Per applicare il simplesso, dobbiamo fare in modo che:
+$$
+y_{ij}=0 \quad\forall i,j:j\in\mathcal{B}, i\neq j
+$$
+L'elemento $y_{02}$ è l'unico a non essere nullo. Ovviamo al problema con l'operazione di riga:
+$$
+R_0\leftarrow R_0 - R_1
+$$
+Otteniamo quindi il tableau in tabella \vref{tab:tab417}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\ut}{$\frac{1}{3}$}
+	\newcommand{\dt}{$\frac{2}{3}$}
+	\newcommand{\qt}{$\frac{4}{3}$}
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-z$		& $x_1$ & $x_2$ & $x_3$ & $x_4$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{-2} 	& \qt 	& 0 	& 0 	&\Sc{\ut} & -\ut\\
+\cline{3-8}
+$R_1$ & $x_2$ 		& \Sc{2} 	& \dt	& 1 	& 0 	&\Sc{-\ut}& \ut \\
+$R_2$ & $x^3$ 		& \Sc{0} 	& -\ut	& 0		& 1 	&\Sc{-\ut}& 0 \\
+\end{tabular}\caption{Quarto tableau. Vertice $\alpha(0,2)$}
+}
+\label{tab:tab417}
+\end{table}
+Il nostro lavoro si conclude qui in quanto $\OL{c_j}>0\quad\forall j>0$ e il vertice $\alpha$ è già quello della soluzione ottima, come d'altronde previsto durante la soluzione per via grafica. La base e la soluzione sono quelle già espresse in precedenza:
+\begin{align*}
+\mathcal{B}&=\{A_2,A_3\} \\
+x&=(0,2,0,0,0)
+\end{align*}
+
+\subsection{Soluzione del problema}
+La soluzione del problema è:
+$$
+z(\alpha)=z(0,2)=2
+$$
+
+\subsection{Extra - Costruzione del problema duale}
+Anche se nessuno ce l'ha chiesto, proviamo a costruire e risolvere il problema duale a quello dato.
+Riportiamo ora il problema primale e, per motivi di sintesi, poniamo anche una notazione più breve che ci permetterà di costruire il problema duale:
+$$
+{
+	\renewcommand*\arraystretch{.7}
+\begin{array}{r| @{}c@{} |c| @{}c@{} |c| @{}c@{}|c| @{}c@{} |c| c|}
+\cline{2-2}\cline{4-4}\cline{6-6}\cline{8-8}\cline{10-10}
+	 &\qquad\qquad& &\qquad\qquad& &\qquad\qquad& &\qquad\qquad& & \\
+\min		& 2x_1 	&+& x_2 	& &   		& &   		& & \CG{\max}\\
+	 		&\CG{=}	& &\CG{=}	& &\CG{=}	& &\CG{=}	& & 	\\
+\CG{\pi_1}	& x_1	&+& x_2 	&+& x_3 	& &			&=& 2 	\\
+	 		&\CG{+}	& &\CG{+}	& &\CG{+}	& &\CG{+}	& & 	\\
+\CG{\pi_2}	& 2x_1 	&+&3x_2 	& &			&-& x_4		&=& 6	\\
+	 		&  		& &  		& &	  		& &   		& & 	\\
+\cline{2-2}\cline{4-4}\cline{6-6}\cline{8-8}\cline{10-10}
+	 		&  		& &  		& &	  		& &   		& & 	\\
+	 		& x_1	&,& x_2 	&,& x_3 	&,& x_4 	&\geq& 0\\
+	 		&  		& &  		& &	  		& &   		& & 	\\
+\cline{2-2}\cline{4-4}\cline{6-6}\cline{8-8}\cline{10-10}
+\end{array}
+}
+$$
+Ricordando che \textit{ad ogni variabile non negativa corrisponde un vincolo duale di non maggioranza}, il problema duale, perciò, è il seguente:
+\begin{alignat*}{6}
+&\max \xi = \quad && +2\pi_1 \quad\; && +6\pi_2 \quad\;\; && \\
+&\;\st  &&+\pi_1		&&+2\pi_2 		&& \leq 2 \\
+&	 	&&+\pi_1		&&+3\pi_2 		&& \leq 1\\
+&	 	&&+\pi_1		&&				&& \leq 0 \\
+&	 	&&				&&-\pi_2		&& \leq 0 \\
+&		&&\quad\;\pi_1,	&&\quad\;\pi_2,	&& \gtreqless 0
+\end{alignat*}
+
+\subsection{Extra - Soluzione del problema duale}
+Riportiamo i tableau iniziale e finale con i quali abbiamo applicato l'algoritmo del simplesso.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 2 	& 1 	& 0 	& \Sc{0}& 0\\
+\cline{3-8}
+$R_1$ & $x_3$ 		& \Sc{2} 	& 1		& 1 	& 1 	& \Sc{0}& 0 \\
+$R_2$ & $x^a$ 		& \Sc{6} 	& 2		& 3		& 0 	&\Sc{-1}& 1 \\
+\end{tabular}
+\caption{Tableau iniziale con la \textit{funzione obiettivo originaria}.}
+\label{tab:tab418}
+\end{table}
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\ut}{$\frac{1}{3}$}
+	\newcommand{\dt}{$\frac{2}{3}$}
+	\newcommand{\qt}{$\frac{4}{3}$}
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-z$		& $x_1$ & $x_2$ & $x_3$ & $x_4$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{-2} 	& \qt 	& 0 	& 0 	&\Sc{\ut} & -\ut\\
+\cline{3-8}
+$R_1$ & $x_2$ 		& \Sc{2} 	& \dt	& 1 	& 0 	&\Sc{-\ut}& \ut \\
+$R_2$ & $x^3$ 		& \Sc{0} 	& -\ut	& 0		& 1 	&\Sc{-\ut}& 0 \\
+\end{tabular}\caption{Tableau finale.}
+}
+\label{tab:tab419}
+\end{table}
+La base iniziale è $\mathcal{B}_1={A_3,A_5}$. Applicando delle semplici sottrazioni, ricaviamo la soluzione del problema duale:
+\begin{align*}
+\pi_1&=c_3-\OL{c_3}=0 \\
+\pi_3&=c_5-\OL{c_5}=\frac{1}{3}
+\end{align*}
+Perciò, la soluzione del problema duale è il vettore:
+$$
+\pi'=
+\begin{bmatrix}
+0 & \frac{1}{3}
+\end{bmatrix}
+$$
+Per verificare la correttezza dei calcoli, applichiamo la soluzione alla funzione obiettivo del problema duale:
+$$
+\xi(0,\frac{1}{3})=2(0)+0+6(\frac{1}{3})=2
+$$
+Il risultato è, come atteso, lo stesso del problema primale.
+
+\section{Esercizio 3}
+
+Sia dato il seguente modello matematico di un problema di LP:
+\begin{align*}
+\min z	&= -x_1-x_2 \\
+\st\;\;	& x_2 \leq 1\\
+		& -x_1+x_2\geq 2\\
+	  	& x_1,x_2 \geq 0
+\end{align*}
+\begin{itemize}
+\item Si rappresenti accuratamente il problema in forma grafica;
+\item Si ricavi la forma standard;
+\item Si risolva il problema tramite il metodo del simplesso a due fasi utilizzando il minor numero di variabili artificiali.
+\end{itemize}
+
+\subsection{Problema in forma grafica}
+
+In figura \vref{fig:graph6} è rappresentato graficamente il problema presentato. Il gradiente della funzione obiettivo vale:
+\begin{equation*}
+\nabla(z)=\left(\frac{\partial z}{\partial x},\frac{\partial z}{\partial y}\right) = \left( -1,-1 \right) \\
+\end{equation*}
+Poiché questa volta il problema è rappresentato sotto forma di minimo, saremo interessati alla limitazione del politopo nella direzione \textbf{opposta} al gradiente. A tal fine utilizziamo una funzione obiettivo ausiliaria $\varphi$ tale che:
+\begin{equation*}
+\varphi = -z \Rightarrow \nabla\varphi = -\nabla z = (-2,-1)
+\end{equation*}
+In giallo è rappresentata l'area tra i due vincoli lineari di disuguaglianza. Notiamo che quest'area si estende nel secondo e nel terzo quadrante, perciò non rispetta i vincoli di non minoranza delle singole variabili. Ci aspettiamo una soluzione impossibile dal simplesso.
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },%xtick={1,2,3}
+ ]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+
+\addplot
+[domain=-3.01:3.01, samples=10, thick, blue, name path=yx2]
+{x+2} node [pos=0.6,pin={135:{\color{blue}$-x_1+x_2=2$}}, inner sep=0pt] {};
+\addplot
+[domain=-3.01:3.01, samples=10, thick, red, name path=y1]
+{1} node [pos=0.5, pin={75:{\color{red}$x_2=1$}}, inner sep=0pt] {};
+\addplot[thick, fill=yellow, fill opacity=0.5] fill between [of=yx2 and y1, soft clip={domain=-3:-1}];
+%\addplot[white] fill between [of=xy2 and AX];
+%\addplot[pattern=north east lines, pattern color=red!10] fill between [reverse=true, of=AX and UP, soft clip={domain=0:5}];
+\addplot[pattern=north west lines, pattern color=blue!10] fill between [of=yx2 and UP];
+\addplot[pattern=vertical lines, pattern color=red!10] fill between [of=y1 and AX];
+\intne{y1}{yx2}{$\alpha$}{alp};
+%\node at (axis cs:1.8,0.5) {$P$};
+\addplot[-latex, thick] coordinates
+           {(0,0) (1/1.414,1/1.414)} node [pos=.3, anchor=south, label={45:{\small $\nabla\varphi$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Rappresentazione cartesiana del problema di programmazione lineare}
+\label{fig:graph6}
+\end{figure}
+
+\subsection{Forma standard}
+
+Aggiungendo una variabile slack e una variabile surplus, il problema in forma standard si presenta così:
+\begin{alignat*}{6}
+&\min z = \quad && -x_1 \quad\; && -x_2 \quad\;\; && \qquad\qquad && \qquad\qquad && \\
+&\;\st  &&				&&+x_2	 		&&+\pmb{x_3}	&&		 		&&=1\\
+&	 	&&-x_1			&&+x_2			&&				&& -\pmb{x_4}	&&=2\\
+&		&&\quad\; x_1,	&&\quad\; x_2,	&&\quad\; x_3,	&&\quad\; x_4,	&&\geq 0
+\end{alignat*}
+
+\subsection{Risoluzione tramite tableau}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rccccc}
+			&$-z$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ \\
+$\OL{c_j}$ 	& \Sc{0} 	& -1 	& -1 	& 0 	& 0 \\
+\cline{2-6}
+$R_1$ 		& \Sc{1} 	& 0 	& 1 	& 1 	& 0\\
+$R_2$		& \Sc{2} 	& -1 	& 1		& 0 	& -1 \\
+\end{tabular}
+\caption{Tableau iniziale.}
+\label{tab:tab420}
+\end{table}
+
+In tabella \vref{tab:tab420} il tableau ricavato dal nostro problema. Non abbiamo nessuna sottomatrice identità a disposizione da utilizzare come base ammissibile quindi ricorriamo alla \textbf{fase 1 del metodo del simplesso} per ottenere una BFS di partenza.
+
+\subsubsection{Fase 1 - aggiunta di variabili artificiali}
+
+Manca solo la seconda colonna della matrice identità con cui formare la BFS di partenza e la introdurremo con l'\textit{unica} variabile artificiale $x^a$, trasformando il secondo vincolo in:
+$$
+-x_1 + x_2 - x_4 + x^a = 2
+$$
+Il nostro scopo, dopo l'introduzione di $x^a$, sarà quello di \textbf{eliminarla} dalla base. Per far ciò bisogna fare in modo che questa valga zero e quindi introduciamo, a tale scopo, una nuova funzione obiettivo da minimizzare $\psi$ tale che:
+$$
+\psi = \sum_{i=1}^{n'}x_i^a = x^a
+$$
+Scriviamo il nuovo tableau in tabella \vref{tab:tab421} e applichiamo il simplesso per ottimizzare la nostra funzione $\psi$.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 0 	& 0 	& 0 	& \Sc{0}& 1\\
+\cline{3-8}
+$R_1$ & $x_3$ 		& \Sc{1} 	& 0		& 1 	& 1 	& \Sc{0}& 0 \\
+$R_2$ & $x^a$ 		& \Sc{2} 	& -1	& 1		& 0 	&\Sc{-1}& 1 \\
+\end{tabular}
+\caption{Nuovo tableau con la variabile artificiale $x^a$.}
+\label{tab:tab421}
+\end{table}
+Abbiamo una sottomatrice identità formata dalla base:
+$$
+\mathcal{B}=\{A_3,A_5\}
+$$
+Per avere a avere a disposizione i valori delle coordinate della BFS del nuovo problema, è necessario che:
+$$
+y_{ij}=0 \quad \forall i,j:A_j\in\mathcal{B},i\neq j
+$$
+Condizione vera per ogni valore tranne $y_{05}$ che provvediamo ad annullare tramite l'operazione elementare di riga:
+$$
+R_0\leftarrow R_0 - R_2
+$$
+Nel nuovo tableau in figura \vref{tab:tab422} dobbiamo scegliere su quale colonna fare pivoting. L'unica colonna con $\OL{c_j}<0$ è $A_2$ e cercheremo qui l'elemento pivot.
+Per scegliere su quale elemento fare \textbf{pivoting}, dobbiamo ottenere il valore di $y_{\ell 2}$ tale che:
+$$
+\vartheta_{\max}=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}}
+$$
+Perciò, operando con gli elementi nel tableau:
+$$
+\vartheta_{\max}=\min\left(\frac{1}{1},\frac{2}{1}\right)=\frac{1}{1}=\frac{y_{10}}{\pmb{y_{12}}}
+$$
+Faremo pivoting sull'elemento $y_{12}$ (cerchiato in tabella). Il nostro scopo è ora far comparire uno 0 nella colonna dell'elemento pivot in tutte le righe tranne quella in cui si trova l'elemento pivot e far comparire un 1 in quest'ultima.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{-2} 	& 1 	& -1 	& 0 	& \Sc{1}& 0\\
+\cline{3-8}
+$R_1$ & $x_2$ 		& \Sc{1} 	& 0		& \C{1}	& 1 	& \Sc{0}& 0 \\
+$R_2$ & $x^a$ 		& \Sc{2} 	& -1	& 1		& 0 	&\Sc{-1}& 1 \\
+\end{tabular}
+\caption{Pivoting su $y_{12}$. $A_2$ entra in base e $A_3$ esce.}
+\label{tab:tab422}
+\end{table}
+Poiché $y_{12}=1$ non c'è nulla da fare su $R_1$. Applichiamo le operazioni elementari di riga al nostro tableau come segue:
+\begin{align*}
+R_0&\leftarrow R_0 + R_1; \\
+R_2&\leftarrow R_2 - R_1.
+\end{align*}
+Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab423}.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{-1} 	& 1 	& 0 	& 1 	& \Sc{1}& 0\\
+\cline{3-8}
+$R_1$ & $x_2$ 		& \Sc{1} 	& 0		& 1 	& 1 	& \Sc{0}& 0 \\
+$R_2$ & $x^a$ 		& \Sc{1} 	& -1	& 0		& -1	&\Sc{-1}& 1 \\
+\end{tabular}
+\caption{Secondo tableau. $x^a$ ancora in base e $\psi\neq 0$.}
+\label{tab:tab423}
+\end{table}
+Siamo nella soluzione ottima ma:
+\begin{itemize}
+\item la variabile artificiale $x^a$ è ancora fuori base;
+\item la soluzione ottima non è nulla.
+\end{itemize}
+Non vale la pena sprecare energie per far uscire dalla base la variabile artificiale. Qualunque operazione facessimo, il valore della soluzione ottima non potrebbe migliorare e quindi non potrebbe annullarsi. Ciò significa che non esistono soluzioni ammissibili al nostro problema.
+\subsection{Soluzione del problema}
+Il problema non ha soluzione in quanto nella fase 1 del metodo del simplesso non siamo riusciti a trovare una BFS che non coinvolga variabili artificiali.

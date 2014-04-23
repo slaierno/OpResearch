@@ -11,7 +11,7 @@
 \usepackage[italian]{varioref}
 \usepackage{array}
 %\usepackage{booktabs}
-\usepackage{tikz,pgfplots}
+\usepackage{tikz,pgfplots,fp,ifthen}
 \usepgfplotslibrary{fillbetween}
 \usetikzlibrary{shapes,arrows,intersections, patterns}
 
@@ -23,7 +23,8 @@
 \newcommand{\OL}[1]{\overline{#1}}
 \newcommand{\st}{\mathrm{s.t.}}
 \newcommand{\Sc}[1]{\multicolumn{1}{c|}{#1}}
-
+\newcommand{\Hr}[1]{%
+  \colorbox{red!50}{$\displaystyle#1$}}
 \newcommand*\C[1]{\tikz[baseline=(char.base)]{
     \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
     
@@ -35,6 +36,10 @@
 \newcommand{\ints}[4]{\node [label={[below=-4pt]-90:#3}, name intersections={of=#1 and #2, by=#4}] at (#4) {$\bullet$}}
 \newcommand{\inte}[4]{\node [label={[right=-4pt]0:#3}, name intersections={of=#1 and #2, by=#4}] at (#4) {$\bullet$}}
 \newcommand{\intw}[4]{\node [label={[left=-4pt]180:#3}, name intersections={of=#1 and #2, by=#4}] at (#4) {$\bullet$}}
+
+%\newcolumntype{C}{>{\centering\arraybackslash$}p{\linewidth}<{$}}
+
+\newcommand{\CG}[1]{\color{green}{#1}}
 
 %\includeonly{capitolo2}
 
@@ -48,7 +53,7 @@
 \chapter*{Introduzione}
 Questa è, o almeno si propone di essere, una raccolta degli esercizi proposti a lezione del corso Ricerca Operativa M tenuto dal prof. Silvano Martello all'interno del CdL di Ingegneria Informatica M dell'Università di Bologna.
 
-Non ha pretese di esattezza, tutt'altro, ma spero sia d'aiuto a chi segue o seguirà il corso. \textbf{Qualsiasi errore, dubbio, correzione, ecc.} è più che bene accetto e può essere comunicato privatamente al mio contatto Facebook o al mio indirizzo \textbf{e-mail}: simonelaierno@gmail.com
+Non ha pretese di esattezza, tutt'altro, ma spero sia d'aiuto a chi segue o seguirà il corso. \textbf{Qualsiasi errore, dubbio, correzione, ecc.} è più che bene accetto e può essere comunicato privatamente al mio contatto Facebook o al mio indirizzo \textbf{e-mail}: \href{mailto:simonelaierno@gmail.com}{simonelaierno@gmail.com}
 
 \include{capitolo1}
 

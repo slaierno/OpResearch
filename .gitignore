@@ -1,6 +1,4 @@
-*.log
-*.aux
-*.gz
-*.toc
-*.out
-*.sh
+!*/
+!*.tex
+!*.pdf
+!*.git*
