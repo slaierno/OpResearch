@@ -37,11 +37,19 @@
 \newcommand{\inte}[4]{\node [label={[right=-4pt]0:#3}, name intersections={of=#1 and #2, by=#4}] at (#4) {$\bullet$}}
 \newcommand{\intw}[4]{\node [label={[left=-4pt]180:#3}, name intersections={of=#1 and #2, by=#4}] at (#4) {$\bullet$}}
 
+\newcommand{\dotgrid}[5]{%
+    \foreach \x in {#1,...,#2} {%
+    \foreach \y in {#3,...,#4}{%
+    \edef\temp{%
+    \noexpand\node [#5, fill, circle, inner sep=1.5pt] at (axis cs:\x,\y) {};%
+    }\temp}%
+    }}
+
 %\newcolumntype{C}{>{\centering\arraybackslash$}p{\linewidth}<{$}}
 
 \newcommand{\CG}[1]{\color{green}{#1}}
 
-%\includeonly{capitolo2}
+\includeonly{capitolo2}
 
 \begin{document}
 \setpapersize{A4}

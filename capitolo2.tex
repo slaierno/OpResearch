@@ -30,7 +30,7 @@ $$
 Modelliamo ora i vincoli espressi dal problema.
 Il modello matematico può essere quindi così riassunto (sono state apportate semplificazione algebriche):
 \begin{align*}
-\max z	&= 2x_1+x_2 \\
+\max z	&= x_1+x_2 \\
 \st\;\;	& x_1+x_2 \leq 8\\
 		& x_1 \geq x_2 + 1\\
 		& x_1 \leq 6 \\
@@ -1011,3 +1011,433 @@ Siamo nella soluzione ottima ma:
 Non vale la pena sprecare energie per far uscire dalla base la variabile artificiale. Qualunque operazione facessimo, il valore della soluzione ottima non potrebbe migliorare e quindi non potrebbe annullarsi. Ciò significa che non esistono soluzioni ammissibili al nostro problema.
 \subsection{Soluzione del problema}
 Il problema non ha soluzione in quanto nella fase 1 del metodo del simplesso non siamo riusciti a trovare una BFS che non coinvolga variabili artificiali.
+\section{Esercizio 4}
+Un'azienda produce panchine per giardini di due tipi utilizzando plastica riciclata e ricevendo un contributo statale di 40\euro per ogni panchina di tipo 1 e 30\euro per ogni panchina di tipo 2. La vendita di ogni panchina di tipo 1 causa una perdita di 10\euro, mentre quella di ogni panchina di tipo 2 da un ricavo di 30\euro. I macchinari utilizzati hanno un limite produttivo di 300 panchine per ciascun tipo. L'azienda vuole ricevere almeno 12000\euro di contributi statali. Si esprimano i livelli di produzione in centinaia di panchine ed i quantitativi monetari in migliaia di euro.
+\begin{enumerate}
+\item Definire il modello LP che massimizza l'introito complessivo dato dalla sola vendita delle panchine.
+\item Risolvere con il metodo delle due fasi (leggere prima il punto 5), introducendo il minor numero possibile di variabili artificiali. In caso di parità, fare uscire dalla base una variabile artificiale.
+\item Dare esplicitamente la soluzione trovata.
+\item Disegnare con cura la regione ammissibile e indicarvi le soluzioni corrispondenti a ciascun tableau.
+\item Definire il duale della forma standard del modello del punto 1 e ricavarne la soluzione dai tableau prodotti.
+\item Imporre l'ulteriore vincolo che debba essere prodotto un numero intero di centinaia di panchine. Risolvere con il metodo di Gomory. [\textit{Questo punto non sarà analizzato perché in data di stesura del documento (04/04/2014) l'argomento non è ancora stato trattato dal prof}]
+\end{enumerate}
+
+\subsection{Modellizzazione}
+
+Si indichi con:
+\begin{itemize}
+\item $x_1$ il numero di centinaia di panchine di tipo 1;
+\item $x_2$ il numero di centinaia di panchine di tipo 2.
+\end{itemize}
+Lo scopo del nostro problema è di massimizzare i profitti ottenuti \textbf{dalla sola vendita} delle panchine, quindi esclusi i contributi statali. Ricordiamo che le variabili indicano \textit{centinaia} di panchine e che l'introito sarà calcolato in \textit{migliaia} di euro. Facendo le opportune moltiplicazioni, la funzione di profitto sarà:
+$$
+\max z = -x_1 + 3x_2
+$$
+Modelliamo ora i vincoli espressi dal problema.
+Il modello matematico può essere quindi così riassunto (sono state apportate semplificazione algebriche):
+\begin{align*}
+\max z	&= -x_1+3x_2 \\
+\st\;\;	& x_1 \leq 3\\
+		& x_1 \leq 3\\
+		& 4x_1 + 3x_2 \geq 12 \\
+	  	& x_1,x_2 \geq 0
+\end{align*}
+
+\subsection{Problema in forma grafica}
+
+In figura \vref{fig:graph7} è rappresentato graficamente il problema presentato. Il gradiente della funzione obiettivo vale:
+\begin{equation*}
+\nabla(z)=\left(\frac{\partial z}{\partial x},\frac{\partial z}{\partial y}\right) = \left( -1,2 \right) \\
+\end{equation*}
+Il problema è in forma di massimo e rappresenteremo $\nabla(z)$ sul grafico, ricordando che nella forma standard è nella stessa direzione dell'opposto del gradiente della funzione obiettivo trasformata in funzione di minimo.
+In giallo è rappresentato il politopo $P$. Essendo un politopo, cioè limitato in ogni direzione, sarà limitato in particolare nella direzione del gradiente, qualunque essa sia.
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },%xtick={1,2,3}
+ ]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+        
+\addplot
+[domain=0:4, samples=10, thick, blue, name path=x3]
+(3,x) node [pos=0.4,pin={75:{\color{blue}$x_1=3$}}, inner sep=0pt] {};
+\addplot
+[domain=0:4, samples=10, thick, red, name path=y3]
+{3} node [pos=0.3, pin={75:{\color{red}$x_2=3$}}, inner sep=0pt] {};
+\addplot
+[domain=0:3, samples=10, thick, green, name path=4x3y12]
+{-(4/3)*x + 4} node [pos=0.5, pin={75:{\color{green}$4x_1+3x_2=12$}}, inner sep=0pt] {};
+\addplot[thick, fill=yellow, fill opacity=0.5] fill between [of=4x3y12 and UP, soft clip={domain=0:3}];
+\addplot[white] fill between [of=y3 and UP];
+%\addplot[pattern=north east lines, pattern color=red!10] fill between [reverse=true, of=AX and UP, soft clip={domain=0:5}];
+\addplot[pattern=north east lines, pattern color=green!10] fill between [of=4x3y12 and UP];
+\addplot[pattern=vertical lines, pattern color=red!10] fill between [of=y3 and AX];
+\addplot[pattern=horizontal lines, pattern color=blue!10] fill between [of=x3 and AY];
+\intne{x3}{AX}{$\alpha$}{alp};
+\intse{y3}{4x3y12}{$\beta$}{bet};
+\intne{y3}{x3}{$\gamma$}{gam};
+\node at (axis cs:2.5,2) {$P$};
+\addplot[-latex, thick] coordinates
+           {(0,0) (-1/3.16,3/3.16)} node [pos=.3, anchor=north, label={135:{\small $\nabla z$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Rappresentazione cartesiana del problema di programmazione lineare}
+\label{fig:graph7}
+\end{figure}
+
+\subsection{Forma standard}
+
+Rendiamo la funzione di massimo $z$ in una funzione di minimo $\varphi$:
+$$
+\varphi=-z=\min x_1-3x_2
+$$
+Introduciamo due variabili slack e una variabile surplus:
+\begin{alignat*}{7}
+&\min \varphi = \quad && x_1 \quad\; && -3x_2 \quad\;\; && \qquad\qquad && \qquad\qquad && \qquad\qquad && \\
+&\;\st  &&+x_1			&&		 		&&+\pmb{x_3}	&&		 		&&					&&=3\\
+&	 	&&				&&+x_2			&&				&& +\pmb{x_4}	&&					&&=3\\
+&	 	&&+4x_1			&&+3x_2			&&				&&				&&-\pmb{x_5}		&&=12\\
+&		&&\quad\; x_1,	&&\quad\; x_2,	&&\quad\; x_3,	&&\quad\; x_4,	&&\quad\; x_5		&&\geq 0
+\end{alignat*}
+
+\subsection{Risoluzione tramite tableau}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rcccccc}
+			&$-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$\OL{c_j}$ 	& \Sc{0} 	& 1 	& -3 	& 0 	& 0 	& 0 \\
+\cline{2-7}
+$R_1$ 		& \Sc{3} 	& 1 	& 0 	& 1 	& 0 	& 0 \\
+$R_2$		& \Sc{3} 	& 0 	& 1		& 0 	& 1 	& 0 \\
+$R_3$		& \Sc{12} 	& 4 	& 3 	& 0 	& 0 	& -1 \\
+\end{tabular}
+\caption{Tableau iniziale.}
+\label{tab:tab424}
+\end{table}
+Non abbiamo nessuna sottomatrice identità a disposizione da utilizzare come base ammissibile.
+Per ottenere una BFS di partenza, quindi, ricorriamo alla \textbf{fase 1 del metodo del simplesso}.
+
+\subsubsection{Fase 1 - aggiunta di variabili artificiali}
+
+Per ridurre al minimo le variabili artificiali $x_i^a,\quad i=1,\cdots,n'$ è sufficiente aggiungerne una per ogni colonna della matrice identità mancante nel tableau originale. Nel nostro caso manca solo la terza colonna e sarà quella che introdurremo con l'\textit{unica} variabile artificiale $x^a$, trasformando il terzo vincolo in:
+$$
+4x_1 + 3x_2 - x_5 + x^a = 12
+$$
+Il nostro scopo, dopo l'introduzione di $x^a$, sarà quello di \textbf{eliminarla} dalla base. Per far ciò bisogna fare in modo che questa valga zero e quindi introduciamo, a tale scopo, una nuova funzione obiettivo da minimizzare $\psi$ tale che:
+$$
+\psi = \sum_{i=1}^{n'}x_i^a = x^a
+$$
+Scriviamo il nuovo tableau in tabella \vref{tab:tab42} e applichiamo il simplesso per ottimizzare la nostra funzione $\psi$.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 0 	& 0 	& 0 	& 0 	& \Sc{0}& 1\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{3} 	& 1		& 0 	& 1 	& 0 	& \Sc{0}& 0 \\
+$R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x^a$ 		& \Sc{12} 	& 4 	& 3 	& 0 	& 0 	&\Sc{-1}& 1 \\
+\end{tabular}
+\caption{Nuovo tableau con la variabile artificiale $x^a$.}
+\label{tab:tab425}
+\end{table}
+Abbiamo una sottomatrice identità formata dalla base:
+$$
+\mathcal{B}=\{A_3,A_4,A_6\}
+$$
+Per avere a avere a disposizione i valori delle coordinate della BFS del nuovo problema, è necessario che:
+$$
+y_{ij}=0 \quad \forall i,j:A_j\in\mathcal{B},i\neq j
+$$
+Condizione vera per ogni valore tranne $y_{06}$ che provvediamo ad annullare tramite l'operazione elementare di riga:
+$$
+R_0\leftarrow R_0 - R_3
+$$
+Nel nuovo tableau in figura \vref{tab:tab426} faremo pivoting sulla colonna $A_1$, che sarebbe la nostra scelta sia con la regola di Dantzig che con la regola di Bland. Per scegliere su quale elemento fare \textbf{pivoting}, dobbiamo ottenere il valore di $y_{\ell 1}$ tale che:
+$$
+\vartheta_{\max}=\min_{i:y_{i1}>0}\frac{y_{i0}}{y_{i1}}=\frac{y_{i0}}{y_{\ell 1}}
+$$
+Perciò, operando con gli elementi nel tableau:
+$$
+\vartheta_{\max}=\min\left(\frac{3}{1},\frac{12}{4}\right)=\frac{12}{4}=\frac{y_{30}}{\pmb{y_{31}}}
+$$
+Faremo pivoting sull'elemento $y_{31}$ (cerchiato in tabella). In realtà avevamo un caso di \textbf{parità}, ma seguendo la regola nella traccia abbiamo fatto pivoting sull'elemento che avrebbe fatto uscire dalla base la variabile artificiale. Il nostro scopo è ora far comparire uno 0 nella colonna dell'elemento pivot in tutte le righe tranne quella in cui si trova l'elemento pivot e far comparire un 1 in quest'ultima.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{-12} 	& -4 	& -3 	& 0 	& 0 	& \Sc{1}& 0\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{3} 	& 1		& 0 	& 1 	& 0 	& \Sc{0}& 0 \\
+$R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x^a$ 		& \Sc{12} 	&\C{4} 	& 3 	& 0 	& 0 	&\Sc{-1}& 1 \\
+\end{tabular}
+\caption{Pivoting su $y_{31}$. $A_1$ entra in base e $A_6$ esce.}
+\label{tab:tab426}
+\end{table}
+Applichiamo le operazioni elementari di riga (nell'ordine) al nostro tableau come segue:
+\begin{align*}
+R_0&\leftarrow R_0+R_3; \\
+R_3&\leftarrow \frac{R_3}{4}; \\
+R_1&\leftarrow R_1 - R_3.
+\end{align*}
+Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab427}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\tq}{$\frac{2}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+	\newcommand{\mtq}{$-\frac{2}{4}$}
+
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 0 	& 0 	& 0 	& 0 	& \Sc{0}& 1\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{0} 	& 0		& \mtq 	& 1 	& 0 	& \Sc{\uq}& \muq \\
+$R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x_1$ 		& \Sc{3} 	& 1 	& \tq 	& 0 	& 0 	& \Sc{\muq}& \uq \\
+\end{tabular}\caption{Secondo tableau. Vertice $\alpha(3,0)$}
+}
+\label{tab:tab427}
+\end{table}
+Siamo giunti alla soluzione ottima, essendo $\OL{c_j}>0 \quad\forall j$. Inoltre la variabile artificiale $x^a$ non è più in base. La nuova base e la nuova soluzione sono:
+\begin{align*}
+\mathcal{B}&=\{A_3,A_4,A_1\} \\
+x&=(3,0,0,3,0,0)
+\end{align*}
+Siamo nel vertice $\alpha(3,0)$ e quindi in una BFS da cui possiamo partire per la \textbf{fase 2} del metodo del simplesso.
+\subsubsection{Fase 2 - Simplesso}
+Per questa fase useremo come tableau di partenza quello in tabella \vref{tab:tab427} sostituendo la funzione obiettivo fittizia $\psi$ utilizzata in precedenza con la nostra vera funzione obiettivo $\varphi$. Manterremo la variabile artificiale (che si fa notare non cambia in alcun modo il nostro problema in quanto non faremo mai entrare in base) perché, come vedremo poi, il suo costo relativo finale sarà utile ai fini della soluzione del problema duale.
+Il tableau così ottenuto è quello in tabella \vref{tab:tab428}
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\tq}{$\frac{2}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+	\newcommand{\mtq}{$-\frac{2}{4}$}
+
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 1 	& -3 	& 0 	& 0 	& \Sc{0}& 0\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{0} 	& 0		& \mtq 	& 1 	& 0 	& \Sc{\uq}& \muq \\
+$R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x_1$ 		& \Sc{3} 	& 1 	& \tq 	& 0 	& 0 	& \Sc{\muq}& \uq \\
+\end{tabular}\caption{Secondo tableau. Vertice $\alpha(3,0)$ e funzione obiettivo $\varphi$.}
+}
+\label{tab:tab428}
+\end{table}
+Per applicare il simplesso, dobbiamo fare in modo che:
+$$
+y_{ij}=0 \quad\forall i,j:j\in\mathcal{B}, i\neq j
+$$
+L'elemento $y_{01}$ è l'unico a non essere nullo. Ovviamo al problema con l'operazione di riga:
+$$
+R_0\leftarrow R_0 - R_3
+$$
+Otteniamo quindi il tableau in tabella \vref{tab:tab429}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\tq}{$\frac{2}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mqq}{$-\frac{15}{4}$}
+
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{-3} 	& 0 	& \mqq 	& 0 	& 0 	& \Sc{\uq}& \muq\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{0} 	& 0		& \mtq 	& 1 	& 0 	& \Sc{\uq}& \muq \\
+$R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x_1$ 		& \Sc{3} 	& 1 	& \tq 	& 0 	& 0 	& \Sc{\muq}& \uq \\
+\end{tabular}\caption{Secondo tableau. Vertice $\alpha(3,0)$.}
+}
+\label{tab:tab429}
+\end{table}
+Per fare pivoting sceglieremo la colonna $A_2$, l'unica con un costo relativo negativo. Cerchiamo quindi l'elemento pivot $y_{\ell 2}$.
+\begin{align*}
+\vartheta_{\max}&=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}} \\
+\vartheta_{\max}&=\min\left(\frac{3}{1},\frac{3}{\frac{3}{4}}\right)=\frac{3}{1}=\frac{y_{20}}{\pmb{y_{22}}}
+\end{align*}
+Faremo pivoting sull'elemento $y_{22}$ (cerchiato in tabella \vref{tab:tab430}). 
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\tq}{$\frac{2}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mqq}{$-\frac{15}{4}$}
+
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{-3} 	& 0 	& \mqq 	& 0 	& 0 	& \Sc{\uq}& \muq\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{0} 	& 0		& \mtq 	& 1 	& 0 	& \Sc{\uq}& \muq \\
+$R_2$ & $x_4$ 		& \Sc{3} 	& 0		& \C{1}	& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x_1$ 		& \Sc{3} 	& 1 	& \tq 	& 0 	& 0 	& \Sc{\muq}& \uq \\
+\end{tabular}\caption{Terzo tableau. Vertice $\alpha(3,0)$}
+}
+\label{tab:tab430}
+\end{table}
+$y_{22}=1$, quindi le operazioni elementari di riga sono:
+\begin{align*}
+R_0&\leftarrow R_0 + \frac{15}{4}R_2 \\
+R_1&\leftarrow R_1 + \frac{3}{4}R_2 \\
+R_3&\leftarrow R_3 - \frac{3}{4}R_2
+\end{align*}
+Otterremo il tableau in tabella \vref{tab:tab431}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
+	\newcommand{\qq}{$\frac{15}{4}$}
+	\newcommand{\nq}{$\frac{9}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mqq}{$-\frac{15}{4}$}
+	\newcommand{\ttq}{$\frac{33}{4}$}
+
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\ttq}	& 0 	& 0 	& 0 	& \qq	& \Sc{\uq}& \muq\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{\nq} 	& 0		& 0 	& 1 	& \tq 	& \Sc{\uq}& \muq \\
+$R_2$ & $x_2$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x_1$ 		& \Sc{\tq} 	& 1 	& 0 	& 0 	& \mtq 	& \Sc{\muq}& \uq \\
+\end{tabular}\caption{Quarto tableau. Vertice $\beta(\frac{3}{4},3)$}
+}
+\label{tab:tab431}
+\end{table}
+Siamo giunti alla soluzione ottima, essendo $\OL{c_j}>0 \quad\forall j$. La nuova base e la nuova soluzione sono:
+\begin{align*}
+\mathcal{B}&=\{A_3,A_2,A_1\} \\
+x&=(\frac{3}{4},3,\frac{9}{4},0,0,0)
+\end{align*}
+Siamo nel vertice $\beta\left(\frac{3}{4},3\right)$
+Si fa notare infine che la nostra funzione obiettivo iniziale è:
+$$
+z=-\varphi=\frac{33}{4}
+$$
+
+\subsection{Soluzione del problema primale}
+La soluzione ottima consiste nel produrre $75$ panchine di tipo 1 e $300$ panchine di tipo 2 per un introito di $8\,250$\euro .
+
+\subsection{Costruzione del problema duale}
+Riportiamo ora il problema primale e, per motivi di sintesi, poniamo anche una notazione più breve che ci permetterà di costruire il problema duale:
+$$
+{
+	\renewcommand*\arraystretch{.7}
+\begin{array}{r| @{}c@{} |c| @{}c@{} |c| @{}c@{}|c| @{}c@{}|c| @{}c@{} |c| c|}
+\cline{2-2}\cline{4-4}\cline{6-6}\cline{8-8}\cline{10-10}\cline{12-12}
+	 &\qquad\qquad& &\qquad\qquad& &\qquad\qquad& &\qquad\qquad& & \qquad\qquad& & \\
+\min		& x_1 	&-& 3x_2 	& &   		& &   		& &			& & \CG{\max}\\
+	 		&\CG{=}	& &\CG{=}	& &\CG{=}	& &\CG{=}	& &\CG{=} 	& &   \\
+\CG{\pi_1}	& x_1	& &		 	&+& x_3 	& &			& & 		&=& 3 \\
+	 		&\CG{+}	& &\CG{+}	& &\CG{+}	& &\CG{+}	& &\CG{+} 	& &   \\
+\CG{\pi_2}	& 	 	& & x_2 	& &			&+& x_4		& &  		&=& 3 \\
+	 		&\CG{+}	& &\CG{+}	& &\CG{+}	& &\CG{+}	& &\CG{+} 	& &   \\
+\CG{\pi_3}	& 4x_1 	&+&3x_2 	& &			& &			&-& x_5		&=& 12\\
+	 		&\CG{+}	& &\CG{+}	& &\CG{+}	& &\CG{+}	& &\CG{-} 	& & \\
+\cline{2-2}\cline{4-4}\cline{6-6}\cline{8-8}\cline{10-10}\cline{12-12}
+	 		&  		& &  		& &	  		& &   		& & 	& & \\
+	 		& x_1	&,& x_2 	&,& x_3 	&,& x_4 	&,& x_5 &\geq& 0\\
+	 		&  		& &  		& &	  		& &   		& & 	& & \\
+\cline{2-2}\cline{4-4}\cline{6-6}\cline{8-8}\cline{10-10}\cline{12-12}
+\end{array}
+}
+$$
+Ricordando che \textit{ad ogni variabile non negativa corrisponde un vincolo duale di non maggioranza}, il problema duale, perciò, è il seguente:
+\begin{alignat*}{8}
+&\max \xi = \quad && +3\pi_1 \quad\; && +3\pi_2 \quad\; && +12\pi_3 \quad\;\; && \\
+&\;\st  &&+\pi_1		&&		 		&&+4\pi_3	&& \leq 1 \\
+&	 	&&				&&+\pi_2 		&&+3\pi_3	&& \leq -3\\
+&	 	&&+\pi_1		&&				&&			&& \leq 0 \\
+&	 	&&				&&+\pi_2		&& 			&& \leq 0 \\
+&	 	&&				&&				&&+\pi_3	&& \leq 0 \\
+&		&&\quad\;\pi_1,	&&\quad\;\pi_2,	&&\quad\;\pi_3,	&& \gtreqless 0
+\end{alignat*}
+
+\subsection{Soluzione del problema duale}
+Riportiamo nuovamente i tableau iniziale e finale rispettivamente nelle tabella \vref{tab:tab49} e \vref{tab:tab410}.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{0} 	& 1 	& -3 	& 0 	& 0 	& \Sc{0}& 0\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{3} 	& 1		& 0 	& 1 	& 0 	& \Sc{0}& 0 \\
+$R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x^a$ 		& \Sc{12} 	& 4 	& 3 	& 0 	& 0 	&\Sc{-1}& 1 \\
+\end{tabular}
+\caption{Nuovo tableau con la variabile artificiale $x^a$.}
+\label{tab:tab432}
+\end{table}
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
+	\newcommand{\qq}{$\frac{15}{4}$}
+	\newcommand{\nq}{$\frac{9}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mqq}{$-\frac{15}{4}$}
+	\newcommand{\ttq}{$\frac{33}{4}$}
+
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\ttq}	& 0 	& 0 	& 0 	& \qq	& \Sc{\uq}& \muq\\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{\nq} 	& 0		& 0 	& 1 	& \tq 	& \Sc{\uq}& \muq \\
+$R_2$ & $x_2$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x_1$ 		& \Sc{\tq} 	& 1 	& 0 	& 0 	& \mtq 	& \Sc{\muq}& \uq \\
+\end{tabular}\caption{Quarto tableau. Vertice $\beta(\frac{3}{4},3)$}
+}
+\label{tab:tab433}
+\end{table}
+La base iniziale è $\mathcal{B}_1={A_3,A_4,A_6}$. Applicando delle semplici sottrazioni, ricaviamo la soluzione del problema duale:
+\begin{align*}
+\pi_1&=c_3-\OL{c_3}=0 \\
+\pi_2&=c_6-\OL{c_4}=-\frac{15}{4} \\
+\pi_3&=c_5-\OL{c_6}=\frac{1}{4}
+\end{align*}
+Perciò, la soluzione del problema duale è il vettore:
+$$
+\pi'=
+\begin{bmatrix}
+0 & -\frac{15}{4} & 0
+\end{bmatrix}
+$$
+Per verificare la correttezza dei calcoli, applichiamo la soluzione alla funzione obiettivo del problema duale:
+$$
+\xi\left(0,-\frac{15}{4},0\right)=3(0)+3\left(-\frac{15}{4}\right)+12\left(\frac{1}{4}\right)=-\frac{45}{4}+\frac{12}{4}=-\frac{33}{4}
+$$
+Il risultato è, come atteso, lo stesso del problema primale.
+
+\subsubsection{Vincolo di interezza}
+
+\textit{Sezione in fase di allestimento...ci rivediamo appena il prof. spiegherà i metodi per la ILP}.
