@@ -41,7 +41,7 @@
     \foreach \x in {#1,...,#2} {%
     \foreach \y in {#3,...,#4}{%
     \edef\temp{%
-    \noexpand\node [#5, fill, circle, inner sep=1.5pt] at (axis cs:\x,\y) {};%
+    \noexpand\node [#5, draw, circle, inner sep=1pt] at (axis cs:\x,\y) {};%
     }\temp}%
     }}
 
@@ -49,7 +49,7 @@
 
 \newcommand{\CG}[1]{\color{green}{#1}}
 
-%\includeonly{capitolo2}
+\includeonly{capitolo3}
 
 \begin{document}
 \setpapersize{A4}
@@ -66,5 +66,7 @@ Non ha pretese di esattezza, tutt'altro, ma spero sia d'aiuto a chi segue o segu
 \include{capitolo1}
 
 \include{capitolo2}
+
+\include{capitolo3}
 
 \end{document}

@@ -5,7 +5,7 @@ I problemi saranno posti in maniera leggermente diversa, cioè quella fornita sul
 Inoltre, anche se durante l'esercitazione non è stata trovata la soluzione dei problemi duali, dato che il metodo per individuarli è stato spiegato dal prof. nella lezione subito successiva, ho ritenuto opportuno e interessante cercarle io stesso e inserirle in questo eserciziario. A maggior ragione, le soluzioni dei duali \textbf{potrebbero essere errate}, per cui chiedo ad ognuno di provare a rivederle e comunicarmi gli eventuali errori trovati.
 Inoltre, ho deciso - in maniera del tutto personale e arbitraria - di preporre la rappresentazione grafica alla risoluzione con tableau negli esercizi di ottimizzazione. L'unico motivo è che mi piace avere un'idea un po' più concreta di quello che sta succedendo sul piano geometrico.
 
-\section{Esercizio 1}
+\section{Esercizio 4}
 Un'azienda chimica produce due tipi di composto, A e B, che danno lo stesso profitto, utilizzando una sostanza base della quale sono disponibili 8 quintali. Ogni tonnellata di composto (indipendentemente dal tipo) contiene un quintale di sostanza base. Il numero di tonnellate di composto A prodotto deve superare di almeno una unità il numero di tonnellate di composto B prodotto. Per problemi di stoccaggio non si possono produrre più di 6 tonnellate di composto A. Si associ la variabile $x_1$ al composto A e la variabile $x_2$ al composto B.
 \begin{enumerate}
 \item Definire il modello LP che determina la funzione di massimo profitto.
@@ -309,7 +309,7 @@ $R_0$ & $\OL{c_j}$ 	& \Sc{8} 	& 0 	& 0 	& 1 	& 0 	& \Sc{0}& 0\\
 \cline{3-9}
 $R_1$ & $x_2$ 		& \Sc{\sm}	& 0		& 1		& \um 	& \um 	& \Sc{0}& -\um \\
 $R_2$ & $x_1$ 		& \Sc{\nm} 	& 1		& 0		& \um	& -\um 	& \Sc{0}& \um \\
-$R_3$ & $x_5$ 		& \Sc{-\tm}	& 0 	& 0 	& -\um 	& \um 	& \Sc{1}& -\um \\
+$R_3$ & $x_5$ 		& \Sc{\tm}	& 0 	& 0 	& -\um 	& \um 	& \Sc{1}& -\um \\
 \end{tabular}
 }
 \caption{Quarto tableau. Vertice $\beta(\frac{9}{2},\frac{7}{2})$. $A_2$ entra in base al posto di $A_3$, che esce.}
@@ -319,7 +319,7 @@ $R_3$ & $x_5$ 		& \Sc{-\tm}	& 0 	& 0 	& -\um 	& \um 	& \Sc{1}& -\um \\
 Siamo giunti alla soluzione ottima, essendo $\OL{c_j}>0 \quad\forall j$. La nuova base e la nuova soluzione sono:
 \begin{align*}
 \mathcal{B}&=\{A_2,A_1,A_5\} \\
-x&=(1,0,7,0,5,0)
+x&=\left(\frac{9}{2},\frac{7}{2},0,0,\frac{3}{2}\right)
 \end{align*}
 Siamo nel vertice $\beta(\frac{9}{2},\frac{7}{2})$ ed appartiene, come previsto durante l'analisi geometrica, allo spigolo $\OL{\beta\gamma}$. Il valore della soluzione ottima è $\varphi=-8$, proviamo ora a calcolare il valore della soluzione con il vertice $\gamma(6,2)$:
 $$
@@ -472,11 +472,11 @@ $$
 $$
 Il risultato è, come atteso, lo stesso del problema primale.
 
-\subsubsection{Vincolo di interezza}
+\subsection{Vincolo di interezza}\label{sec:es4ILP}
 
 \textit{Sezione in fase di allestimento...ci rivediamo appena il prof. spiegherà i metodi per la ILP}.
 
-\section{Esercizio 2}
+\section{Esercizio 5}
 
 Sia dato il seguente modello matematico di un problema di LP:
 \begin{align*}
@@ -579,10 +579,10 @@ $R_1$ 		& \Sc{2} 	& 1 	& 1 	& 1 	& 0\\
 $R_2$		& \Sc{6} 	& 2 	& 3		& 0 	& -1 \\
 \end{tabular}
 \caption{Tableau iniziale.}
-\label{tab:tab411}
+\label{tab:tab51}
 \end{table}
 
-In tabella \vref{tab:tab411} il tableau ricavato dal nostro problema. Non abbiamo nessuna sottomatrice identità a disposizione da utilizzare come base ammissibile quindi ricorriamo alla \textbf{fase 1 del metodo del simplesso} per ottenere una BFS di partenza.
+In tabella \vref{tab:tab51} il tableau ricavato dal nostro problema. Non abbiamo nessuna sottomatrice identità a disposizione da utilizzare come base ammissibile quindi ricorriamo alla \textbf{fase 1 del metodo del simplesso} per ottenere una BFS di partenza.
 
 \subsubsection{Fase 1 - aggiunta di variabili artificiali}
 
@@ -594,7 +594,7 @@ Il nostro scopo, dopo l'introduzione di $x^a$, sarà quello di \textbf{eliminarla
 $$
 \psi = \sum_{i=1}^{n'}x_i^a = x^a
 $$
-Scriviamo il nuovo tableau in tabella \vref{tab:tab412} e applichiamo il simplesso per ottimizzare la nostra funzione $\psi$.
+Scriviamo il nuovo tableau in tabella \vref{tab:tab52} e applichiamo il simplesso per ottimizzare la nostra funzione $\psi$.
 \begin{table}[htbp]
 \centering
 \begin{tabular}{rrcccccc}
@@ -605,7 +605,7 @@ $R_1$ & $x_3$ 		& \Sc{2} 	& 1		& 1 	& 1 	& \Sc{0}& 0 \\
 $R_2$ & $x^a$ 		& \Sc{6} 	& 2		& 3		& 0 	&\Sc{-1}& 1 \\
 \end{tabular}
 \caption{Nuovo tableau con la variabile artificiale $x^a$.}
-\label{tab:tab42}
+\label{tab:tab52}
 \end{table}
 Abbiamo una sottomatrice identità formata dalla base:
 $$
@@ -619,7 +619,7 @@ Condizione vera per ogni valore tranne $y_{05}$ che provvediamo ad annullare tra
 $$
 R_0\leftarrow R_0 - R_2
 $$
-Nel nuovo tableau in figura \vref{tab:tab413} dobbiamo scegliere su quale colonna fare pivoting. Dato che la traccia non ci specifica nulla sulla regola da utilizzare \footnote{Oppure non ricordo se era stato specificato dal tutor all'inizio dell'esercizio durante la lezione [NdA]} applicheremo la regola di Dantzig e sceglieremo la colonna con il $\OL{c_j}$ più negativo, cioè $A_2$.
+Nel nuovo tableau in figura \vref{tab:tab53} dobbiamo scegliere su quale colonna fare pivoting. Dato che la traccia non ci specifica nulla sulla regola da utilizzare \footnote{Oppure non ricordo se era stato specificato dal tutor all'inizio dell'esercizio durante la lezione [NdA]} applicheremo la regola di Dantzig e sceglieremo la colonna con il $\OL{c_j}$ più negativo, cioè $A_2$.
 Per scegliere su quale elemento fare \textbf{pivoting}, dobbiamo ottenere il valore di $y_{\ell 2}$ tale che:
 $$
 \vartheta_{\max}=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}}
@@ -643,14 +643,14 @@ $R_1$ & $x_2$ 		& \Sc{2} 	& \C{1}	& 1 	& 1 	& \Sc{0}& 0 \\
 $R_2$ & $x^a$ 		& \Sc{6} 	& 2		& 3		& 0 	&\Sc{-1}& 1 \\
 \end{tabular}
 \caption{Pivoting su $y_{12}$. $A_2$ entra in base e $A_3$ esce.}
-\label{tab:tab413}
+\label{tab:tab53}
 \end{table}
 Poiché $y_{12}=1$ non c'è nulla da fare su $R_1$. Applichiamo le operazioni elementari di riga al nostro tableau come segue:
 \begin{align*}
 R_0&\leftarrow R_0 + 3R_1; \\
 R_2&\leftarrow R_2 - 3R_1.
 \end{align*}
-Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab414}.
+Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab54}.
 \begin{table}[htbp]
 \centering
 \begin{tabular}{rrcccccc}
@@ -661,7 +661,7 @@ $R_1$ & $x_2$ 		& \Sc{2} 	& 1		& 1 	& 1 	& \Sc{0}& 0 \\
 $R_2$ & $x^a$ 		& \Sc{0} 	& -1	& 0		&\C{-3}	&\Sc{-1}& 1 \\
 \end{tabular}
 \caption{Secondo tableau. $x^a$ ancora in base.}
-\label{tab:tab414}
+\label{tab:tab54}
 \end{table}
 Siamo giunti alla soluzione ottima, ma non è ancora sufficiente. Possiamo osservare, infatti, che $x_3$ è subentrata in base al posto di $x_2$ e che quindi $x^a$ è ancora in base e noi non lo vogliamo. Se il problema fosse risolvibile dovrebbe esserlo \textit{a prescindere} dalla variabile artificiale, cioè dovremmo essere in grado di trovare una soluzione a questo tableau con $x^a$ fuori base.
 Non tutto è ancora perduto. Osserviamo che la base in cui ci troviamo ora è \textbf{degenere}, e possiamo fare entrare al posto di $x^a$ una qualsiasi altra variabile senza creare problemi. Qualsiasi operazione elementare di riga, in tal caso, non apporterebbe modifiche al valore di $-\psi$ e rimarremmo comunque in basi ottime.
@@ -672,7 +672,7 @@ R_0&\leftarrow R_0 + R_2 \\
 R_2&\leftarrow \frac{1}{3}R_2 \\
 R_1&\leftarrow R_1 + R_2
 \end{align*}
-Otteniamo il tableau in tabella \vref{tab:tab415}. È ancora un tableau ottimo (non poteva essere diversamente) e questa volta nessuna fastidiosa variabile artificiale è in base.
+Otteniamo il tableau in tabella \vref{tab:tab55}. È ancora un tableau ottimo (non poteva essere diversamente) e questa volta nessuna fastidiosa variabile artificiale è in base.
 \begin{table}[htbp]
 \centering
 {
@@ -686,7 +686,7 @@ $R_1$ & $x_2$ 		& \Sc{2} 	& \dt	& 1 	& 0 	&\Sc{-\ut}& \ut \\
 $R_2$ & $x^3$ 		& \Sc{0} 	& -\ut	& 0		& 1 	&\Sc{-\ut}& 0 \\
 \end{tabular}\caption{Terzo tableau. $A_3$ entra in base al posto di $A_5$. Vertice $\alpha(0,2)$}
 }
-\label{tab:tab415}
+\label{tab:tab55}
 \end{table}
 La nuova base e la nuova soluzione sono:
 \begin{align*}
@@ -695,8 +695,8 @@ x&=(0,2,0,0,0)
 \end{align*}
 Siamo nel vertice $\alpha(0,2)$ e quindi in una BFS da cui possiamo partire per la \textbf{fase 2} del metodo del simplesso.
 \subsubsection{Fase 2 - Simplesso}
-Per questa fase useremo come tableau di partenza quello in tabella \vref{tab:tab415} sostituendo la funzione obiettivo fittizia $\psi$ utilizzata in precedenza con la nostra vera funzione obiettivo $z$. Manterremo la variabile artificiale (che si fa notare non cambia in alcun modo il nostro problema in quanto non faremo mai entrare in base) perché, come vedremo poi, il suo costo relativo finale sarà utile ai fini della soluzione del problema duale.
-Il tableau così ottenuto è quello in tabella \vref{tab:tab416}
+Per questa fase useremo come tableau di partenza quello in tabella \vref{tab:tab55} sostituendo la funzione obiettivo fittizia $\psi$ utilizzata in precedenza con la nostra vera funzione obiettivo $z$. Manterremo la variabile artificiale (che si fa notare non cambia in alcun modo il nostro problema in quanto non faremo mai entrare in base) perché, come vedremo poi, il suo costo relativo finale sarà utile ai fini della soluzione del problema duale.
+Il tableau così ottenuto è quello in tabella \vref{tab:tab56}
 \begin{table}[htbp]
 \centering
 {
@@ -710,7 +710,7 @@ $R_1$ & $x_2$ 		& \Sc{2} 	& \dt	& 1 	& 0 	&\Sc{-\ut}& \ut \\
 $R_2$ & $x^3$ 		& \Sc{0} 	& -\ut	& 0		& 1 	&\Sc{-\ut}& 0 \\
 \end{tabular}\caption{Quarto tableau. Vertice $\alpha(0,2)$}
 }
-\label{tab:tab416}
+\label{tab:tab56}
 \end{table}
 Per applicare il simplesso, dobbiamo fare in modo che:
 $$
@@ -720,7 +720,7 @@ L'elemento $y_{02}$ è l'unico a non essere nullo. Ovviamo al problema con l'oper
 $$
 R_0\leftarrow R_0 - R_1
 $$
-Otteniamo quindi il tableau in tabella \vref{tab:tab417}.
+Otteniamo quindi il tableau in tabella \vref{tab:tab57}.
 \begin{table}[htbp]
 \centering
 {
@@ -735,7 +735,7 @@ $R_1$ & $x_2$ 		& \Sc{2} 	& \dt	& 1 	& 0 	&\Sc{-\ut}& \ut \\
 $R_2$ & $x^3$ 		& \Sc{0} 	& -\ut	& 0		& 1 	&\Sc{-\ut}& 0 \\
 \end{tabular}\caption{Quarto tableau. Vertice $\alpha(0,2)$}
 }
-\label{tab:tab417}
+\label{tab:tab57}
 \end{table}
 Il nostro lavoro si conclude qui in quanto $\OL{c_j}>0\quad\forall j>0$ e il vertice $\alpha$ è già quello della soluzione ottima, come d'altronde previsto durante la soluzione per via grafica. La base e la soluzione sono quelle già espresse in precedenza:
 \begin{align*}
@@ -794,7 +794,7 @@ $R_1$ & $x_3$ 		& \Sc{2} 	& 1		& 1 	& 1 	& \Sc{0}& 0 \\
 $R_2$ & $x^a$ 		& \Sc{6} 	& 2		& 3		& 0 	&\Sc{-1}& 1 \\
 \end{tabular}
 \caption{Tableau iniziale con la \textit{funzione obiettivo originaria}.}
-\label{tab:tab418}
+\label{tab:tab58}
 \end{table}
 \begin{table}[htbp]
 \centering
@@ -810,7 +810,7 @@ $R_1$ & $x_2$ 		& \Sc{2} 	& \dt	& 1 	& 0 	&\Sc{-\ut}& \ut \\
 $R_2$ & $x^3$ 		& \Sc{0} 	& -\ut	& 0		& 1 	&\Sc{-\ut}& 0 \\
 \end{tabular}\caption{Tableau finale.}
 }
-\label{tab:tab419}
+\label{tab:tab59}
 \end{table}
 La base iniziale è $\mathcal{B}_1={A_3,A_5}$. Applicando delle semplici sottrazioni, ricaviamo la soluzione del problema duale:
 \begin{align*}
@@ -830,7 +830,7 @@ $$
 $$
 Il risultato è, come atteso, lo stesso del problema primale.
 
-\section{Esercizio 3}
+\section{Esercizio 6}
 
 Sia dato il seguente modello matematico di un problema di LP:
 \begin{align*}
@@ -923,10 +923,10 @@ $R_1$ 		& \Sc{1} 	& 0 	& 1 	& 1 	& 0\\
 $R_2$		& \Sc{2} 	& -1 	& 1		& 0 	& -1 \\
 \end{tabular}
 \caption{Tableau iniziale.}
-\label{tab:tab420}
+\label{tab:tab61}
 \end{table}
 
-In tabella \vref{tab:tab420} il tableau ricavato dal nostro problema. Non abbiamo nessuna sottomatrice identità a disposizione da utilizzare come base ammissibile quindi ricorriamo alla \textbf{fase 1 del metodo del simplesso} per ottenere una BFS di partenza.
+In tabella \vref{tab:tab61} il tableau ricavato dal nostro problema. Non abbiamo nessuna sottomatrice identità a disposizione da utilizzare come base ammissibile quindi ricorriamo alla \textbf{fase 1 del metodo del simplesso} per ottenere una BFS di partenza.
 
 \subsubsection{Fase 1 - aggiunta di variabili artificiali}
 
@@ -938,7 +938,7 @@ Il nostro scopo, dopo l'introduzione di $x^a$, sarà quello di \textbf{eliminarla
 $$
 \psi = \sum_{i=1}^{n'}x_i^a = x^a
 $$
-Scriviamo il nuovo tableau in tabella \vref{tab:tab421} e applichiamo il simplesso per ottimizzare la nostra funzione $\psi$.
+Scriviamo il nuovo tableau in tabella \vref{tab:tab62} e applichiamo il simplesso per ottimizzare la nostra funzione $\psi$.
 \begin{table}[htbp]
 \centering
 \begin{tabular}{rrcccccc}
@@ -949,7 +949,7 @@ $R_1$ & $x_3$ 		& \Sc{1} 	& 0		& 1 	& 1 	& \Sc{0}& 0 \\
 $R_2$ & $x^a$ 		& \Sc{2} 	& -1	& 1		& 0 	&\Sc{-1}& 1 \\
 \end{tabular}
 \caption{Nuovo tableau con la variabile artificiale $x^a$.}
-\label{tab:tab421}
+\label{tab:tab62}
 \end{table}
 Abbiamo una sottomatrice identità formata dalla base:
 $$
@@ -963,7 +963,7 @@ Condizione vera per ogni valore tranne $y_{05}$ che provvediamo ad annullare tra
 $$
 R_0\leftarrow R_0 - R_2
 $$
-Nel nuovo tableau in figura \vref{tab:tab422} dobbiamo scegliere su quale colonna fare pivoting. L'unica colonna con $\OL{c_j}<0$ è $A_2$ e cercheremo qui l'elemento pivot.
+Nel nuovo tableau in figura \vref{tab:tab63} dobbiamo scegliere su quale colonna fare pivoting. L'unica colonna con $\OL{c_j}<0$ è $A_2$ e cercheremo qui l'elemento pivot.
 Per scegliere su quale elemento fare \textbf{pivoting}, dobbiamo ottenere il valore di $y_{\ell 2}$ tale che:
 $$
 \vartheta_{\max}=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}}
@@ -983,14 +983,14 @@ $R_1$ & $x_2$ 		& \Sc{1} 	& 0		& \C{1}	& 1 	& \Sc{0}& 0 \\
 $R_2$ & $x^a$ 		& \Sc{2} 	& -1	& 1		& 0 	&\Sc{-1}& 1 \\
 \end{tabular}
 \caption{Pivoting su $y_{12}$. $A_2$ entra in base e $A_3$ esce.}
-\label{tab:tab422}
+\label{tab:tab63}
 \end{table}
 Poiché $y_{12}=1$ non c'è nulla da fare su $R_1$. Applichiamo le operazioni elementari di riga al nostro tableau come segue:
 \begin{align*}
 R_0&\leftarrow R_0 + R_1; \\
 R_2&\leftarrow R_2 - R_1.
 \end{align*}
-Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab423}.
+Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab64}.
 \begin{table}[htbp]
 \centering
 \begin{tabular}{rrcccccc}
@@ -1001,7 +1001,7 @@ $R_1$ & $x_2$ 		& \Sc{1} 	& 0		& 1 	& 1 	& \Sc{0}& 0 \\
 $R_2$ & $x^a$ 		& \Sc{1} 	& -1	& 0		& -1	&\Sc{-1}& 1 \\
 \end{tabular}
 \caption{Secondo tableau. $x^a$ ancora in base e $\psi\neq 0$.}
-\label{tab:tab423}
+\label{tab:tab64}
 \end{table}
 Siamo nella soluzione ottima ma:
 \begin{itemize}
@@ -1011,7 +1011,7 @@ Siamo nella soluzione ottima ma:
 Non vale la pena sprecare energie per far uscire dalla base la variabile artificiale. Qualunque operazione facessimo, il valore della soluzione ottima non potrebbe migliorare e quindi non potrebbe annullarsi. Ciò significa che non esistono soluzioni ammissibili al nostro problema.
 \subsection{Soluzione del problema}
 Il problema non ha soluzione in quanto nella fase 1 del metodo del simplesso non siamo riusciti a trovare una BFS che non coinvolga variabili artificiali.
-\section{Esercizio 4}
+\section{Esercizio 7}
 Un'azienda produce panchine per giardini di due tipi utilizzando plastica riciclata e ricevendo un contributo statale di 40\euro per ogni panchina di tipo 1 e 30\euro per ogni panchina di tipo 2. La vendita di ogni panchina di tipo 1 causa una perdita di 10\euro, mentre quella di ogni panchina di tipo 2 da un ricavo di 30\euro. I macchinari utilizzati hanno un limite produttivo di 300 panchine per ciascun tipo. L'azienda vuole ricevere almeno 12000\euro di contributi statali. Si esprimano i livelli di produzione in centinaia di panchine ed i quantitativi monetari in migliaia di euro.
 \begin{enumerate}
 \item Definire il modello LP che massimizza l'introito complessivo dato dalla sola vendita delle panchine.
@@ -1130,7 +1130,7 @@ $R_2$		& \Sc{3} 	& 0 	& 1		& 0 	& 1 	& 0 \\
 $R_3$		& \Sc{12} 	& 4 	& 3 	& 0 	& 0 	& -1 \\
 \end{tabular}
 \caption{Tableau iniziale.}
-\label{tab:tab424}
+\label{tab:tab71}
 \end{table}
 Non abbiamo nessuna sottomatrice identità a disposizione da utilizzare come base ammissibile.
 Per ottenere una BFS di partenza, quindi, ricorriamo alla \textbf{fase 1 del metodo del simplesso}.
@@ -1145,7 +1145,7 @@ Il nostro scopo, dopo l'introduzione di $x^a$, sarà quello di \textbf{eliminarla
 $$
 \psi = \sum_{i=1}^{n'}x_i^a = x^a
 $$
-Scriviamo il nuovo tableau in tabella \vref{tab:tab42} e applichiamo il simplesso per ottimizzare la nostra funzione $\psi$.
+Scriviamo il nuovo tableau in tabella \vref{tab:tab72} e applichiamo il simplesso per ottimizzare la nostra funzione $\psi$.
 \begin{table}[htbp]
 \centering
 \begin{tabular}{rrccccccc}
@@ -1157,7 +1157,7 @@ $R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
 $R_3$ & $x^a$ 		& \Sc{12} 	& 4 	& 3 	& 0 	& 0 	&\Sc{-1}& 1 \\
 \end{tabular}
 \caption{Nuovo tableau con la variabile artificiale $x^a$.}
-\label{tab:tab425}
+\label{tab:tab72}
 \end{table}
 Abbiamo una sottomatrice identità formata dalla base:
 $$
@@ -1171,7 +1171,7 @@ Condizione vera per ogni valore tranne $y_{06}$ che provvediamo ad annullare tra
 $$
 R_0\leftarrow R_0 - R_3
 $$
-Nel nuovo tableau in figura \vref{tab:tab426} faremo pivoting sulla colonna $A_1$, che sarebbe la nostra scelta sia con la regola di Dantzig che con la regola di Bland. Per scegliere su quale elemento fare \textbf{pivoting}, dobbiamo ottenere il valore di $y_{\ell 1}$ tale che:
+Nel nuovo tableau in figura \vref{tab:tab73} faremo pivoting sulla colonna $A_1$, che sarebbe la nostra scelta sia con la regola di Dantzig che con la regola di Bland. Per scegliere su quale elemento fare \textbf{pivoting}, dobbiamo ottenere il valore di $y_{\ell 1}$ tale che:
 $$
 \vartheta_{\max}=\min_{i:y_{i1}>0}\frac{y_{i0}}{y_{i1}}=\frac{y_{i0}}{y_{\ell 1}}
 $$
@@ -1191,7 +1191,7 @@ $R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
 $R_3$ & $x^a$ 		& \Sc{12} 	&\C{4} 	& 3 	& 0 	& 0 	&\Sc{-1}& 1 \\
 \end{tabular}
 \caption{Pivoting su $y_{31}$. $A_1$ entra in base e $A_6$ esce.}
-\label{tab:tab426}
+\label{tab:tab73}
 \end{table}
 Applichiamo le operazioni elementari di riga (nell'ordine) al nostro tableau come segue:
 \begin{align*}
@@ -1199,7 +1199,7 @@ R_0&\leftarrow R_0+R_3; \\
 R_3&\leftarrow \frac{R_3}{4}; \\
 R_1&\leftarrow R_1 - R_3.
 \end{align*}
-Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab427}.
+Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab74}.
 \begin{table}[htbp]
 \centering
 {
@@ -1217,7 +1217,7 @@ $R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
 $R_3$ & $x_1$ 		& \Sc{3} 	& 1 	& \tq 	& 0 	& 0 	& \Sc{\muq}& \uq \\
 \end{tabular}\caption{Secondo tableau. Vertice $\alpha(3,0)$}
 }
-\label{tab:tab427}
+\label{tab:tab74}
 \end{table}
 Siamo giunti alla soluzione ottima, essendo $\OL{c_j}>0 \quad\forall j$. Inoltre la variabile artificiale $x^a$ non è più in base. La nuova base e la nuova soluzione sono:
 \begin{align*}
@@ -1226,8 +1226,8 @@ x&=(3,0,0,3,0,0)
 \end{align*}
 Siamo nel vertice $\alpha(3,0)$ e quindi in una BFS da cui possiamo partire per la \textbf{fase 2} del metodo del simplesso.
 \subsubsection{Fase 2 - Simplesso}
-Per questa fase useremo come tableau di partenza quello in tabella \vref{tab:tab427} sostituendo la funzione obiettivo fittizia $\psi$ utilizzata in precedenza con la nostra vera funzione obiettivo $\varphi$. Manterremo la variabile artificiale (che si fa notare non cambia in alcun modo il nostro problema in quanto non faremo mai entrare in base) perché, come vedremo poi, il suo costo relativo finale sarà utile ai fini della soluzione del problema duale.
-Il tableau così ottenuto è quello in tabella \vref{tab:tab428}
+Per questa fase useremo come tableau di partenza quello in tabella \vref{tab:tab74} sostituendo la funzione obiettivo fittizia $\psi$ utilizzata in precedenza con la nostra vera funzione obiettivo $\varphi$. Manterremo la variabile artificiale (che si fa notare non cambia in alcun modo il nostro problema in quanto non faremo mai entrare in base) perché, come vedremo poi, il suo costo relativo finale sarà utile ai fini della soluzione del problema duale.
+Il tableau così ottenuto è quello in tabella \vref{tab:tab75}
 \begin{table}[htbp]
 \centering
 {
@@ -1245,7 +1245,7 @@ $R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
 $R_3$ & $x_1$ 		& \Sc{3} 	& 1 	& \tq 	& 0 	& 0 	& \Sc{\muq}& \uq \\
 \end{tabular}\caption{Secondo tableau. Vertice $\alpha(3,0)$ e funzione obiettivo $\varphi$.}
 }
-\label{tab:tab428}
+\label{tab:tab75}
 \end{table}
 Per applicare il simplesso, dobbiamo fare in modo che:
 $$
@@ -1255,7 +1255,7 @@ L'elemento $y_{01}$ è l'unico a non essere nullo. Ovviamo al problema con l'oper
 $$
 R_0\leftarrow R_0 - R_3
 $$
-Otteniamo quindi il tableau in tabella \vref{tab:tab429}.
+Otteniamo quindi il tableau in tabella \vref{tab:tab76}.
 \begin{table}[htbp]
 \centering
 {
@@ -1274,14 +1274,14 @@ $R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
 $R_3$ & $x_1$ 		& \Sc{3} 	& 1 	& \tq 	& 0 	& 0 	& \Sc{\muq}& \uq \\
 \end{tabular}\caption{Secondo tableau. Vertice $\alpha(3,0)$.}
 }
-\label{tab:tab429}
+\label{tab:tab76}
 \end{table}
 Per fare pivoting sceglieremo la colonna $A_2$, l'unica con un costo relativo negativo. Cerchiamo quindi l'elemento pivot $y_{\ell 2}$.
 \begin{align*}
 \vartheta_{\max}&=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}} \\
 \vartheta_{\max}&=\min\left(\frac{3}{1},\frac{3}{\frac{3}{4}}\right)=\frac{3}{1}=\frac{y_{20}}{\pmb{y_{22}}}
 \end{align*}
-Faremo pivoting sull'elemento $y_{22}$ (cerchiato in tabella \vref{tab:tab430}). 
+Faremo pivoting sull'elemento $y_{22}$ (cerchiato in tabella \vref{tab:tab77}). 
 \begin{table}[htbp]
 \centering
 {
@@ -1300,7 +1300,7 @@ $R_2$ & $x_4$ 		& \Sc{3} 	& 0		& \C{1}	& 0 	& 1 	& \Sc{0}& 0 \\
 $R_3$ & $x_1$ 		& \Sc{3} 	& 1 	& \tq 	& 0 	& 0 	& \Sc{\muq}& \uq \\
 \end{tabular}\caption{Terzo tableau. Vertice $\alpha(3,0)$}
 }
-\label{tab:tab430}
+\label{tab:tab77}
 \end{table}
 $y_{22}=1$, quindi le operazioni elementari di riga sono:
 \begin{align*}
@@ -1308,7 +1308,7 @@ R_0&\leftarrow R_0 + \frac{15}{4}R_2 \\
 R_1&\leftarrow R_1 + \frac{3}{4}R_2 \\
 R_3&\leftarrow R_3 - \frac{3}{4}R_2
 \end{align*}
-Otterremo il tableau in tabella \vref{tab:tab431}.
+Otterremo il tableau in tabella \vref{tab:tab78}.
 \begin{table}[htbp]
 \centering
 {
@@ -1330,7 +1330,7 @@ $R_2$ & $x_2$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
 $R_3$ & $x_1$ 		& \Sc{\tq} 	& 1 	& 0 	& 0 	& \mtq 	& \Sc{\muq}& \uq \\
 \end{tabular}\caption{Quarto tableau. Vertice $\beta(\frac{3}{4},3)$}
 }
-\label{tab:tab431}
+\label{tab:tab78}
 \end{table}
 Siamo giunti alla soluzione ottima, essendo $\OL{c_j}>0 \quad\forall j$. La nuova base e la nuova soluzione sono:
 \begin{align*}
@@ -1394,7 +1394,7 @@ $R_2$ & $x_4$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
 $R_3$ & $x^a$ 		& \Sc{12} 	& 4 	& 3 	& 0 	& 0 	&\Sc{-1}& 1 \\
 \end{tabular}
 \caption{Nuovo tableau con la variabile artificiale $x^a$.}
-\label{tab:tab432}
+\label{tab:tab79}
 \end{table}
 \begin{table}[htbp]
 \centering
@@ -1417,7 +1417,7 @@ $R_2$ & $x_2$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}& 0 \\
 $R_3$ & $x_1$ 		& \Sc{\tq} 	& 1 	& 0 	& 0 	& \mtq 	& \Sc{\muq}& \uq \\
 \end{tabular}\caption{Quarto tableau. Vertice $\beta(\frac{3}{4},3)$}
 }
-\label{tab:tab433}
+\label{tab:tab710}
 \end{table}
 La base iniziale è $\mathcal{B}_1={A_3,A_4,A_6}$. Applicando delle semplici sottrazioni, ricaviamo la soluzione del problema duale:
 \begin{align*}
@@ -1438,6 +1438,6 @@ $$
 $$
 Il risultato è, come atteso, lo stesso del problema primale.
 
-\subsubsection{Vincolo di interezza}
+\subsection{Vincolo di interezza}\label{sec:es7ILP}
 
 \textit{Sezione in fase di allestimento...ci rivediamo appena il prof. spiegherà i metodi per la ILP}.
