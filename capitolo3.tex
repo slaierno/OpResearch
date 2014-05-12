@@ -40,7 +40,7 @@ Nel momento in cui uno dei sottoproblemi offre una soluzione intera uguale a que
 \paragraph{Rappresentazione}
 Il metodo migliore per rappresentare la soluzione tramite branch and bound è un albero binario.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \centering
 \begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
 					level/.style={sibling distance=50mm, level distance=20mm},
@@ -87,7 +87,7 @@ $R_3$ & $x_5$ 		& \Sc{\tm}	& 0 	& 0 	& -\um 	& \um 	& \Sc{1}& -\um \\
 \caption{Tableau finale del problema LP. Rappresenta il rilassamento continuo del problema ILP.}
 \label{tab:tab411}
 \end{table}
-Le colonne $R_1$,$R_2$ ed $R_3$ sono valide candidate per  applicare il taglio di Gomory. Scegliamo la riga $R_1$:
+Le righe $R_1$,$R_2$ ed $R_3$ sono valide candidate per  applicare il taglio di Gomory. Scegliamo la riga $R_1$:
 $$
 \frac{1}{2}x_3+\frac{1}{2}x_4\geq\frac{1}{2}
 $$
@@ -161,7 +161,7 @@ $R_4$ & $x_4$		& \Sc{1}	& 0		& 0 	& 1		& 1		& 0		& -2
 \end{table}
 La nuova base e la nuova soluzione sono:
 \begin{align*}
-\mathcal{B}&={A_2,A_1,A_5,A_4} \\
+\mathcal{B}&=\{A_2,A_1,A_5,A_4\} \\
 x&=(5,3,0,1,1)
 \end{align*}
 La soluzione è intera ed il nostro problema di ILP è risolto nel nuovo vertice $\varepsilon(5,3)$. Il valore della soluzione è:
@@ -249,7 +249,7 @@ In giallo è rappresentato il nuovo politopo $P'$ risultato del vecchio politopo 
 
 \subsection{ILP - Branch and bound}
 Il problema di LP iniziale verrà denominato $P_0$. La soluzione del rilassamento continuo $x^*=\left(\frac{9}{2},\frac{7}{2}\right)$ è $-z^*=-8$, il che imposterà il nostro lower bound a $L_B=\lceil -8 \rceil = -8$.
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \centering
 \begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
 					level/.style={sibling distance=50mm, level distance=20mm},
@@ -264,8 +264,8 @@ Il problema di LP iniziale verrà denominato $P_0$. La soluzione del rilassamento
 
 Iniziando dalla variabile $x_1$ possiamo prendere in considerazione due diversi sottoproblemi derivati dall'aggiunta di uno dei due seguenti vincoli:
 \begin{align*}
-x_1&\geq\lceil x^*_1 \rceil \\
-x_1&\leq\lfloor x^*_1 \rfloor
+x_1&\geq\lceil x^*_1 \rceil &\Rightarrow x_1&\geq 5\\
+x_1&\leq\lfloor x^*_1 \rfloor &\Rightarrow x_1&\leq 4
 \end{align*}
 Per convincerci che considerando questi due vincoli non si esclude nessuna soluzione e che sono mutuamente esclusivi, si faccia riferimento al grafico \vref{fig:graph43} e osservando che le due aree colorate in ciano e in verde non escludono nessuno dei punti interi.
 \begin{figure}[htbp]
@@ -327,7 +327,7 @@ Per convincerci che considerando questi due vincoli non si esclude nessuna soluz
 \label{fig:graph43}
 \end{figure}
 Esploriamo ora il figlio $P_1$ del problema $P_0$, corrispondente al vincolo $x_1\geq\lceil x^*_1 \rceil = 5$.
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \centering
 \begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
 					level/.style={sibling distance=50mm, level distance=20mm},
@@ -434,7 +434,7 @@ La nuova base e la nuova soluzione sono:
 x&=(5,3,0,1,1)
 \end{align*}
 La soluzione è intera ed il ramo attuale dell'albero è giunto ad una foglia.
-\begin{figure}[h!]
+\begin{figure}[ht!]
 \centering
 \begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
 					level/.style={sibling distance=50mm, level distance=20mm},
@@ -454,3 +454,1237 @@ Siamo fortunati perché l'attuale soluzione è uguale al lower bound del nodo \tex
 $$
 z(\varepsilon)=-\varphi=8
 $$
+
+\section{Esercizio 7}
+In questa sezione riprenderemo da dove eravamo rimasti in \vref{sec:es7ILP}, risolvendo il problema ILP prima con il metodo dei \textbf{tagli di Gomory} e poi con il metodo \textbf{branch and bound} (il secondo in realtà non è richiesto dalla traccia, ma lo proveremo ugualmente come utile esercitazione).
+
+\subsection{ILP - Tagli di Gomory}
+Riportiamo in tabella \vref{tab:tab711} il tableau finale del problema LP.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
+	\newcommand{\qq}{$\frac{15}{4}$}
+	\newcommand{\nq}{$\frac{9}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mqq}{$-\frac{15}{4}$}
+	\newcommand{\ttq}{$\frac{33}{4}$}
+
+\begin{tabular}{rrcccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\ttq}	& 0 	& 0 	& 0 	& \qq	& \Sc{\uq} \\
+\cline{3-8}
+$R_1$ & $x_3$ 		& \Sc{\nq} 	& 0		& 0 	& 1 	& \tq 	& \Sc{\uq} \\
+$R_2$ & $x_2$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0} \\
+$R_3$ & $x_1$ 		& \Sc{\tq} 	& 1 	& 0 	& 0 	& \mtq 	& \Sc{\muq} \\
+\end{tabular}
+}
+\caption{Tableau finale del problema LP. Rappresenta il rilassamento continuo del problema ILP.}
+\label{tab:tab711}
+\end{table}
+Le righe $R_0$, $R_1$ ed $R_3$ sono valide candidate per un taglio di Gomory, scegliamo quindi la prima disponibile, cioè $R_0$. Il taglio sarà:
+$$
+\sum_{j\in\{4,5\}} f_{0j}x_j \geq f_{00} \Rightarrow \frac{3}{4}x_4+\frac{1}{4}x_5\geq\frac{1}{4}
+$$
+Trasformiamolo ora in una forma algebricamente adatta al nostro tableau:
+$$
+-\frac{3}{4}x_4-\frac{1}{4}x_5+s=-\frac{1}{4}
+$$
+Aggiungendo questo vincolo si ottiene il tableau in tabella \vref{tab:tab712}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
+	\newcommand{\qq}{$\frac{15}{4}$}
+	\newcommand{\nq}{$\frac{9}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mqq}{$-\frac{15}{4}$}
+	\newcommand{\ttq}{$\frac{33}{4}$}
+
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $s$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\ttq}	& 0 	& 0 	& 0 	& \qq	& \Sc{\uq}	& 0 \\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{\nq} 	& 0		& 0 	& 1 	& \tq 	& \Sc{\uq}	& 0 \\
+$R_2$ & $x_2$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}	& 0 \\
+$R_3$ & $x_1$ 		& \Sc{\tq} 	& 1 	& 0 	& 0 	& \mtq 	& \Sc{\muq}	& 0 \\
+\cline{3-8}
+$R_4$ & $s$ 		& \Sc{\muq}	& 0 	& 0 	& 0 	& \mtq 	& \C{\muq}	& 1 \\
+\end{tabular}
+}
+\caption{Applicazione del primo taglio di Gomory.}
+\label{tab:tab712}
+\end{table}
+La soluzione attuale rispetto il criterio di ottimalità ma non è ammissibile poiché $s<0$. Il simplesso duale ci porterà in una nuova base ottima e infine anche ammissibile.
+Sceglieremo l'elemento di pivoting $y_{is}$ tale che:
+$$
+\vartheta=\max_{j>0:y_{ij}<0}\left(\frac{y_{0j}}{y_{ij}}\right)=\frac{y_{0s}}{y_{is}}
+$$
+Nel nostro caso:
+$$
+\vartheta=\max\left(\frac{\frac{15}{4}}{-\frac{3}{4}},\frac{\frac{1}{4}}{-\frac{1}{5}}\right)=\max(-5,-1)=-1=\frac{y_{05}}{\pmb{y_{45}}}
+$$
+Faremo pivoting sull'elemento $y_{45}$, cerchiato in tabella \vref{tab:tab712}. Attuiamo le operazioni elementari di riga:
+\begin{align*}
+R_0&\leftarrow R_0 + R_4 \\
+R_1&\leftarrow R_1 + R_4 \\
+R_3&\leftarrow R_3 - R_4 \\
+R_4&\leftarrow -4R_4
+\end{align*}
+Il tableau che segue è quello in tabella \vref{tab:tab713}.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $s$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{8}	& 0 	& 0 	& 0 	& 3		& \Sc{0}	& 1 \\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{2} 	& 0		& 0 	& 1 	& 0 	& \Sc{0}	& 1 \\
+$R_2$ & $x_2$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}	& 0 \\
+$R_3$ & $x_1$ 		& \Sc{1} 	& 1 	& 0 	& 0 	& 0 	& \Sc{0}	& -1 \\
+\cline{3-8}
+$R_4$ & $x_5$ 		& \Sc{1}	& 0 	& 0 	& 0 	& 3 	& 1			& -4 \\
+\end{tabular}
+\caption{Secondo tableau. Soluzione ottima e intera al vertice $\delta(1,3)$.}
+\label{tab:tab713}
+\end{table}
+La soluzione del nuovo problema LP è ottima e intera, quindi è anche la soluzione del problema ILP. La nuova base, la nuova soluzione e il suo valore sono:
+\begin{align*}
+\mathcal{B}&=\{A_3,A_2,A_1,A_5\} \\
+x&=(1,3,2,0,1) \\
+z(\delta)&=-\varphi=8
+\end{align*}
+
+\subsubsection{Rappresentazione grafica}
+Rappresentiamo il taglio di Gomory in funzione delle variabili $x_1$ e $x_2$ ricavandole dai vincoli espressi all'inizio:
+$$
+\begin{cases}
+x_2+x_4=3 \\
+4x_1+3x_2-x_5=12
+\end{cases}
+\Rightarrow
+\begin{cases}
+x_4=3-x_2 \\
+x_5=-12+4x_1+3x_2
+\end{cases}
+$$
+Sostituiamo queste espressioni nel taglio di Gomory espresso sotto forma di disequazione:
+$$
+\frac{3}{4}x_4+\frac{1}{4}x_5\geq\frac{1}{4}\Rightarrow 3(3-x_2)+(-12+4x_1+3x_2)\geq 1 \Rightarrow x_1\geq 1
+$$
+In figura \vref{fig:graph71} è rappresentato il problema dopo il taglio.
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },%xtick={1,2,3}
+ ]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+
+\dotgrid{0}{4}{0}{4}{black!50}
+\addplot
+[domain=0:4, samples=10, thick, blue, name path=x3] (3,x);
+\addplot
+[domain=0:4, samples=10, thick, red, name path=y3] {3};
+\addplot
+[domain=0:3, samples=10, thick, green, name path=4x3y12] {-(4/3)*x + 4};
+\addplot
+[domain=0:4, samples=10, thick, purple, name path=gomory]
+	(1,x) node [pos=0.8, anchor=west, pin={75:{\color{purple}$x_1\geq 1$}}, inner sep= 0pt] {};
+\path[name path=GOM]
+	(axis cs:1.25,0)--(axis cs:1.25,4);
+\addplot[thick, fill=yellow, fill opacity=0.5] fill between [of=4x3y12 and UP, soft clip={domain=0:3}];
+\addplot[white] fill between [of=y3 and UP];
+\addplot[white] fill between [of=gomory and AY];
+\addplot[pattern=north east lines, pattern color=purple] fill between [of=gomory and GOM];
+\intne{x3}{AX}{$\alpha$}{alp};
+\intsw{y3}{4x3y12}{$\beta$}{bet};
+\intne{y3}{x3}{$\gamma$}{gam};
+\intsw{gomory}{y3}{$\delta$}{del};
+\node at (axis cs:2.5,2) {$P_1$};
+\addplot[-latex, thick] coordinates
+           {(0,0) (-1/3.16,3/3.16)} node [pos=.3, anchor=north, label={135:{\small $\nabla z$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Rappresentazione cartesiana del problema di programmazione lineare dopo il taglio di Gomory}
+\label{fig:graph71}
+\end{figure}
+In giallo è rappresentato il nuovo politopo $P'$ risultato del vecchio politopo $P$ e del taglio di Gomory applicato.
+
+\subsection{ILP - Branch and bound}
+Il problema di LP iniziale verrà denominato $P_0$. La soluzione del rilassamento continuo $x^*=\left(\frac{3}{4},3\right)$ è $-z^*=-\frac{33}{4}$, il che imposterà il nostro lower bound a $L_B=\lceil -\frac{33}{4} \rceil = -8$.
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=50mm, level distance=20mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$L_B=-8$}] (z) {$P_0$}
+	;
+\end{tikzpicture}
+\end{figure}
+
+Iniziando dalla variabile $x_1$ possiamo prendere in considerazione due diversi sottoproblemi derivati dall'aggiunta di uno dei due seguenti vincoli (si noti che non avrebbe senso iniziare dalla variabile $x_2$, che è già intera):
+\begin{align*}
+x_1&\geq\lceil x^*_1 \rceil &\Rightarrow x_1&\geq 1\\
+x_1&\leq\lfloor x^*_1 \rfloor &\Rightarrow x_1&\leq 0
+\end{align*}
+Per convincerci che considerando questi due vincoli non si esclude nessuna soluzione e che sono mutuamente esclusivi, si faccia riferimento al grafico \vref{fig:graph43} e osservando che le due aree colorate in ciano e in verde non escludono nessuno dei punti interi.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },%xtick={-2,-1,0,1,2,3}
+ ]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+
+\dotgrid{0}{4}{0}{4}{black!50}
+\addplot
+[domain=-2:-1, samples=2, white, name path=enlarge] {2};
+\addplot
+[domain=0:4, samples=10, thick, blue, name path=x3] (3,x);
+\addplot
+[domain=0:4, samples=10, thick, red, name path=y3] {3};
+\addplot
+[domain=0:3, samples=10, thick, green, name path=4x3y12] {-(4/3)*x + 4};
+\addplot
+[domain=0:4, samples=10, thick, cyan, name path=gomory]
+	(1,x) node [pos=0.8, anchor=west, pin={75:{\color{cyan}$x_1\geq 1$}}, inner sep= 0pt] {};
+\path[name path=GOM]
+	(axis cs:1.25,0)--(axis cs:1.25,4);
+\addplot
+[domain=0:4, samples=10, thick, purple, name path=bb]
+	(0,x) node [pos=0.8, anchor=east, pin={135:{\color{purple}$x_1\leq 0$}}, inner sep= 0pt] {}
+	;
+\path [name path=BBi]
+	(axis cs:-0.25,0)--(axis cs:-0.25,4);
+\addplot[thick, fill=cyan, fill opacity=0.5] fill between [of=4x3y12 and UP, soft clip={domain=0:3}];
+\addplot[white] fill between [of=y3 and UP];
+\addplot[white] fill between [of=gomory and AY];
+\addplot[pattern=north east lines, pattern color=cyan] fill between [of=gomory and GOM];
+\addplot[pattern=north east lines, pattern color=purple] fill between [of=bb and BBi];
+\intne{x3}{AX}{$\alpha$}{alp};
+\intsw{y3}{4x3y12}{$\beta$}{bet};
+\intne{y3}{x3}{$\gamma$}{gam};
+\intsw{gomory}{y3}{$\delta$}{del};
+\node at (axis cs:2.5,2) {$P'$};
+\node at (axis cs:-2,2) {};
+\addplot[-latex, thick] coordinates
+           {(0,0) (-1/3.16,3/3.16)} node [pos=.3, anchor=north, label={135:{\small $\nabla z$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Rappresentazione cartesiana dei sottoproblemi di $P_0$.}
+\label{fig:graph72}
+\end{figure}
+
+Inizieremo, come di consueto, ad esplorare il ramo con la disequazione di maggioranza ma si noti dal grafico come l'altro ramo porterebbe evidentemente ad un nulla di fatto in quanto l'area di regione ammissibile sarebbe vuota.
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=50mm, level distance=20mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$L_B=-8$}] (z) {$P_0$}
+	child {node [circle, draw] (a) {$P_1$}
+			edge from parent node[left] {$x_1\geq 1$}
+		   }
+	;
+\end{tikzpicture}
+\end{figure}
+
+\textbf{N.B.}: il taglio che applicheremo sarà lo stesso che abbiamo applicato in precedenza con i tagli di Gomory.
+
+Il taglio applicato nel problema $P_1$ può essere così espresso in forma standard:
+$$
+-x_1+s=-1
+$$
+Lo introduciamo nel tableau in tabella \vref{tab:tab711} ottenendo quello in tabella \vref{tab:tab714}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
+	\newcommand{\qq}{$\frac{15}{4}$}
+	\newcommand{\nq}{$\frac{9}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mqq}{$-\frac{15}{4}$}
+	\newcommand{\ttq}{$\frac{33}{4}$}
+
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $s$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\ttq}	& 0 	& 0 	& 0 	& \qq	& \Sc{\uq}	& 0 \\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{\nq} 	& 0		& 0 	& 1 	& \tq 	& \Sc{\uq}	& 0 \\
+$R_2$ & $x_2$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}	& 0 \\
+$R_3$ & $x_1$ 		& \Sc{\tq} 	& 1 	& 0 	& 0 	& \mtq 	& \Sc{\muq}	& 0 \\
+\cline{3-8}
+$R_4$ & $s$ 		& \Sc{-1}	& -1 	& 0 	& 0 	& 0 	& 0	& 1 \\
+\end{tabular}
+}
+\caption{Sottoproblema $P_1$.}
+\label{tab:tab714}
+\end{table}
+Per riottenere la sottomatrice identità dobbiamo rendere $y_{41}=0$, a tal fine operiamo:
+$$
+R_4\leftarrow R_4+R_3
+$$
+Otterremo così il tableau in tabella \vref{tab:tab715}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
+	\newcommand{\qq}{$\frac{15}{4}$}
+	\newcommand{\nq}{$\frac{9}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mqq}{$-\frac{15}{4}$}
+	\newcommand{\ttq}{$\frac{33}{4}$}
+
+\begin{tabular}{rrccccccc}
+ 	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $s$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\ttq}	& 0 	& 0 	& 0 	& \qq	& \Sc{\uq}	& 0 \\
+\cline{3-9}
+$R_1$ & $x_3$ 		& \Sc{\nq} 	& 0		& 0 	& 1 	& \tq 	& \Sc{\uq}	& 0 \\
+$R_2$ & $x_2$ 		& \Sc{3} 	& 0		& 1		& 0 	& 1 	& \Sc{0}	& 0 \\
+$R_3$ & $x_1$ 		& \Sc{\tq} 	& 1 	& 0 	& 0 	& \mtq 	& \Sc{\muq}	& 0 \\
+\cline{3-8}
+$R_4$ & $s$ 		& \Sc{\muq}	& 0 	& 0 	& 0 	& \mtq 	& \C{\muq}	& 1 \\
+\end{tabular}
+}
+\caption{Sottoproblema $P_1$, secondo tableau.}
+\label{tab:tab715}
+\end{table}
+Non è sorprendente che questo tableau è \textbf{identico a quello in tabella \vref{tab:tab712}}. Non ripeteremo i calcoli sul tableau che sarebbero identici a quelli del caso del taglio di Gomory. Riportiamo soltanto il risultato finale:
+\begin{align*}
+\mathcal{B}&=\{A_3,A_2,A_1,A_5\} \\
+x&=(1,3,2,0,1) \\
+z(\delta)&=-\varphi=8
+\end{align*}
+Il nostro ramo dell'albero è giunto a una foglia.
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=50mm, level distance=20mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$L_B=-8$}] (z) {$P_0$}
+	child {node [circle, draw, label=east:{$L_B=-8$}, label=south:{$-z=-8$}] (a) {$P_1$}
+			edge from parent node[left] {$x_1\geq 1$}
+		   }
+	;
+\end{tikzpicture}
+\end{figure}
+
+Siamo fortunati perché l'attuale soluzione è uguale al lower bound del nodo \textit{root}, il che significa che non serve cercare altre soluzioni che potrebbero essere al più uguali a quella trovata. Ne conviene infine che il vertice $\delta(1,3)$ è una soluzione ottima del problema ILP. Il valore della soluzione è:
+$$
+z(\delta)=-\varphi=8
+$$
+
+\section{Esercizio 1}
+
+Riprenderemo l'esercizio in \vref{sec:es1ILP}. Segue la parte di traccia che richiede come affrontare il problema ILP:
+\begin{enumerate}
+\item Risolvere con l'algoritmo branch-and-bound, scegliendo per il branching la variabile frazionaria di indice massimo ed esplorando per primo il nodo corrispondente alla condizione $x_j\leq\alpha$.
+\end{enumerate}
+Durante l'esercitazione in classe il tutor ha esplorato invece per prima la \textit{variabile di indice minimo}, concludendo l'esercizio in tempo record. Noi esploreremo come da traccia: l'esercizio sarà più lungo ma forse didatticamente più utile.
+In ogni caso, come sempre, proveremo anche a utilizzare i tagli di Gomory.
+
+\subsection{ILP - Tagli di Gomory}
+Riportiamo in tabella \vref{tab:tab11} il tableau finale del problema LP.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\tm}{$\frac{13}{2}$}
+	\newcommand{\cm}{$\frac{5}{2}$}
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+\begin{tabular}{rrcccccc}
+ & & $-\varphi$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\tm} 	& 0 	& 0 	& \um 	& 1 	& 0 \\
+\cline{3-8}
+%\hline
+$R_1$ & $x_1$ 		& \Sc{\cm} 	& 1 	& 0 	& \um 	& -1 	& 0 \\
+$R_2$ & $x_2$ 		& \Sc{2} 	& 0 	& 1 	& 0 	& 1 	& 0 \\
+$R_3$ & $x_5$ 		& \Sc{\um} 	& 0 	& 0 	& \mum 	& 2 	& 1 \\
+\end{tabular}
+}
+\caption{Tableau finale del problema di LP.}
+\label{tab:tab11}
+\end{table}
+Applichiamo quindi il taglio di Gomory sulla riga $R_0$, cioè la prima disponibile:
+$$
+\sum_{j\in\{3,4\}} f_{0j}x_j\geq f_{00} \Rightarrow \frac{1}{2}x_3+0x_4\geq\frac{1}{2}
+$$
+Trasformiamolo in una forma algebricamente più consona:
+$$
+-\frac{1}{2}x_3+s=-\frac{1}{2}
+$$
+Aggiungendo questo vincolo si ottiene il tableau in tabella \vref{tab:tab12}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\tm}{$\frac{13}{2}$}
+	\newcommand{\cm}{$\frac{5}{2}$}
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+\begin{tabular}{rrccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\tm} 	& 0 	& 0 	& \um 	& 1 	& \Sc{0}& 0 \\
+\cline{3-9}
+$R_1$ & $x_1$ 		& \Sc{\cm} 	& 1 	& 0 	& \um 	& -1 	& \Sc{0}& 0 \\
+$R_2$ & $x_2$ 		& \Sc{2} 	& 0 	& 1 	& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x_5$ 		& \Sc{\um} 	& 0 	& 0 	& \mum 	& 2 	& \Sc{1}& 0 \\
+\cline{3-8}
+$R_4$ & $s$			& \Sc{\mum} & 0		& 0		&\C{\mum}& 0	& 0		& 1
+\end{tabular}
+}
+\caption{Applicazione del primo taglio di Gomory.}
+\label{tab:tab12}
+\end{table}
+L'unico elemento su cui è possibile fare pivoting è $y_{43}$ (cerchiato in tabella \vref{tab:tab12}). Procediamo con le operazioni elementari di riga (in ordine):
+\begin{align*}
+R_0&\leftarrow R_0 + R_4 \\
+R_1&\leftarrow R_1 + R_4 \\
+R_3&\leftarrow R_3 - R_4 \\
+R_4&\leftarrow -2R_4
+\end{align*}
+Il tableau che otteniamo è quello in tabella \vref{tab:tab13}.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{6} 	& 0 	& 0 	& 0 	& 1 	& \Sc{0}& 1 \\
+\cline{3-9}
+$R_1$ & $x_1$ 		& \Sc{2} 	& 1 	& 0 	& 0 	& -1 	& \Sc{0}& 1 \\
+$R_2$ & $x_2$ 		& \Sc{2} 	& 0 	& 1 	& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x_5$ 		& \Sc{1} 	& 0 	& 0 	& 0 	& 2 	& \Sc{1}& -1 \\
+\cline{3-8}
+$R_4$ & $x_3$		& \Sc{1} 	& 0		& 0		& 1		& 0		& 0		& -2
+\end{tabular}
+\caption{Simplesso duale dopo il taglio di Gomory. Soluzione ottima e intera al vertice $\zeta(2,2)$.}
+\label{tab:tab13}
+\end{table}
+La soluzione del nuovo problema LP è ottima e intera e quindi anche la soluzione ottima del problema ILP. I nuovi valori di base, soluzione e suo valore sono:
+\begin{align*}
+\mathcal{B}&=\{A_1,A_2,A_5,A_4\} \\
+x&=(2,2,1,0,1) \\
+z(\zeta)&=-\varphi=6
+\end{align*}
+
+\subsubsection{Rappresentazione grafica}
+Rappresentiamo il taglio di Gomory in funzione delle variabili $x_1$ e $x_2$, ricavandole dal vincolo del problema iniziale:
+$$
+2x_1+2x_2+x_3=9\Rightarrow x_3=9-2x_1-2x_2
+$$
+Sostituiamo nel taglio di Gomory in forma di disequazione:
+$$
+\frac{1}{2}x_3\geq\frac{1}{2}\Rightarrow 9-2x_1-2x_2 \geq 1 \Rightarrow x_1+x_2 \leq 4
+$$
+In figura \vref{fig:graph11} è rappresentato il problema dopo il taglio. In giallo è rappresentato il politopo $P'$ risultato del vecchio politopo $P$ e del taglio di Gomory applicato.
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+
+\dotgrid{0}{5}{0}{4}{black!50}    	
+    	
+\addplot [domain=0:4.5, samples=10, thick, blue, name path=2x2y9] {-x+(9/2)}; 
+\addplot [domain=1:5, samples=10, thick, red, name path=yx-1] {x-1};
+\addplot [domain=0:5, samples = 10, thick, purple, name path=y2] {2};
+\addplot [domain=0:4, samples = 10, thick, green, name path=gomory] {-x+4}
+	node [pos=0.2, anchor=west, pin={75:{\color{green}$x_1+x_2\leq 4$}}, inner sep= 0pt] {};
+\path[name path=GOM]
+	(axis cs:0,3.75)--(axis cs:3.75,0);
+\addplot[thick, fill=yellow, fill opacity=0.5] fill between [of=2x2y9 and AX, soft clip={domain=0:11/4},];
+\addplot[white] fill between [of=2x2y9 and y2];
+\addplot[white] fill between [of=gomory and UP];
+\addplot[white] fill between [of=yx-1 and AX];
+\addplot[pattern=horizontal lines, pattern color=green] fill between [of=gomory and GOM];
+\intse{AX}{AY}{$\alpha$}{alp};
+\intse{AY}{y2}{$\beta$}{bet};
+\intne{y2}{2x2y9}{$\gamma$}{gam};
+\inte{2x2y9}{yx-1}{$\delta$}{del};
+\intn{yx-1}{AX}{$\varepsilon$}{eps};
+\intnw{gomory}{y2}{$\zeta$}{zet};
+\node at (axis cs:1,1) {$P'$};
+\addplot[-latex, thick] coordinates
+           {(0,0) (1/2.24,2/2.24)} node [pos=1, anchor=north, label={90:{\small $\nabla z$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Rappresentazione cartesiana del problema di programmazione lineare intera.}
+\label{fig:graph11}
+\end{figure}
+
+\subsection{ILP - Branch and bound}
+\textbf{Premessa:} i calcoli li ho fatti io autonomamente, sono molto macchinosi ma \textit{credo} di averli fatti bene. In ogni caso, data la laboriosità di questa parte di esercizio, fate attenzione e se trovate errori, non esitate a inviarmi correzioni (o a fare una \textit{push request} su \textit{GitHub} al repository: \href{https://github.com/slaierno/OpResearch}{https://github.com/slaierno/OpResearch}).
+La sezione sarà suddivisa in sottosezioni per comodità, ognuna riguardante un sottoproblema diverso.
+
+\subsubsection{$\pmb{P_0}$}
+Il problema $P_0$ sarà quello con cui indicheremo il problema LP iniziale. La sua soluzione è anche la soluzione del rilassamento continuo del problema ILP:
+\begin{align*}
+x^*=\left(\frac{5}{2},2\right) \\
+-z^*=\frac{13}{2}
+\end{align*}
+Il rilassamento continuo imposterà il nostro \textit{lower bound} di partenza:
+$$
+L_B = \lceil -z^* \rceil = \lceil \frac{13}{2} \rceil = -6
+$$
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=50mm, level distance=20mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$L_B=-6$}] (z) {$P_0$}
+	;
+\end{tikzpicture}
+\end{figure}
+
+Partendo dalla variabile di indice maggiore, dal problema $P_0$ possiamo ricavare i seguenti due sottoproblemi:
+\begin{align*}
+P_1 &= P_0 \cap x_5\leq \lfloor x_5^* \rfloor &\Rightarrow x_5 \leq 0 \\
+P_2 &= P_0 \cap x_5\geq \lceil x_5^* \rceil &\Rightarrow x_5 \geq 1
+\end{align*}
+
+I due sottoproblemi sono rappresentati in figura \vref{fig:graph12}. Per ricavare le equazioni delle rette che rappresentano il taglio sulla variabile $x_5$ si procede come al solito facendo riferimento al vincolo che introduce la variabile (esprimiamo le equazioni delle rette nella loro forma cartesiana esplicita:
+$$
+x_1 - x_2 + x_5 = 1 \Rightarrow x_5 = 1 - x_1 + x_2 \Rightarrow
+\begin{cases}
+x_5 \leq 0 \Rightarrow 1 - x_1 + x_2 \leq 0 \\
+x_5 \geq 1 \Rightarrow 1 - x_1 + x_2 \geq 1
+\end{cases} \Rightarrow
+\begin{cases}
+x_2 \leq x_1 - 1 \\
+x_2 \geq x_1
+\end{cases}
+$$
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+
+\dotgrid{0}{5}{0}{4}{black!50}    	
+    	
+\addplot [domain=0:4.5, samples=10, thick, blue, name path=2x2y9] {-x+(9/2)}; 
+\addplot [domain=1:5, samples=10, thick, red, name path=yx-1] {x-1};
+\addplot [domain=0:5, samples = 10, thick, purple, name path=y2] {2};
+\addplot [domain=1:5, samples = 10, thick, green, name path=p1] {x-1}
+	node [pos=0.6, anchor=west, pin={-75:{\color{green}$x_5 \leq 0$}}, inner sep= 0pt] {};
+\path[name path=p1i]
+	(axis cs:1.25,0)--(axis cs:5,3.75);
+\addplot [domain=0:4, samples = 10, thick, cyan, name path=p2] {x}
+	node [pos=0.7, anchor=west, pin={135:{\color{cyan}$x_5 \geq 1$}}, inner sep= 0pt] {};
+\path[name path=p2i]
+	(axis cs:0,0.25)--(axis cs:3.75,4);
+\addplot [domain=1:2.75, samples = 10, thick, brown] {x-1};
+\addplot[thick, fill=cyan, fill opacity=0.3] fill between [of=y2 and p2, soft clip={domain=0:2}];
+\addplot[pattern=north west lines, pattern color=green] fill between [of=p1 and p1i];
+\addplot[pattern=north west lines, pattern color=cyan] fill between [of=p2 and p2i];
+\intse{AX}{AY}{$\alpha$}{alp};
+\intse{AY}{y2}{$\beta$}{bet};
+\intne{y2}{2x2y9}{$\gamma$}{gam};
+\inte{2x2y9}{yx-1}{$\delta$}{del};
+\intn{yx-1}{AX}{$\varepsilon$}{eps};
+\intne{p2}{y2}{$\zeta$}{zet};
+\node at (axis cs:1,1.5) {$P_1$};
+\node at (axis cs:2,1) {$P_2$};
+\addplot[-latex, thick] coordinates
+           {(0,0) (1/2.24,2/2.24)} node [pos=1, anchor=north, label={90:{\small $\nabla z$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Rappresentazione cartesiana del problema di programmazione lineare intera.}
+\label{fig:graph12}
+\end{figure}
+
+Partiremo dalla relazione del problema $P_1$.
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=50mm, level distance=20mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$L_B=-6$}] (z) {$P_0$}
+	child {node [circle, draw] (a) {$P_1$}
+			edge from parent node[left] {$x_5\leq 0$}
+		   }
+	;
+\end{tikzpicture}
+\end{figure}
+
+\subsubsection{$\pmb{P_1}$}
+Per portare all'interno del tableau di $P_0$ il vincolo aggiuntivo del problema $P_1$, trasformiamolo in una forma standard:
+$$
+x_5\leq 0 \Rightarrow \pmb{x_5 + s_1 = 0}
+$$
+Riprendiamo il tableau in tabella \vref{tab:tab11} e aggiungiamo il vincolo e la variabile surplus. Otterremo il tableau in tabella \vref{tab:tab14}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\tm}{$\frac{13}{2}$}
+	\newcommand{\cm}{$\frac{5}{2}$}
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+\begin{tabular}{rrccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\tm} 	& 0 	& 0 	& \um 	& 1 	& \Sc{0}& 0 \\
+\cline{3-9}
+$R_1$ & $x_1$ 		& \Sc{\cm} 	& 1 	& 0 	& \um 	& -1 	& \Sc{0}& 0 \\
+$R_2$ & $x_2$ 		& \Sc{2} 	& 0 	& 1 	& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x_5$ 		& \Sc{\um} 	& 0 	& 0 	& \mum 	& 2 	& \Sc{1}& 0 \\
+\cline{3-8}
+$R_4$ & $s_1$			& \Sc{0}	& 0		& 0		& 0		& 0		& 1		& 1
+\end{tabular}
+}
+\caption{Problema $P_1$.}
+\label{tab:tab14}
+\end{table}
+Ricaviamo nuovamente la sottomatrice identità facendo sì che $y_{45}=0$ con l'operazione elementare di riga:
+$$
+R_4\leftarrow R_4 - R_3
+$$
+Il tableau ottenuto è quello in tabella \vref{tab:tab15}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\tm}{$\frac{13}{2}$}
+	\newcommand{\cm}{$\frac{5}{2}$}
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+\begin{tabular}{rrccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\tm} 	& 0 	& 0 	& \um 	& 1 	& \Sc{0}& 0 \\
+\cline{3-9}
+$R_1$ & $x_1$ 		& \Sc{\cm} 	& 1 	& 0 	& \um 	& -1 	& \Sc{0}& 0 \\
+$R_2$ & $x_2$ 		& \Sc{2} 	& 0 	& 1 	& 0 	& 1 	& \Sc{0}& 0 \\
+$R_3$ & $x_5$ 		& \Sc{\um} 	& 0 	& 0 	& \mum 	& 2 	& \Sc{1}& 0 \\
+\cline{3-8}
+$R_4$ & $s_1$			& \Sc{\mum} & 0		& 0		& \um	&\C{-2}	& 0		& 1
+\end{tabular}
+}
+\caption{Problema $P_1$, secondo tableau.}
+\label{tab:tab15}
+\end{table}
+Per applicare il simplesso duale sulla riga $R_4$ l'unico possibile elemento di pivoting è $y_{44}$ (cerchiato in tabella \vref{tab:tab15}). Le operazioni elementari di riga da effettuare sono, nell'ordine:
+\begin{align*}
+R_3&\rightarrow R_3 + R_4 \\
+R_4&\rightarrow -\frac{1}{2}R_4 \\
+R_0&\rightarrow R_0 - R_4 \\
+R_1&\rightarrow R_1 + R_4 \\
+R_2&\rightarrow R_2 - R_4
+\end{align*}
+Ne risulta il tableau in tabella \vref{tab:tab16}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+	\newcommand{\vcq}{$\frac{25}{4}$}
+	\newcommand{\unq}{$\frac{11}{4}$}
+	\newcommand{\sq}{$\frac{7}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
+	\newcommand{\mtq}{$-\frac{3}{4}$}
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+\begin{tabular}{rrccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$ \\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\vcq}	& 0 	& 0 	& \tq 	& 0 	& \Sc{0}& \um \\
+\cline{3-9}
+$R_1$ & $x_1$ 		& \Sc{\unq}	& 1 	& 0 	& \uq 	& 0 	& \Sc{0}& \mum \\
+$R_2$ & $x_2$ 		& \Sc{\sq} 	& 0 	& 1 	& \uq 	& 0 	& \Sc{0}& \um \\
+$R_3$ & $x_5$ 		& \Sc{0} 	& 0 	& 0 	& 0 	& 0 	& \Sc{1}& 1 \\
+\cline{3-8}
+$R_4$ & $x_4$		& \Sc{\uq}	& 0		& 0		& \muq	& 1		& 0		& \mum
+\end{tabular}
+}
+\caption{Soluzione del problema $P_1$.}
+\label{tab:tab16}
+\end{table}
+Il problema $P_1$ è giunto ad una soluzione:
+$$
+x^*=\left(\frac{11}{4}, \frac{3}{4}, 0, \frac{1}{4}, 0\right)
+$$
+Purtroppo questa soluzione non è intera e saremo costretti successivamente a imporre nuove condizioni sulla prossima variabile frazionaria di indice massimo: $x_4$.
+Nel frattempo prendiamo nota della soluzione dell'attuale rilassamento continuo e calcoliamo il nuovo \textit{lower bound}:
+$$
+L_B=\lceil -z^* \rceil = \lceil -\frac{25}{4} \rceil = -6
+$$
+La buona notizia, per ora, è che il \textit{lower bound} non è peggiorato.
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=50mm, level distance=20mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$L_B=-6$}] (z) {$P_0$}
+	child {node [circle, draw, label=east:{$L_B=-6$}] (a) {$P_1$}
+			edge from parent node[left] {$x_5\leq 0$}
+		   }
+	;
+\end{tikzpicture}
+\end{figure}
+
+Le nostre possibilità di esplorazione ora sono le seguenti:
+\begin{align*}
+P_3 &= P_1 \cap x_4\leq \lfloor x_4^* \rfloor &\Rightarrow x_4 \leq 0 \\
+P_4 &= P_1 \cap x_4\geq \lceil x_4^* \rceil &\Rightarrow x_4 \geq 1
+\end{align*}
+
+Cerchiamo di rappresentare graficamente i nuovi vincoli. Come al solito, prendiamo il vincolo iniziale e sfruttiamolo per ricavare disequazioni utilizzanti solo le variabili $x_1$ e $x_2$:
+$$
+x_2 + x_4 = 2 \Rightarrow x_4 = 2 - x_2 \Rightarrow
+\begin{cases}
+2 - x_2 \leq 0 \\
+2 - x_2 \geq 1
+\end{cases}
+\Rightarrow
+\begin{cases}
+x_2 \geq 2 \\
+x_2 \leq 1
+\end{cases}
+$$
+Osservando il grafico in figura \vref{fig:graph13} risulta ovvio che $P_3$ non porterà ad alcun risultato ma, ahinoi, la traccia richiede l'esplorazione di questo ramo, anche perché un calcolatore non farebbe questa deduzione e si accorgerebbe solo durante l'applicazione dell'algoritmo del simplesso che il problema è impossibile. E noi faremo lo stesso.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}
+[axis lines=middle, axis equal, enlargelimits, xlabel=$x_1$, ylabel=$x_2$,
+ every axis x label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=west,
+ },
+ every axis y label/.style={
+    at={(ticklabel* cs:1.01)},
+    anchor=south,
+ },]
+    \path[name path=AX] 
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
+        (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
+    \path[name path=AY] 
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
+        (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
+    \path[name path=UP]
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
+    	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
+
+\dotgrid{0}{5}{0}{4}{black!50}    	
+    	
+\addplot [domain=1:2.75, samples = 10, thick, brown, name path=p2] {x-1};
+\addplot [domain=0:5, samples=10, thick, blue, name path=p3] {2} 
+	node [pos=0.3, anchor=south, pin={115:{\color{blue}$x_4 \leq 0$}}, inner sep= 0pt] {};
+\path[name path=p3i]
+	(axis cs:0,2.25)--(axis cs:5,2.25);
+\addplot[pattern=north west lines, pattern color=blue] fill between [of=p3 and p3i];
+\addplot [domain=0:5, samples=10, thick, red, name path=p4] {1} 
+	node [pos=0.2, anchor=west, pin={75:{\color{red}$x_4 \geq 1$}}, inner sep= 0pt] {};
+\path[name path=p4i]
+	(axis cs:0,.75)--(axis cs:5,.75);
+\addplot[pattern=north west lines, pattern color=red] fill between [of=p4 and p4i];
+\addplot [domain=1:2, samples = 10, thick, purple] {x-1};
+\intnw{p2}{p4}{$\eta$}{eta};
+\node at (axis cs:2,2.5) {$P_3=\emptyset$};
+\node at (axis cs:2,.5) {$P_4$};
+\addplot[-latex, thick] coordinates
+           {(0,0) (1/2.24,2/2.24)} node [pos=1, anchor=north, label={90:{\small $\nabla z$}}] {};
+\end{axis}
+\end{tikzpicture}
+\caption{Alternative $P_3$ e $P_4$.}
+\label{fig:graph13}
+\end{figure}
+
+\subsubsection{$\pmb{P_3}$}
+
+In forma standard, il vincolo $x_4 \leq 0$ richiede l'introduzione di un'ulteriore variabile slack:
+$$
+x_4+s_2=0
+$$
+Aggiungiamo il vincolo al tableau \vref{tab:tab16} ottenendo il tableau \vref{tab:tab17}
+
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+	\newcommand{\vcq}{$\frac{25}{4}$}
+	\newcommand{\unq}{$\frac{11}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
+	\newcommand{\mtq}{$-\frac{3}{4}$}
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+\begin{tabular}{rrcccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$ 	& $s_2$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\vcq}	& 0 	& 0 	& \tq 	& 0 	& 0		& \Sc{\um} 	& 0 \\
+\cline{3-10}
+$R_1$ & $x_1$ 		& \Sc{\unq}	& 1 	& 0 	& \uq 	& 0 	& 0		& \Sc{\mum}	& 0\\
+$R_2$ & $x_2$ 		& \Sc{\tq} 	& 0 	& 1 	& \uq 	& 0 	& 0		& \Sc{\um}	& 0\\
+$R_3$ & $x_5$ 		& \Sc{0} 	& 0 	& 0 	& 0 	& 0 	& 1		& \Sc{1} 	& 0\\
+$R_4$ & $x_4$		& \Sc{\uq}	& 0		& 0		& \muq	& 1		& 0		& \Sc{\mum}	& 0\\
+\cline{3-9}
+$R_5$ & $s_2$		& \Sc{0}	& 0		& 0		& 0		& 1		& 0		& 0			& 1
+\end{tabular}
+}
+\caption{Tableau del problema $P_3$.}
+\label{tab:tab17}
+\end{table}
+
+Rendiamo nullo l'elemento $y_{54}$ per riottenere una sottomatrice identità da utilizzare come base.
+$$
+R_5\leftarrow R_5 - R_4
+$$
+Otterremo il tableau in \vref{tab:tab18}.
+
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+	\newcommand{\vcq}{$\frac{25}{4}$}
+	\newcommand{\unq}{$\frac{11}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
+	\newcommand{\mtq}{$-\frac{3}{4}$}
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+\begin{tabular}{rrcccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$ 	& $s_2$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\vcq}	& 0 	& 0 	& \tq 	& 0 	& 0		& \Sc{\um} 	& 0 \\
+\cline{3-10}
+$R_1$ & $x_1$ 		& \Sc{\unq}	& 1 	& 0 	& \uq 	& 0 	& 0		& \Sc{\mum}	& 0 \\
+$R_2$ & $x_2$ 		& \Sc{\tq} 	& 0 	& 1 	& \uq 	& 0 	& 0		& \Sc{\um}	& 0 \\
+$R_3$ & $x_5$ 		& \Sc{0} 	& 0 	& 0 	& 0 	& 0 	& 1		& \Sc{1} 	& 0 \\
+$R_4$ & $x_4$		& \Sc{\uq}	& 0		& 0		& \muq	& 1		& 0		& \Sc{\mum}	& 0 \\
+\cline{3-9}
+$R_5$ & $s_2$		& \Sc{\mtq}	& 0		& 0		& \uq	& 0		& 0		& \um		& 1
+\end{tabular}
+}
+\caption{Problema $P_3$, secondo tableau.}
+\label{tab:tab18}
+\end{table}
+
+Il nostro viaggio nel problema $P_3$ si conclude qui. $y_{i0}<0$ solo per $i=5$, ma $y_{5j}\geq j \quad\forall j$. L'algoritmo del simplesso duale ci fa sapere che in questo caso il problema primale è impossibile. Sic est.
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=50mm, level distance=20mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$L_B=-6$}] (z) {$P_0$}
+	child {node [circle, draw, label=east:{$L_B=-6$}] (a) {$P_1$}
+			child {node [circle, draw, cross] {$P_3$}
+				edge from parent node[left] {$x_4 \leq 0$}
+			}
+			edge from parent node[left] {$x_5\leq 0$}
+		   }
+	;
+\end{tikzpicture}
+\end{figure}
+
+\subsubsection{$\pmb{P_4}$}
+Esploriamo il secondo figlio del nodo $P_1$ del nostro albero di \textit{branch and bound}.
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=40mm, level distance=20mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$L_B=-6$}] (z) {$P_0$}
+	child {node [circle, draw, label=east:{$L_B=-6$}] (a) {$P_1$}
+			child {node [circle, draw, cross] {$P_3$}
+				edge from parent node[left] {$x_4 \leq 0$}
+				}
+			child {node [circle, draw] {$P_4$}
+				edge from parent node[right] {$x_4 \geq 1$}
+				}
+			edge from parent node[left] {$x_5\leq 0$}
+		   }
+	;
+\end{tikzpicture}
+\end{figure}
+
+In forma standard, il vincolo $x_4 \geq 1$ richiede l'introduzione di una variabile surplus (ma che utilizzeremo come una variabile slack). La chiameremo comunque $s_2$, senza problemi di sovrapposizione con l'omonima variabile del problema $P_3$, innanzitutto perché sono problemi indipendenti, in secondo luogo perché il problema $P_3$ è morto e sepolto e possiamo dimenticarcene.
+$$
+x_4 - s_2 = 1 \Rightarrow \pmb{-x_4 + s_2 = -1}
+$$
+Aggiungiamo, sempre a \vref{tab:tab16}, il nuovo vincolo ottenendo il tableau \vref{tab:tab19}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+	\newcommand{\vcq}{$\frac{25}{4}$}
+	\newcommand{\unq}{$\frac{11}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
+	\newcommand{\mtq}{$-\frac{3}{4}$}
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+\begin{tabular}{rrcccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$ 	& $s_2$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\vcq}	& 0 	& 0 	& \tq 	& 0 	& 0		& \Sc{\um} 	& 0 \\
+\cline{3-10}
+$R_1$ & $x_1$ 		& \Sc{\unq}	& 1 	& 0 	& \uq 	& 0 	& 0		& \Sc{\mum}	& 0\\
+$R_2$ & $x_2$ 		& \Sc{\tq} 	& 0 	& 1 	& \uq 	& 0 	& 0		& \Sc{\um}	& 0\\
+$R_3$ & $x_5$ 		& \Sc{0} 	& 0 	& 0 	& 0 	& 0 	& 1		& \Sc{1} 	& 0\\
+$R_4$ & $x_4$		& \Sc{\uq}	& 0		& 0		& \muq	& 1		& 0		& \Sc{\mum}	& 0\\
+\cline{3-9}
+$R_5$ & $s_2$		& \Sc{-1}	& 0		& 0		& 0		& -1	& 0		& 0			& 1
+\end{tabular}
+}
+\caption{Tableau del problema $P_4$.}
+\label{tab:tab19}
+\end{table}
+Come di consueto, ripristiniamo la sottomatrice identità:
+$$
+R_5\leftarrow R_5 + R_4
+$$
+Si ottiene il tableau \vref{tab:tab110}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+	\newcommand{\vcq}{$\frac{25}{4}$}
+	\newcommand{\unq}{$\frac{11}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
+	\newcommand{\mtq}{$-\frac{3}{4}$}
+	\newcommand{\uq}{$\frac{1}{4}$}
+	\newcommand{\muq}{$-\frac{1}{4}$}
+\begin{tabular}{rrcccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$ 	& $s_2$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\vcq}	& 0 	& 0 	& \tq 	& 0 	& 0		& \Sc{\um} 	& 0 \\
+\cline{3-10}
+$R_1$ & $x_1$ 		& \Sc{\unq}	& 1 	& 0 	& \uq 	& 0 	& 0		& \Sc{\mum}	& 0\\
+$R_2$ & $x_2$ 		& \Sc{\tq} 	& 0 	& 1 	& \uq 	& 0 	& 0		& \Sc{\um}	& 0\\
+$R_3$ & $x_5$ 		& \Sc{0} 	& 0 	& 0 	& 0 	& 0 	& 1		& \Sc{1} 	& 0\\
+$R_4$ & $x_4$		& \Sc{\uq}	& 0		& 0		& \muq	& 1		& 0		& \Sc{\mum}	& 0\\
+\cline{3-9}
+$R_5$ & $s_2$		& \Sc{\mtq}	& 0		& 0		& \muq	& 0		& 0		& \C{\mum}	& 1
+\end{tabular}
+}
+\caption{Tableau del problema $P_4$.}
+\label{tab:tab110}
+\end{table}
+Determiniamo, tramite $\vartheta$, l'elemento della riga $R_5$ su cui fare pivot:
+\begin{gather*}
+\vartheta=\max_{j>0:y_{ij}<0}\left(\frac{y_{0j}}{y_{ij}}\right)=\frac{y_{0s}}{y_{is}} \\
+\vartheta=\max\left(\frac{\frac{3}{4}}{-\frac{1}{4}},\frac{\frac{1}{2}}{-\frac{1}{2}}\right)=\max\left(-3,-1\right)=-1=\frac{y_{06}}{\pmb{y_{56}}}
+\end{gather*}
+L'elemento pivot è $y_{56}$, cerchiato in \vref{tab:tab110}. Le operazioni elementari di riga sono:
+\begin{align*}
+R_1&\leftarrow R_1 + R_5 \\
+R_2&\leftarrow R_2 - R_5 \\
+R_3&\leftarrow R_3 + R_5 \\
+R_4&\leftarrow R_4 - R_5
+R_5&\leftarrow -2R_5
+\end{align*}
+Si ottiene il tableau \vref{tab:tab111}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\unm}{$\frac{11}{2}$}
+	\newcommand{\sm}{$\frac{7}{2}$}
+	\newcommand{\tm}{$\frac{3}{2}$}
+	\newcommand{\mtm}{$-\frac{3}{2}$}
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+\begin{tabular}{rrcccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$ 	& $s_2$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\unm}	& 0 	& 0 	& \um 	& 0 	& 0		& \Sc{0} 	& 1 \\
+\cline{3-10}
+$R_1$ & $x_1$ 		& \Sc{\sm}	& 1 	& 0 	& \um 	& 0 	& 0		& \Sc{0}	& -1\\
+$R_2$ & $x_2$		& \Sc{1}	& 0		& 1		& 0		& 0		& 0		& \Sc{0}	& 1\\
+$R_3$ & $x_5$ 		& \Sc{\mtm}	& 0 	& 0 	&\C{\mum}& 0 	& 1		& \Sc{0}	& 2\\
+$R_4$ & $x_4$ 		& \Sc{1} 	& 0 	& 0 	& 0 	& 1 	& 0		& \Sc{0} 	& -1\\
+\cline{3-9}
+$R_5$ & $s_1$		& \Sc{\tm}	& 0		& 0		& \um	& 0		& 0		& 1			& -2
+\end{tabular}
+}
+\caption{Secondo tableau del problema $P_4$.}
+\label{tab:tab111}
+\end{table}
+Il simplesso duale non è ancora concluso perché $y_{03}<0$. Faremo pivoting sull'unico elemento possibile: $y_{33}$. Le operazioni elementari di riga da applicare sono:
+\begin{align*}
+R_0&\leftarrow R_0 + R_3 \\
+R_1&\leftarrow R_1 + R_3 \\
+R_5&\leftarrow R_5 + R_3 \\
+R_3&\leftarrow -2R_3
+\end{align*}
+Si ottiene il tableau in \vref{tab:tab112}
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrcccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$ 	& $s_2$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{4}	& 0 	& 0 	& 0 	& 0 	& 0		& \Sc{0} 	& 3 \\
+\cline{3-10}
+$R_1$ & $x_1$ 		& \Sc{2}	& 1 	& 0 	& 0 	& 0 	& 0		& \Sc{0}	& 1\\
+$R_2$ & $x_2$		& \Sc{1}	& 0		& 1		& 0		& 0		& 0		& \Sc{0}	& 1\\
+$R_3$ & $x_3$ 		& \Sc{3}	& 0 	& 0 	& 1		& 0 	& -2	& \Sc{0}	& -4\\
+$R_4$ & $x_4$ 		& \Sc{1} 	& 0 	& 0 	& 0 	& 1 	& 0		& \Sc{0} 	& -1\\
+\cline{3-9}
+$R_5$ & $s_1$		& \Sc{0}	& 0		& 0		& 0		& 0		& 0		& 1			& 0
+\end{tabular}
+\caption{Terzo tableau del problema $P_4$. Soluzione intera al vertice $\eta(2,1)$.}
+\label{tab:tab112}
+\end{table}
+La soluzione è intera, perciò il nodo in cui ci troviamo è una foglia dell'albero. Base, soluzione e suo valore valgono:
+\begin{align*}
+\mathcal{B}&=\{A_1,A_2,A_3,A_4,A_6\} \\
+x^*&=(2,1,3,1,0) \\
+-z*&=-4
+\end{align*}
+La soluzione attuale è $-z=-4$, ma non è necessariamente la migliore del problema \textit{root} $P_0$, il cui \textit{lower bound} è $L_B=-6$ e ha ancora un nodo figlio che può essere esplorato.
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=40mm, level distance=20mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$L_B=-6$}] (z) {$P_0$}
+	child {node [circle, draw, label=east:{$L_B=-6$}] (a) {$P_1$}
+			child {node [circle, draw, cross] {$P_3$}
+				edge from parent node[left] {$x_4 \leq 0$}
+				}
+			child {node [circle, draw, label=south:{$-z=-4$}] {$P_4$}
+				edge from parent node[right] {$x_4 \geq 1$}
+				}
+			edge from parent node[left] {$x_5\leq 0$}
+		   }
+	;
+\end{tikzpicture}
+\end{figure}
+
+\subsubsection{$\pmb{P_2}$}
+Ritorniamo indietro ed esploriamo il figlio di $P_0$ corrispondente al vincolo $x_5 \geq 1$.
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=40mm, level distance=20mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$L_B=-6$}] (z) {$P_0$}
+	child {node [circle, draw, label=east:{$L_B=-6$}] (a) {$P_1$}
+			child {node [circle, draw, cross] {$P_3$}
+				edge from parent node[left] {$x_4 \leq 0$}
+				}
+			child {node [circle, draw, label=south:{$-z=-4$}] {$P_4$}
+				edge from parent node[right] {$x_4 \geq 1$}
+				}
+			edge from parent node[left] {$x_5\leq 0$}
+		   }
+	child {node [circle, draw] {$P_2$}
+		edge from parent node[right] {$x_5 \geq 1$}
+		}
+	;
+\end{tikzpicture}
+\end{figure}
+
+In forma standard il vincolo si presenta così:
+$$
+-x_5 + s_1 = -1
+$$
+Come al solito, non è un problema riutilizzare $s_1$ come variabile slack, in quanto possiamo rimuovere dalla nostra memoria i tableau precedenti.
+Riprendiamo il tableau \vref{tab:tab11} e aggiungendo il vincolo otteniamo il tableau \vref{tab:tab113}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\tm}{$\frac{13}{2}$}
+	\newcommand{\cm}{$\frac{5}{2}$}
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+\begin{tabular}{rrccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\tm} 	& 0 	& 0 	& \um 	& 1 	& \Sc{0}& 0\\
+\cline{3-9}
+$R_1$ & $x_1$ 		& \Sc{\cm} 	& 1 	& 0 	& \um 	& -1 	& \Sc{0}& 0\\
+$R_2$ & $x_2$ 		& \Sc{2} 	& 0 	& 1 	& 0 	& 1 	& \Sc{0}& 0\\
+$R_3$ & $x_5$ 		& \Sc{\um} 	& 0 	& 0 	& \mum 	& 2 	& \Sc{1}& 0\\
+\cline{3-8}
+$R_4$ & $s_1$		& \Sc{-1}	& 0		& 0 	& 0		& 0 	& -1	& 1
+\end{tabular}
+}
+\caption{Tableau iniziale del problema $P_2$.}
+\label{tab:tab113}
+\end{table}
+Rendiamo $y_{45}=0$ con l'operazione elementare di riga:
+$$
+R_4\leftarrow R_4 + R_3
+$$
+Otteniamo il tableau \vref{tab:tab114}.
+\begin{table}[htbp]
+\centering
+{
+	\newcommand{\tm}{$\frac{13}{2}$}
+	\newcommand{\cm}{$\frac{5}{2}$}
+	\newcommand{\um}{$\frac{1}{2}$}
+	\newcommand{\mum}{$-\frac{1}{2}$}
+\begin{tabular}{rrccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{\tm} 	& 0 	& 0 	& \um 	& 1 	& \Sc{0}& 0\\
+\cline{3-9}
+$R_1$ & $x_1$ 		& \Sc{\cm} 	& 1 	& 0 	& \um 	& -1 	& \Sc{0}& 0\\
+$R_2$ & $x_2$ 		& \Sc{2} 	& 0 	& 1 	& 0 	& 1 	& \Sc{0}& 0\\
+$R_3$ & $x_5$ 		& \Sc{\um} 	& 0 	& 0 	& \mum 	& 2 	& \Sc{1}& 0\\
+\cline{3-8}
+$R_4$ & $s_1$		& \Sc{\mum}	& 0		& 0 	&\C{\mum}& 2 	& 0		& 1
+\end{tabular}
+}
+\caption{Problema $P_2$, secondo tableau.}
+\label{tab:tab114}
+\end{table}
+Abbiamo poco da scegliere, a questo punto. L'unica riga su cui possiamo lavorare con il simplesso duale è $R_4$ e su tale riga l'unico elemento valido per il pivoting è $y_{43}$, cerchiato in \vref{tab:tab114}.
+Le operazioni elementari di riga da applicare sono:
+\begin{align*}
+R_0&\leftarrow R_0 + R_4 \\
+R_1&\leftarrow R_1 + R_4 \\
+R_3&\leftarrow R_3 - R_4 \\
+R_4&\leftarrow -2R_4
+\end{align*}
+Si ottiene il tableau in \vref{tab:tab115}.
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rrccccccc}
+ 	  & 			& $-\varphi$& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $s_1$\\
+$R_0$ & $\OL{c_j}$ 	& \Sc{6} 	& 0 	& 0 	& 0 	& 3 	& \Sc{0}& 1\\
+\cline{3-9}
+$R_1$ & $x_1$ 		& \Sc{2} 	& 1 	& 0 	& 0 	& 1 	& \Sc{0}& 1\\
+$R_2$ & $x_2$ 		& \Sc{2} 	& 0 	& 1 	& 0 	& 1 	& \Sc{0}& 0\\
+$R_3$ & $x_5$ 		& \Sc{1} 	& 0 	& 0 	& 0 	& 0 	& \Sc{1}& -1\\
+\cline{3-8}
+$R_4$ & $x_3$		& \Sc{1}	& 0		& 0 	& 1		& -4 	& 0		& -2
+\end{tabular}
+\caption{Problema $P_2$, tableau finale. Vertice $\zeta(2,2)$}
+\label{tab:tab115}
+\end{table}
+Questa volta siamo giunti ad una soluzione intera abbastanza in fretta. Base, soluzione e suo valore sono:
+\begin{align*}
+\mathcal{B}&=\{A_1,A_2,A_5,A_3\} \\
+x^*&=(2,2,1,0,1) \\
+-z^*&=-6
+\end{align*}
+Il nostro problema ILP è risolto e lo sarebbe anche se ci fossero altri rami da esplorare. Siamo giunti ad una soluzione intera uguale al \textit{lower bound} del problema root. Ciò significa che non solo "uccide" tutti i nodi il cui \textit{lower bound} o la cui soluzione sono inferiori a quella attuale, ma li ucciderebbe comunque tutti perché non potremmo trovare soluzione migliore di questa.
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=40mm, level distance=20mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$L_B=-6$}] (z) {$P_0$}
+	child {node [circle, draw, label=east:{$L_B=-6$}] (a) {$P_1$}
+			child {node [circle, draw, cross] {$P_3$}
+				edge from parent node[left] {$x_4 \leq 0$}
+				}
+			child {node [circle, draw, cross, label=south:{$-z=-4$}] {$P_4$}
+				edge from parent node[right] {$x_4 \geq 1$}
+				}
+			edge from parent node[left] {$x_5\leq 0$}
+		   }
+	child {node [circle, draw, label=south:{$-z=-6$}] {$P_2$}
+		edge from parent node[right] {$x_5 \geq 1$}
+		}
+	;
+\end{tikzpicture}
+\end{figure}
+
+La soluzione ottima è quindi nel vertice $\zeta(2,2)$ e il suo valore è $z=6$. Esattamente come ottenuto con il metodo dei tagli di Gomory.
