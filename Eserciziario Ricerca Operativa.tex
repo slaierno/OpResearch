@@ -1,5 +1,5 @@
 \documentclass[a4paper]{report}
-\usepackage{amssymb, amsfonts, amsmath, eurosym}
+\usepackage{amssymb, amsfonts, amsmath, eurosym, cancel}
 \usepackage{graphicx, import, wrapfig}
 \usepackage{fixltx2e}
 \usepackage[T1]{fontenc}
@@ -21,12 +21,14 @@
 \renewcommand*\arraystretch{1.5}
 
 \newcommand{\OL}[1]{\overline{#1}}
+\newcommand{\UL}[1]{\underline{#1}}
 \newcommand{\st}{\mathrm{s.t.}}
 \newcommand{\Sc}[1]{\multicolumn{1}{c|}{#1}}
 \newcommand{\Hr}[1]{%
   \colorbox{red!50}{$\displaystyle#1$}}
 \newcommand*\C[1]{\tikz[baseline=(char.base)]{
     \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+%\newcommand{\,,}{,\,}
     
 \newcommand{\intne}[4]{\node [label={[above right=-4pt]45:#3}, name intersections={of=#1 and #2, by=#4}] at (#4) {$\bullet$}}
 \newcommand{\intse}[4]{\node [label={[below right=-4pt]-45:#3}, name intersections={of=#1 and #2, by=#4}] at (#4) {$\bullet$}}
@@ -47,9 +49,34 @@
 
 %\newcolumntype{C}{>{\centering\arraybackslash$}p{\linewidth}<{$}}
 
+\newcommand*{\mathcolor}{}
+\def\mathcolor#1#{\mathcoloraux{#1}}
+\newcommand*{\mathcoloraux}[3]{%
+  \protect\leavevmode
+  \begingroup
+    \color#1{#2}#3%
+  \endgroup
+}
+
 \newcommand{\CG}[1]{\color{green}{#1}}
 
-%\includeonly{capitolo3}
+% Comando che restituisce velocemente il troncamento di #1*(#2/#3) in ambiente matematico
+\newcommand{\rest}[3]{\left\lfloor #1 \frac{#2}{#3} \right\rfloor}
+
+% Comandi per stati dominati e dominanti.
+% Uno stato nel comando Dx domina i corrispettivi stati in Sx
+% D=Dominatore S=Schiavo (circa. non mi veniva in mente una lettera migliore)
+\newcommand{\DA}[1]{\mathcolor{red}{\pmb{#1}}}
+\newcommand{\SA}[1]{\mathcolor{red}{\cancel{#1}}}
+\newcommand{\DB}[1]{\mathcolor{green}{\pmb{#1}}}
+\newcommand{\SB}[1]{\mathcolor{green}{\cancel{#1}}}
+\newcommand{\DC}[1]{\mathcolor{blue}{\pmb{#1}}}
+\newcommand{\SC}[1]{\mathcolor{blue}{\cancel{#1}}}
+
+% Comando che sottolinea, o comunque enfatizza, lo stato con la soluzione ottima
+\newcommand{\opt}[1]{\UL{#1}}
+
+%\includeonly{capitolo4}
 
 \begin{document}
 \setpapersize{A4}
@@ -68,5 +95,7 @@ Non ha pretese di esattezza, tutt'altro, ma spero sia d'aiuto a chi segue o segu
 \include{capitolo2}
 
 \include{capitolo3}
+
+\include{capitolo4}
 
 \end{document}

@@ -1,0 +1,615 @@
+\chapter{06/05/2014}
+
+Questo capitolo sarà una pacchia da scrivere: niente tabelle e niente grafici! Solo qualche albero e \textit{tantissimi} numeri. Più che aver paura di errori di calcolo si rischia di fare errori di battitura, perciò invito tutti a fare attenzione ai numeri che scrivo e in caso di errore comunicare tempestivamente come sempre.
+
+\section{Esercizio 8}
+Sia dato un problema KP01 con i seguenti dati:
+\begin{align*}
+x&=(x_1,x_2,x_3,x_4,x_5) \\
+p&=(35,21,16,10,3) \\
+w&=(18,10,8,9,5) \\
+c&=20
+\end{align*}
+D'ora in poi si intendano sempre:
+\begin{itemize}
+\item[$x$] il vettore delle variabili, cioè gli oggetti da introdurre nello zaino. Si ricorda che $x_i \in [0,1] \forall i$; in altri termini, un oggetto può essere o non essere nello zaino.
+\item[$p$] il vettore dei profitti di ogni oggetto.
+\item[$w$] il vettore dei pesi di ogni oggetto, corrispondenti agli oggetti del vettore $p$.
+\item[$c$] la capacità dello \textit{zaino}.
+\end{itemize}
+
+Si massimizzi la funzione $z$:
+$$
+z=\sum_{i=1}^5 p_i x_i
+$$
+Nel rispetto del vincolo:
+$$
+c=\sum_{i=1}^5 w_i x_i \leq 20
+$$
+
+\subsection{Ordinamento per valori $\frac{p}{w}$ decrescenti}
+Premettendo che qualunque metodo di risoluzione utilizziamo saremo costretti ad operare una ricerca (quasi) esaustiva, ordinare i nostri oggetti per valori decrescenti di profitto per unità di peso (e quindi $\frac{p}{w}$) può essere un'utile accortezza per ridurre i tempi di ricerca.
+Infatti, operando questo ordinamento, è più probabile che inseriremo nel nostro zaino gli oggetti con indice minore piuttosto che quelli con indice maggiore. Quindi eviteremo almeno in parte di esplorare inutilmente delle possibilità. \textit{Questo non ci da la certezza di procedere il più velocemente possibile}, ma è un utile accorgimento e non fa alcun danno. Quindi tanto vale attuarlo.
+Inoltre, vedremo che per il metodo branch and bound sarà indispensabile per calcolare agevolmente gli \textit{upper bound}.
+Procediamo con l'elencare tutti i rapporti:
+$$
+\frac{p_1}{w_1}=\frac{35}{18}=1.94 \qquad 
+\frac{p_2}{w_2}=\frac{21}{10}=2.1 \qquad 
+\frac{p_3}{w_3}=\frac{16}{8}=2 \qquad 
+\frac{p_4}{w_4}=\frac{10}{9}=1.11 \qquad 
+\frac{p_5}{w_5}=\frac{3}{5}=0.6 \qquad 
+$$
+Riordiniamo quindi il vettore $x$:
+$$
+x^*=(x_2, x_3, x_1, x_4, x_5)
+$$
+Per comodità, riproponiamo il problema \textit{ex novo} ma con gli elementi nell'ordine appena stabilito:
+\begin{align*}
+x&=(x_1,x_2,x_3,x_4,x_5)\\
+p&=(21,16,35,10,3)\\
+w&=(10,8,18,9,5)\\
+c&=20
+\end{align*}
+
+\subsection{Metodo branch and bound}
+\subsubsection{Come funziona}
+Come ogni problema di carattere discreto, il metodo \textit{branch and bound} può essere utilizzato per ricercarne la soluzione.
+In un problema KP01, ogni nodo è caratterizzato da una serie di variabili fissate e le rimanenti variabili ancora da fissare. Considerando il caso migliore delle variabili da fissare, si determina l'\textit{upper bound} $U$.
+Supponendo di trovarci al \textbf{livello i-esimo} dell'albero e che sia stato cioè appena assegnato il valore della variabile $x_i$, i passi da eseguire sono i seguenti
+\begin{enumerate}
+\item Se la $x_i=1$, allora l'upper bound è lo stesso del nodo padre. Altrimenti, ricalcolarlo.
+\item Se quella $x_i$ è l'ultima variabile, allora l'upper bound è anche la soluzione attuale $z$ e siamo in un nodo foglia. In tal caso si controlla che non ci siano nodi con upper bound o soluzione peggiore della soluzione appena trovata. In tal caso, questi nodi vengono uccisi e non saranno più esplorati o considerati.
+\item Se ci sono nodi foglia con una soluzione migliore dell'upper bound o della soluzione corrente, questo nodo muore e si risale al nodo padre.
+\item Se il caso $x_{i+1}=0$ è stato già esplorato, risalire al nodo padre (perché si suppone che $x_{i+1}=1$ sia stato già esplorato o non fosse ammissibile).
+\item Se il caso $x_{i+1}=1$ non è stato esplorato, controllare se è un caso ammissibile. In tal caso, esplorare tale nodo.
+\item Esplorare il caso $x_{i+1}=0$.
+\end{enumerate}
+Spiegare a parole il metodo con un unico algoritmo è difficile. Si prova di seguito a dare delle indicazioni meno sequenziali ma più comprensibili.
+\begin{itemize}
+\item Quando si entra in un nodo la prima volta, si calcola l'upper bound solo se si proviene da $x_i=0$, altrimenti si \textit{eredita} l'upper bound del padre. Se siamo all'ultima variabile da assegnare, abbiamo la soluzione.
+\item Se questo upper bound/soluzione è peggiore di una soluzione già trovata nell'albero, il nodo in cui ci si trova viene ucciso e si risale al nodo padre. Se abbiamo trovato una soluzione, tutti gli altri nodi con upper bound o soluzione inferiore a questa vengono uccisi.
+\item Si esplora prima $x_{i+1}=0$, se possibile. Se non è possibile si esplora $x_{i+1}=0$.
+\item Se si risale da un ramo $x_{i+1}=0$ si può continuare a risalire in quanto abbiamo già appurato che se possibile si esplora prima il caso $x_{i+1}=1$. Quindi, questo caso è stato già esplorato o non era esplorabile.
+\item Se si risale da un ramo $x_{i+1}=1$ dobbiamo esplorare per forza il ramo $x_{i+1}=0$.
+\item A fine esplorazione, saremo rimasti solo con il nodo con la soluzione ottima.
+\end{itemize}
+\textbf{NdA}: Procedendo con l'esercizio vi prometto che sarà tutto più chiaro. Non ci ho capito nulla nemmeno io quando ho iniziato a scrivere le istruzioni.
+
+\subsubsection{Come calcolare l'upper bound}
+Il calcolo dell'upper bound consiste nello scoprire qual è il massimo profitto ottenibile con il peso a disposizione a partire dalle variabili già assegnate.
+
+Se è appena stata assegnata la variabile $x_{k-1}$ (supponendo per convenzione che $x_0$ assegnato indichi che non è stata assegnata alcuna variabile), si sommano i profitti di tutte le variabile successive che entrano nello zaino senza eccedere la capacità. Infine, assegnato l'ultimo elemento possibile, il successivo viene detto \textit{elemento critico} e se ne prende una frazione tale da riempire lo zaino col maggior profitto possibile.
+Questo metodo funziona solo se, ovviamente, gli oggetti sono in ordine crescente di profitto per unità di peso. Di fatto, l'\textit{upper bound} è il \textbf{rilassamento continuo} del problema.
+
+In termini matematici, sia $c^*$ la \textbf{capacità attualmente occupata} dagli elementi assegnati:
+$$
+c^* = \sum_{i=1}^{k-1} c_i x_i
+$$
+Sia $s$ l'\textbf{elemento critico}, ovvero il primo elemento che \textit{non entra}. Su un insieme di $n$ oggetti, $s$ è tale che:
+$$
+s\triangleq\left\lbrace i : c^*+\sum_{j=k}^i w_j > c\right\rbrace
+$$
+Sia $\OL{c}$ la \textbf{capacità residua}:
+$$
+\OL{c}\triangleq c-c^*-\sum_{j=k}^{s-1} w_j
+$$
+Sia $p^*$ il profitto attuale generato dagli elementi assegnati:
+$$
+p^* = \sum_{i=1}^{k-1} p_i x_i
+$$
+L'upper bound $U$ è quindi così definito:
+$$
+U\triangleq\left\lfloor p^* + \sum_{j=1}^{s-1} p_j + \OL{c}\frac{p_s}{w_s}\right\rfloor
+$$
+
+\subsubsection{L'esercizio}
+
+Per brevità e per evitare di utilizzare miriadi di pagine solo per disegnare decine di alberi, introdurremo ora direttamente l'albero finale. Basterà seguire, durante l'esercizio, i nodi man mano che li si percorrono.
+Si ricorda che, per convenzione, quando un upper bound $\UL{U}$ è sottolineato nell'albero, significa che è stato necessario calcolarlo. Altrimenti, è stato semplicemente ereditato dal padre.
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=25mm, level distance=20mm},
+					level 1/.style={sibling distance=50mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$\UL{U}=40$}] {$0$}
+	child {node [circle, draw, label=east:{$U=40$}] {$1$}
+			child {node [circle, draw, label=east:{$U=40$}] {$2$}
+				child {node [circle, draw, label=east:{$\UL{U}=39$}] {$3$}
+					child {node [circle, draw, label=east:{$\UL{U}=38$}] {$4$}
+						child {node [circle, draw, label=east:{$z=37$}] {$5$}
+							edge from parent node[right] {$x_5=0$}							
+							}
+						edge from parent node[right] {$x_4 = 0$}
+						}
+					edge from parent node [right] {$x_3 = 0$}
+					}
+				edge from parent node[left] {$x_2 = 1$}
+				}
+			child {node [circle, draw, label=east:{$\UL{U}=40$}] {$6$}
+				child {node [circle, draw, cross, label=east:{$\UL{U}=31$}] {$7$}
+					edge from parent node[right] {$x_3=0$}
+					}
+				edge from parent node[right] {$x_2 = 0$}
+				}
+		edge from parent node[left] {$x_1 = 1$}
+		}
+	child {node [circle, draw, label=east:{$\UL{U}=39$}] {$8$}
+		child {node [circle, draw, label=east:{$U=39$}] {$9$}
+			child {node [circle, draw, cross, label=east:{$\UL{U}=27$}] {$10$}
+				edge from parent node[right] {$x_3 = 0$}
+				}
+			edge from parent node[left] {$x_2 = 1$}
+			}
+		child {node [circle, draw, cross, label=east:{$\UL{U}=37$}] {$11$}
+			edge from parent node[right] {$x_2 = 0$}
+			}
+		edge from parent node[right] {$x_1 = 0$}
+		}
+	;
+\end{tikzpicture}
+\end{figure}
+
+\paragraph{Nodo 0}
+Calcoliamo l'upper bound del nodo \textit{root}.
+Gli oggetti $x_1$ e $x_2$ entrano completamente nello zaino, lasciando una capacità residua $\OL{c}=2$. Perciò l'elemento critico è $x_3$ e l'upper bound è:
+$$
+U_0=p_1+p_2+\left\lfloor\OL{c}\frac{p_3}{w_3}\right\rfloor=21+16+\left\lfloor 2\frac{35}{18} \right\rfloor=40
+$$
+L'oggetto $x_1$ entra nello zaino, procediamo con l'esplorare il nodo figlio corrispondente.
+
+\paragraph{Nodo 1}
+L'upper bound è ereditato dal padre, quindi nessun calcolo da fare. Anche la variabile $x_2$ entra nello zaino ed esploreremo il figlio corrispondente.
+
+\paragraph{Nodo 2}
+L'upper bound è ereditato dal padre, quindi nessun calcolo da fare. La variabile $x_3$ non entra nello zaino ed esploreremo direttamente il figlio corrispondente al ramo $x_3=0$.
+
+\paragraph{Nodo 3}
+Non prendendo in considerazione l'elemento $x_3$, dovremmo provare a inserire l'elemento $x_4$. Ma non entra, quindi diventa il nuovo elemento critico.
+$$
+U_3=p_1+p_2+\left\lfloor\OL{c}\frac{p_4}{w_4}\right\rfloor=21+16+\left\lfloor 2\frac{10}{9} \right\rfloor=39
+$$
+Il nostro upper bound è leggermente calato. In ogni caso, l'elemento $x_4$ non entra nel nostro zaino e l'unica prossima opzione è esplorare il ramo $x_4=0$.
+
+\paragraph{Nodo 4}
+Anche questa volta dobbiamo calcolare il nuovo upper bound. Nemmeno l'elemento $x_5$ entra nello zaino e diventerà il nuovo elemento critico.\footnote{Che poi, per capirci, a che serve calcolare un altro upper bound se sappiamo già che $x_5$ non entrerà? Tanto vale andare al prossimo nodo e calcolare la soluzione direttamente. Ma va be', calcoliamo lo stesso tutto l'ambaradan.}
+$$
+U_4=p_1+p_2+\left\lfloor\OL{c}\frac{p_5}{w_5}\right\rfloor=21+16+\left\lfloor 2\frac{3}{5} \right\rfloor=38
+$$
+Abbiamo appena detto che $x_5$ non entra nello zaino, perciò esploreremo il ramo $x_5 = 0$
+
+\paragraph{Nodo 5}
+Ci siamo. Siamo arrivati all'ultima variabile, non serve calcolare l'upper bound nuovamente, ma possiamo ottenere una soluzione.
+$$
+z^*=\sum_{i=1}^5 p_i x_i = 21+16=37
+$$
+Fatto ciò, risaliamo fino a tornare al nodo 1. Ricordiamo che se si sale da un ramo $x_i=0$, significa che il rispettivo ramo $x_i=1$ è stato già esplorato o era non ammissibile, quindi si risale finché non si giunge ad un nodo tramite un ramo $x_i=1$.
+Giunti al nodo 1, esploriamo il figlio corrispondente al ramo $x_2=0$.
+
+\paragraph{Nodo 6}
+Siamo scesi da un ramo $x_i=0$, quindi ricalcoliamo l'upper bound. Questa volta non prenderemo più nello zaino l'elemento $x_2$ e guarderemo al successivo. Purtroppo, $x_3$ non entra nello zaino e diventa il nostro nuovo elemento critico.
+$$
+U_6=p_1+\left\lfloor\OL{c}\frac{p_3}{w_3}\right\rfloor=21+\left\lfloor 10\frac{35}{18} \right\rfloor=40
+$$
+L'upper bound appena calcolato ci fa ben sperare, essendo superiore a $z^*$. Non entrando $x_3$ nello zaino, esploriamo il ramo $x_3=0$.
+
+\paragraph{Nodo 7}
+L'upper bound deve essere ricalcolato. Siamo fortunati che almeno l'elemento $x_4$ entra nello zaino. L'elemento critico diventa $x_5$.
+$$
+U_7=p_1+p_4+\left\lfloor\OL{c}\frac{p_5}{w_5}\right\rfloor=21+10+\left\lfloor 1\frac{3}{5} \right\rfloor=31
+$$
+Possiamo notare che $U_7\leq z^*$, il che significa che anche andando avanti nell'esplorazione potremmo trovare solo soluzioni peggiori di $z^*$. Queste non ci interessano, e il nodo 5 \textit{uccide} il \textit{nodo 7}.
+Risalendo, giungiamo di nuovo al nodo \textit{root}. Esploriamo l'altro ramo del nodo 0, quello corrispondente a $x_1=0$.
+
+\paragraph{Nodo 8}
+Ricalcoliamo l'upper bound. $x_2$ entra nello zaino ma $x_3$ no, diventando elemento critico.
+$$
+U_8=p_2+\left\lfloor\OL{c}\frac{p_3}{w_3}\right\rfloor=16+\left\lfloor 12\frac{35}{18} \right\rfloor=39
+$$
+Vale ancora la pena continuare l'esplorazione, poiché stando all'upper bound attuale potremmo trovare soluzioni migliori di $z^*$. $x_2$ entra nello zaino, quindi esploreremo per primo il ramo $x_2=1$.
+
+\paragraph{Nodo 9}
+L'upper bound viene ereditato dal nodo padre, qunidi non cambia. Sappiamo già che $x_3$ non entra nello zaino, quindi esploriamo direttamente il ramo $x_3=0$.
+
+\paragraph{Nodo 10}
+L'upper bound deve essere ricalcolato. Stando alle variabili fissate finora, il prossima elemento da analizzare è $x_4$. Questo entra tranquillamente nello zaino insieme ad $x_2$, ma lo stesso non si può dire di $x_5$ che diventa elemento critico.
+$$
+U_10=p_2+p_4+\left\lfloor\OL{c}\frac{p_5}{w_5}\right\rfloor=16+10+\left\lfloor 3\frac{3}{5}\right\rfloor=27
+$$
+Fine del viaggio per questo ramo dell'albero. $U_9\leq z^*$ e il nodo 5 uccide anche il nodo 10.
+Risaliamo l'albero fino ad arrivare al nodo 8, che aveva ancora un figlio da esplorare: quello corrispondente al ramo $x_2=0$.
+
+\paragraph{Nodo 11}
+Upper bound da ricalcolare anche questa volta. $x_1$ e $x_2$ abbiamo già stabilito che non saranno introdotti nello zaino. Perciò introdurremo $x_3$, che ha peso $p_3=18$ e non lascerà spazio per nessun altro oggetto. L'elemento critico è di conseguenza $x_4$.
+$$
+U_11=p_3+\left\lfloor\OL{c}\frac{p_4}{w_4}\right\rfloor=35+\left\lfloor 2\frac{10}{9} \right\rfloor=37
+$$
+Non è un cattivo nodo e tecnicamente potrebbe portarci ad una soluzione uguale a $37$.\footnote{In realtà no, ma noi facciamo finta di essere stupidi calcolatori e di non intuire il risultato.} A noi comunque non importa se troviamo una soluzione peggiore o \textit{al più uguale} a quella che abbiamo già ottenuto in precedenza; ce ne basta una. Quindi, da bravo serial killer, il nodo 5 ucciderà anche il nodo 11. E a questo punto tutti i rami sono stati esplorati o \textit{potati}.
+
+\paragraph{Conclusione}
+Il vettore della soluzione e il suo valore sono:
+\begin{align*}
+x^*&=(1,1,0,0,0) \\
+z^*&=37
+\end{align*}
+C'era la probabilità che ci fossero delle altre soluzioni con lo stesso valore, ma a noi non importa. Trovata una, ci teniamo quella.
+
+\subsection{Metodo della programmazione dinamica}
+
+\subsubsection{Come funziona}
+Stabiliamo prima di tutto un concetto base.
+
+L'insieme $M_i$ è l'insieme delle coppie (o triple, vedremo poi perché) contenenti tutte le possibili combinazioni ottenibili della coppia $(\textit{peso},\textit{profitto})$ con i primi $i$ elementi a disposizione. Nel caso si parli di triple, e non di coppie, alla coppia $(\textit{peso},\textit{profitto})$ viene aggiunto l'insieme di elementi utilizzati per ottenere quella coppia, diventando la tripla $(\textit{peso},\textit{profitto}, \{\textit{elementi})$. Questo è utile se vogliamo risalire velocemente a quali elementi sono stati utilizzati per quella soluzione. In ogni caso, sia che si parli di coppie che di triple, esse assumono il nome di \textbf{stati}.
+
+Per ottenere un insieme $M_i$ si parte dall'insieme $M_{i-1}$ e si aggiungono, oltre a tutti gli stati già presenti, quelli ottenibili combinando quelli già presenti insieme all'elemento $i$, ove si rispetti il vincolo di capacità.
+
+In aggiunta a tutto ciò, è utile eliminare gli stati inutili o ridondanti. In altri termini, se ci sono due stati in cui uno dei due ottiene un profitto minore con un peso maggiore si può eliminare, in quanto non porterà di certo a stati migliori dell'altro.
+Formalmente, dati due stati:
+\begin{align*}
+S'&=(P',W') \\
+S''&=(P'',W'')
+\end{align*}
+Si dice che $S'$ \textbf{domina} $S''$ se:
+$$
+P'\geq P'' \wedge W' \leq W''
+$$
+Non ha alcuna importanza se si utilizzano più o meno elementi per raggiungere il profitto. Questo metodo contribuirà ad alleggerire la dimensione dell'insieme $M_i$.
+
+Infine, lo stato con il profitto maggiore sarà ovviamente la nostra soluzione. Se abbiamo tenuto traccia delle variabili utilizzate, queste ultime saranno le variabili da porre a $1$ nella soluzione e le altre saranno poste a $0$. Altrimenti, bisognerà risalire dagli stati al momento in cui è stato aggiunto un determinato stato. Questo metodo però risulta più scomodo del primo.
+
+Durante la spiegazione dell'esercizio il procedimento risulterà chiaro in quanto è estremamente meccanico da applicare in pratica.
+
+\subsubsection{L'esercizio}
+\paragraph{$\pmb{M_0}$}
+Si parte dall'insieme $M_0$ che conterrà lo stato in cui non prendiamo alcun elemento.
+$$
+M_0=\{(\emptyset,0,0)\}
+$$
+Nient'altro da fare.
+
+\paragraph{$\pmb{M_1}$}
+Si aggiunge ad ogni stato di $M_0$ l'elemento $x_1$, formando l'insieme $M_1$.
+$$
+M_1=M_0\cup (M_0\uplus x_1) = \{(\emptyset,0,0),\;(\{x_1\},21,10)\}
+$$
+Anche qui, nient'altro da fare. Il secondo stato è formato dallo stato di $M_0$ con in più l'elemento $x_1$:
+$$
+S_2=S_1+(\{x_1\},21,10\}=(\emptyset\cup\{x_1\},0+21,0+10)=(\{x_1\},21,10)\}
+$$
+
+\paragraph{$\pmb{M_2}$}
+Si aggiunge ad ogni stato di $M_1$ l'elemento $x_2$, formando l'insieme $M_2$.
+$$
+M_2=M_1\cup (M_1\uplus x_2) = \{(\emptyset,0,0),\;(\{x_1\},21,10),\;(\{x_2\},16,8),\;(\{x_1,x_2\},37,18\}
+$$
+Soffermiamoci un attimo, solo questa volta, su come abbiamo formato $M_2$.
+\begin{align*}
+M_1\uplus x_2=&\{(\emptyset,0,0),\;(\{x_1\},21,10)\}+(\{x_2\},16,8) \\
+			 =&\{(\emptyset\cup\{x_2\},0+16,0+8),\;(\{x_1\}\cup\{x_2\},21+16,10+8)\} \\
+			 =&\{(\{x_2\},16,8),\;(\{x_1,x_2\},37,18\} \\
+M_2=M_1\cup (M_1\uplus x_2) =& \{(\emptyset,0,0),\;(\{x_1\},21,10)\}\cup\{(\{x_2\},16,8),\;(\{x_1,x_2\},37,18)\}\\
+			 =&\{(\emptyset,0,0),\;(\{x_1\},21,10),\;(\{x_2\},16,8),\;(\{x_1,x_2\},37,18)\}
+\end{align*}
+Sperando che tutto sia chiaro, non ci soffermeremo più su come si formano i vari gruppi $M_i$.
+
+\paragraph{$\pmb{M_3}$}
+Si noti che l'elemento $x_3$ non può coesistere con gli elementi $x_1$ e $x_2$ poiché sommando il suo peso $18$ con qualsiasi altro peso si eccederebbe la capacità $c=20$, quindi sarà presente solo da solo.
+\begin{align*}
+M_3=M_2\cup (M_2\uplus x_3) = \{(\emptyset,0,0),\;
+								(\{x_1\},21,10),\;
+								(\{x_2\},16,8),\;
+								\DA{(\{x_1,x_2\},37,18)},\;
+								\SA{(\{x_3\},35,18)}\}
+\end{align*}
+L'ultimo stato è dominato dal precedente poiché a parità di peso offriva un profitto maggiore.
+\footnote{
+Per indicare uno stato che ne domina un altro si useranno colori diverse per indicare dominazioni diverse. Inoltre, lo stato dominante sarà in grassetto e lo stato dominato sarà sbarrato. Si prenda come esempio il seguente insieme:
+$$
+M_n=\{\DA{S_1},\SB{S_2},\SA{S_3},\DC{S_4},\SA{S_5},\DB{S_6},\SC{S_7},S_8\}
+$$
+Così si indica che $S_1$ domina $S_3$ e $S_5$, $S_4$ domina $S_7$ e infine $S_6$ domina $S_2$. $S_8$, invece, non domina né è dominato da nessuno stato.
+}
+Lo cancelliamo, quindi, e non comparirà più nei nostri insiemi.
+
+\paragraph{$\pmb{M_4}$}
+\begin{align*}
+M_4=&M_3\cup(M_3\uplus x_4) = \\
+=&\{
+	(\emptyset,0,0)		,\;
+	(\{x_1\},21,10)		,\;
+\DA{(\{x_2\},16,8)}		,\;
+\DB{(\{x_1,x_2\},37,18)},\; \\&
+\SA{(\{x_4\},10,9)}		,\;
+\SB{(\{x_1,x_4\},31,19)},\;
+	(\{x_2,x_4\},26,17)
+	\}
+\end{align*}
+
+\paragraph{$\pmb{M_5}$}
+\begin{align*}
+M_5=&M_4\cup(M_4\uplus x_5) = \\
+=&\{
+	(\emptyset,0,0)		,\;
+\DA{(\{x_1\},21,10)}	,\;
+	(\{x_2\},16,8)		,\;
+	\opt{(\{x_1,x_2\},37,18)}	,\; \\&
+	(\{x_2,x_4\},26,17)	,\;
+	(\{x_5\},3,5)		,\;
+	(\{x_1,x_5\},24,15)	,\;
+\SA{(\{x_2,x_5\},19,13)}
+	\}
+\end{align*}
+Lo stato ottimo è stato evidenziato. Se ne deduce quindi che la soluzione ottima e il suo valore sono:
+\begin{align*}
+x^*=& (1,1,0,0,0) \\
+z^*=& 37
+\end{align*}
+
+\section{Esercizio 9}
+Sia dato un problema KP01 con i seguenti dati:
+\begin{align*}
+x&=(x_1,x_2,x_3,x_4,x_5) \\
+p&=(49,100,36,15,18) \\
+w&=(12,15,9,4,5) \\
+c&=30
+\end{align*}
+Si massimizzi la funzione $z$:
+$$
+z=\sum_{i=1}^5 p_i x_i
+$$
+Nel rispetto del vincolo:
+$$
+c=\sum_{i=1}^5 w_i x_i \leq 20
+$$
+
+\subsection{Ordinamento per valori $\frac{p}{w}$ decrescenti}
+Procediamo con l'elencare tutti i rapporti:
+$$
+\frac{p_1}{w_1}=\frac{49}{12}=4.083 \qquad 
+\frac{p_2}{w_2}=\frac{100}{15}=6.67 \qquad 
+\frac{p_3}{w_3}=\frac{36}{9}=4 \qquad 
+\frac{p_4}{w_4}=\frac{15}{4}=3.75 \qquad 
+\frac{p_5}{w_5}=\frac{18}{5}=3.6 \qquad 
+$$
+Riordiniamo quindi il vettore $x$:
+$$
+x^*=(x_2, x_1, x_3, x_5, x_4)
+$$
+Per comodità, riproponiamo il problema \textit{ex novo} ma con gli elementi nell'ordine appena stabilito:
+\begin{align*}
+x&=(x_1,x_2,x_3,x_4,x_5)\\
+p&=(100,49,36,15,18)\\
+w&=(15,12,9,4,5)\\
+c&=20
+\end{align*}
+
+\subsection{Metodo branch and bound}
+Oramai siamo diventati \textit{smart} e non è più necessario stare a spiegare tutto il procedimento. Inoltre saranno snellite le formule per gli upper bound che saranno solo numeriche.
+
+Segue l'albero di branching.
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
+					level/.style={sibling distance=25mm, level distance=20mm},
+					level 1/.style={sibling distance=50mm},
+					level 2/.style={sibling distance=50mm},
+					cross/.style={path picture={ 
+ 						\draw[black]
+						(path picture bounding box.south east) -- (path picture bounding box.north west) (path picture bounding box.south west) -- (path picture bounding box.north east);}}
+					]
+\node [circle, draw, label=east:{$\UL{U}=161$}] {$0$}
+	child {node [circle, draw, label=east:{$U=161$}] {$1$}
+		child {node [circle, draw, label=east:{$U=161$}] {$2$}
+			child {node [circle, draw, label=east:{$\UL{U}=160$}] {$3$}
+				child {node [circle, draw, label=east:{$\UL{U}=159$}] {$4$}
+					child {node [circle, draw, cross, label=south:{$z=149$}] {$5$}
+						edge from parent node[right] {$x_5=0$}}
+					edge from parent node[right] {$x_4=0$}}
+				edge from parent node[right] {$x_3=0$}}
+			edge from parent node[left] {$x_2=1$}}
+		child {node [circle, draw, label=east:{$\UL{U}=158$}] {$6$}
+			child {node [circle, draw, label=east:{$U=158$}] {$7$}
+				child {node [circle, draw, label=east:{$U=158$}] {$8$}
+					child {node [circle, draw, cross, label=south:{$z=151$}] {$9$}
+						edge from parent node[right] {$x_5=0$}}
+					edge from parent node[left] {$x_4=1$}}
+				child {node [circle, draw, label=east:{$\UL{U}=154$}] {$10$}
+					child {node [circle, draw, label=south:{$z=151$}] {$11$}
+						edge from parent node[left] {$x_5=1$}}
+					edge from parent node[right] {$x_4=0$}}
+				edge from parent node[left] {$x_3=1$}}
+			child {node [circle, draw, cross, label=east:{$\UL{U}=133$}] {$12$}
+				edge from parent node[right] {$x_3=0$}}
+			edge from parent node[right] {$x_2=0$}}
+		edge from parent node[left] {$x_1=1$}}
+	child {node [circle, draw, cross, label=east:{$\UL{U}=118$}] {$13$}
+		edge from parent node[right] {$x_1=0$}}
+	;
+\end{tikzpicture}
+\end{figure}
+
+\paragraph{Nodo 0}
+Calcoliamo l'upper bound del nodo \textit{root}.
+Gli oggetti $x_1$ e $x_2$ entrano completamente nello zaino, lasciando una capacità residua $\OL{c}=3$. Perciò l'elemento critico è $x_3$ e l'upper bound è:
+$$
+U_0=100+49+\rest{3}{36}{9}=161
+$$
+L'oggetto $x_1$ entra nello zaino, procediamo con l'esplorare il nodo figlio corrispondente.
+
+\paragraph{Nodo 1}
+L'upper bound è ereditato dal padre, quindi nessun calcolo da fare. Anche la variabile $x_2$ entra nello zaino ed esploreremo il figlio corrispondente.
+
+\paragraph{Nodo 2}
+L'upper bound è ereditato dal padre, quindi nessun calcolo da fare. La variabile $x_3$ non entra nello zaino ed esploreremo direttamente il figlio corrispondente al ramo $x_3=0$.
+
+\paragraph{Nodo 3}
+Non prendendo in considerazione l'elemento $x_3$, dovremmo provare a inserire l'elemento $x_4$. Ma non entra, quindi diventa il nuovo elemento critico.
+$$
+U_3=100+49+\rest{3}{15}{4}=160
+$$
+Il nostro upper bound è leggermente calato. In ogni caso, l'elemento $x_4$ non entra nel nostro zaino e l'unica prossima opzione è esplorare il ramo $x_4=0$.
+
+\paragraph{Nodo 4}
+Anche questa volta dobbiamo calcolare il nuovo upper bound. Nemmeno l'elemento $x_5$ entra nello zaino e diventerà il nuovo elemento critico.
+$$
+U_4=100+49+\rest{3}{18}{5}=159
+$$
+Abbiamo appena detto che $x_5$ non entra nello zaino, perciò esploreremo il ramo $x_5 = 0$
+
+\paragraph{Nodo 5}
+Siamo arrivati all'ultima variabile, non serve calcolare l'upper bound nuovamente, ma possiamo ottenere una soluzione.
+$$
+z^*=\sum_{i=1}^5 p_i x_i = 100+49=149
+$$
+Fatto ciò, risaliamo fino a tornare al nodo 1. Giunti ad esso, esploriamo il figlio corrispondente al ramo $x_2=0$.
+
+\paragraph{Nodo 6}
+Siamo scesi da un ramo $x_i=0$, quindi ricalcoliamo l'upper bound. Questa volta non prenderemo più nello zaino l'elemento $x_2$ e guarderemo al successivo. $x_3$ e $x_4$ entrano nello zaino e $x_5$ diventa il nostro nuovo elemento critico.
+$$
+U_6=100+36+15+\rest{2}{18}{5}
+$$
+L'upper bound appena calcolato ci fa ben sperare, essendo superiore a $z^*$. Esploriamo il ramo $x_3=1$.
+
+\paragraph{Nodo 7}
+L'upper bound è ereditato dal padre, quindi nessun calcolo da fare. Anche la variabile $x_2$ entra nello zaino ed esploreremo il figlio corrispondente.
+
+\paragraph{Nodo 8}
+L'upper bound è ereditato dal padre, quindi nessun calcolo da fare. Abbiamo già stabilito prima che la variabile $x_5$ non entra nello zaino, perciò esploreremo direttamente il ramo $x_5=0$.
+
+\paragraph{Nodo 9}
+Siamo arrivati all'ultima variabile, non serve calcolare l'upper bound nuovamente, ma possiamo ottenere una soluzione.
+$$
+z^*=\sum_{i=1}^5 p_i x_i = 100+36+15 = 151
+$$
+Questa soluzione è migliore di quella ottenuta al nodo 5, che perciò verrà ucciso dal nodo 9.
+Fatto ciò, risaliamo fino a tornare al nodo 7. Giunti ad esso, esploriamo il figlio corrispondente al ramo $x_4=0$.
+
+\paragraph{Nodo 10}
+L'upper bound deve essere ricalcolato. Stando alle variabili fissate finora, il prossima elemento da analizzare è $x_5$. Questo entra tranquillamente nello zaino.
+$$
+U_10=100+36+18=154
+$$
+Esploriamo il ramo $x_5=1$.
+
+\paragraph{Nodo 11}
+Dato che siamo scesi dal ramo $x_5=1$ e che questa è l'ultima variabile, l'upper bound del padre è la soluzione del figlio (provare per credere).
+$$
+z^*=U_10=154
+$$
+La nostra soluzione è migliorata ulteriormente e il nodo 9 viene ucciso dall'attuale nodo 11.
+
+Risaliamo al nodo 10. In teoria avremmo ancora da esplorare un figlio ma dato che l'upper bound del nodo 10 è uguale alla soluzione che abbiamo attualmente tra le mani, è inutile esplorare ulteriori figli. Ovviamente, se prendendo $x_5$ abbiamo avuto una soluzione, non prendendolo non potremo fare altro che peggiorarla. Ancora una volta, i calcolatori elettronici sono stupidi e non faranno questa intuizione.
+
+Risaliamo quindi fino al nodo 6. Da qui esploriamo il ramo $x_3=0$.
+
+\paragraph{Nodo 12}
+L'upper bound deve essere ricalcolato. Stando alle variabili fissate finora, il prossima elemento da analizzare è $x_4$. Questo entra tranquillamente nello zaino e lo stesso si può dire per $x_5$.
+$$
+U_12=100+15+18=133
+$$
+L'upper bound è minore della soluzione migliore trovata finora, quindi il nodo 11 uccide il nodo 12.
+
+Risaliamo fino al nodo 0 ed esploriamo il suo figlio corrispondente al ramo $x_1=0$
+
+\paragraph{Nodo 13}
+Ricalcoliamo l'upper bound. Non prenderemo in considerazione l'elemento $x_1$. Senza di questo, tutti gli altri elementi entrano nello zaino.
+$$
+U_13=49+36+15+18=118
+$$
+Entrando tutti, questa è anche una soluzione del problema. Ma non ce ne importa granché perché è un upper bound nettamente inferiore alla soluzione trovata. Il nodo 11 ucciderà anche il nodo 13.
+
+Tutti i rami sono stati esplorati o potati e siamo giunti ad una conclusione.
+
+\paragraph{Conclusione}
+Il vettore della soluzione e il suo valore sono:
+\begin{align*}
+x^*&=(1,0,1,0,1) \\
+z^*&=154
+\end{align*}
+
+\section{Metodo della programmazione dinamica}
+
+\paragraph{$\pmb{M_0}$}
+Si parte dall'insieme $M_0$ che conterrà lo stato in cui non prendiamo alcun elemento.
+$$
+M_0=\{(\emptyset,0,0)\}
+$$
+Nient'altro da fare.
+
+\paragraph{$\pmb{M_1}$}
+Si aggiunge ad ogni stato di $M_0$ l'elemento $x_1$, formando l'insieme $M_1$.
+$$
+M_1=M_0\cup (M_0\uplus x_1) = \{(\emptyset,0,0),\;(\{x_1\},100,15)\}
+$$
+Anche qui, nient'altro da fare.
+
+\paragraph{$\pmb{M_2}$}
+Si aggiunge ad ogni stato di $M_1$ l'elemento $x_2$, formando l'insieme $M_2$.
+$$
+M_2=M_1\cup (M_1\uplus x_2) = \{(\emptyset,0,0),\;(\{x_1\},100,15),\;(\{x_2\},49,12),\;(\{x_1,x_2\},149,27)\}
+$$
+Nessuno stato dominante. Si passa all'insieme successivo.
+
+\paragraph{$\pmb{M_3}$}
+\begin{align*}
+M_3=&M_2\cup (M_2\uplus x_3) = \\ =&
+							  \{(\emptyset,0,0),\;
+							\DA{(\{x_1\},100,15)},\;
+								(\{x_2\},49,12),\; 
+								(\{x_1,x_2\},149,27),\; \\ &
+								(\{x_3\},36,9),\;
+								(\{x_1,x_3\},136,24),\;
+							\SA{(\{x_2,x_3\},85,21)}
+								\}
+\end{align*}
+
+\paragraph{$\pmb{M_4}$}
+\begin{align*}
+M_4=&M_3\cup(M_3\uplus x_4) = \\ =&
+							  \{(\emptyset,0,0),\;
+							\DA{(\{x_1\},100,15)},\;
+								(\{x_2\},49,12),\; 
+								(\{x_1,x_2\},149,27),\; \\ &
+								(\{x_3\},36,9),\;
+								(\{x_1,x_3\},136,24),\;
+								(\{x_4\},15,4),\;
+								(\{x_1,x_4\},115,19),\;
+							\SA{(\{x_2,x_4\},64,16)},\; \\ &
+								(\{x_3,x_5\},51,13),\;
+								(\{x_1,x_3,x_4\},151,28)
+								\}
+\end{align*}
+
+\paragraph{$\pmb{M_5}$}
+\begin{align*}
+M_5=&M_5\cup(M_4\uplus x_5) = \\ =&
+							  \{(\emptyset,0,0),\;
+							\DA{(\{x_1\},100,15)},\;
+								(\{x_2\},49,12),\; 
+								(\{x_1,x_2\},149,27),\; \\ &
+							\DB{(\{x_3\},36,9)},\;
+							\DC{(\{x_1,x_3\},136,24)},\;
+								(\{x_4\},15,4),\;
+								(\{x_1,x_4\},115,19),\; \\ &
+								(\{x_3,x_5\},51,13),\;
+								(\{x_1,x_3,x_4\},151,28),\;
+								(\{x_5\},18,5),\;
+								(\{x_1,x_5\},118,20),\; \\ &
+							\SA{(\{x_2,x_5\},67,17)},\;
+								(\{x_3,x_5\},54,14),\;
+									\opt{(\{x_1,x_3,x_5\},154,29)},\;
+							\SB{(\{x_4,x_5\},33,9)},\; \\ &
+							\SC{(\{x_1,x_4,x_5\},133,24)},\;
+							\SA{(\{x_3,x_4,x_5\},69,18)}
+								\}
+\end{align*}
+Lo stato ottimo è stato evidenziato. Se ne deduce quindi che la soluzione ottima e il suo valore sono:
+\begin{align*}
+x^*=& (1,0,1,0,1) \\
+z^*=& 154
+\end{align*}

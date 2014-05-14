@@ -17,7 +17,7 @@ Ricordiamo dato un problema ILP con \textbf{soluzione del rilassamento continuo 
 Definendo:
 \begin{align*}
 \mathcal{B} & \qquad\textbf{base ottima} \\
-f_{ij}=y_{ij}-\lfloor y_{ij} \rfloor & \qquad\textbf{parte frazionaria di $y_{ij}$}
+f_{ij}=y_{ij}-\left\lfloor y_{ij} \right\rfloor & \qquad\textbf{parte frazionaria di $y_{ij}$}
 \end{align*}
 Un \textbf{taglio di Gomory} è tale che:
 $$
@@ -30,7 +30,7 @@ Come dal nome del metodo, questo metodo si compone di due parti: \textbf{branchi
 \paragraph{Branching}
 L'operazione di \textbf{branching} consiste nell'imporre due \textbf{vincoli mutualmente esclusivi ed esaustivi} su una variabile $x_j$, data $x_j^*$ la componente $j$-esima della soluzione del rilassamento continuo:
 $$
-x_j \leq \lfloor x_j^* \rfloor \qquad\veebar\qquad x_j \geq \lceil x_j^* \rceil
+x_j \leq \left\lfloor x_j^* \right\rfloor \qquad\veebar\qquad x_j \geq \left\lceil x_j^* \right\rceil
 $$
 Unendo al problema originario alternativamente questi due vincoli, si ottengono due nuovi sottoproblemi. La soluzione migliore tra i due sarà anche la migliore in assoluto. Per risolvere i due nuovi sottoproblemi si può applicare ricorsivamente un nuovo branching.
 \paragraph{Bounding}
@@ -248,7 +248,7 @@ Così espresso il vincolo è ora facilmente rappresentabile graficamente come in f
 In giallo è rappresentato il nuovo politopo $P'$ risultato del vecchio politopo $P$ e del taglio di Gomory applicato.
 
 \subsection{ILP - Branch and bound}
-Il problema di LP iniziale verrà denominato $P_0$. La soluzione del rilassamento continuo $x^*=\left(\frac{9}{2},\frac{7}{2}\right)$ è $-z^*=-8$, il che imposterà il nostro lower bound a $L_B=\lceil -8 \rceil = -8$.
+Il problema di LP iniziale verrà denominato $P_0$. La soluzione del rilassamento continuo $x^*=\left(\frac{9}{2},\frac{7}{2}\right)$ è $-z^*=-8$, il che imposterà il nostro lower bound a $L_B=\left\lceil -8 \right\rceil = -8$.
 \begin{figure}[ht!]
 \centering
 \begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
@@ -264,8 +264,8 @@ Il problema di LP iniziale verrà denominato $P_0$. La soluzione del rilassamento
 
 Iniziando dalla variabile $x_1$ possiamo prendere in considerazione due diversi sottoproblemi derivati dall'aggiunta di uno dei due seguenti vincoli:
 \begin{align*}
-x_1&\geq\lceil x^*_1 \rceil &\Rightarrow x_1&\geq 5\\
-x_1&\leq\lfloor x^*_1 \rfloor &\Rightarrow x_1&\leq 4
+x_1&\geq\left\lceil x^*_1 \right\rceil &\Rightarrow x_1&\geq 5\\
+x_1&\leq\left\lfloor x^*_1 \right\rfloor &\Rightarrow x_1&\leq 4
 \end{align*}
 Per convincerci che considerando questi due vincoli non si esclude nessuna soluzione e che sono mutuamente esclusivi, si faccia riferimento al grafico \vref{fig:graph43} e osservando che le due aree colorate in ciano e in verde non escludono nessuno dei punti interi.
 \begin{figure}[htbp]
@@ -326,7 +326,7 @@ Per convincerci che considerando questi due vincoli non si esclude nessuna soluz
 \caption{Rappresentazione cartesiana dei due sottoproblemi di $P_0$.}
 \label{fig:graph43}
 \end{figure}
-Esploriamo ora il figlio $P_1$ del problema $P_0$, corrispondente al vincolo $x_1\geq\lceil x^*_1 \rceil = 5$.
+Esploriamo ora il figlio $P_1$ del problema $P_0$, corrispondente al vincolo $x_1\geq\left\lceil x^*_1 \right\rceil = 5$.
 \begin{figure}[ht!]
 \centering
 \begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
@@ -631,7 +631,7 @@ In figura \vref{fig:graph71} è rappresentato il problema dopo il taglio.
 In giallo è rappresentato il nuovo politopo $P'$ risultato del vecchio politopo $P$ e del taglio di Gomory applicato.
 
 \subsection{ILP - Branch and bound}
-Il problema di LP iniziale verrà denominato $P_0$. La soluzione del rilassamento continuo $x^*=\left(\frac{3}{4},3\right)$ è $-z^*=-\frac{33}{4}$, il che imposterà il nostro lower bound a $L_B=\lceil -\frac{33}{4} \rceil = -8$.
+Il problema di LP iniziale verrà denominato $P_0$. La soluzione del rilassamento continuo $x^*=\left(\frac{3}{4},3\right)$ è $-z^*=-\frac{33}{4}$, il che imposterà il nostro lower bound a $L_B=\left\lceil -\frac{33}{4} \right\rceil = -8$.
 \begin{figure}[ht!]
 \centering
 \begin{tikzpicture}[edge from parent/.style={draw=black,-latex},
@@ -647,8 +647,8 @@ Il problema di LP iniziale verrà denominato $P_0$. La soluzione del rilassamento
 
 Iniziando dalla variabile $x_1$ possiamo prendere in considerazione due diversi sottoproblemi derivati dall'aggiunta di uno dei due seguenti vincoli (si noti che non avrebbe senso iniziare dalla variabile $x_2$, che è già intera):
 \begin{align*}
-x_1&\geq\lceil x^*_1 \rceil &\Rightarrow x_1&\geq 1\\
-x_1&\leq\lfloor x^*_1 \rfloor &\Rightarrow x_1&\leq 0
+x_1&\geq\left\lceil x^*_1 \right\rceil &\Rightarrow x_1&\geq 1\\
+x_1&\leq\left\lfloor x^*_1 \right\rfloor &\Rightarrow x_1&\leq 0
 \end{align*}
 Per convincerci che considerando questi due vincoli non si esclude nessuna soluzione e che sono mutuamente esclusivi, si faccia riferimento al grafico \vref{fig:graph43} e osservando che le due aree colorate in ciano e in verde non escludono nessuno dei punti interi.
 
@@ -990,7 +990,7 @@ x^*=\left(\frac{5}{2},2\right) \\
 \end{align*}
 Il rilassamento continuo imposterà il nostro \textit{lower bound} di partenza:
 $$
-L_B = \lceil -z^* \rceil = \lceil \frac{13}{2} \rceil = -6
+L_B = \left\lceil -z^* \right\rceil = \left\lceil \frac{13}{2} \right\rceil = -6
 $$
 
 \begin{figure}[ht!]
@@ -1008,8 +1008,8 @@ $$
 
 Partendo dalla variabile di indice maggiore, dal problema $P_0$ possiamo ricavare i seguenti due sottoproblemi:
 \begin{align*}
-P_1 &= P_0 \cap x_5\leq \lfloor x_5^* \rfloor &\Rightarrow x_5 \leq 0 \\
-P_2 &= P_0 \cap x_5\geq \lceil x_5^* \rceil &\Rightarrow x_5 \geq 1
+P_1 &= P_0 \cap x_5\leq \left\lfloor x_5^* \right\rfloor &\Rightarrow x_5 \leq 0 \\
+P_2 &= P_0 \cap x_5\geq \left\lceil x_5^* \right\rceil &\Rightarrow x_5 \geq 1
 \end{align*}
 
 I due sottoproblemi sono rappresentati in figura \vref{fig:graph12}. Per ricavare le equazioni delle rette che rappresentano il taglio sulla variabile $x_5$ si procede come al solito facendo riferimento al vincolo che introduce la variabile (esprimiamo le equazioni delle rette nella loro forma cartesiana esplicita:
@@ -1192,7 +1192,7 @@ $$
 Purtroppo questa soluzione non è intera e saremo costretti successivamente a imporre nuove condizioni sulla prossima variabile frazionaria di indice massimo: $x_4$.
 Nel frattempo prendiamo nota della soluzione dell'attuale rilassamento continuo e calcoliamo il nuovo \textit{lower bound}:
 $$
-L_B=\lceil -z^* \rceil = \lceil -\frac{25}{4} \rceil = -6
+L_B=\left\lceil -z^* \right\rceil = \left\lceil -\frac{25}{4} \right\rceil = -6
 $$
 La buona notizia, per ora, è che il \textit{lower bound} non è peggiorato.
 
@@ -1214,8 +1214,8 @@ La buona notizia, per ora, è che il \textit{lower bound} non è peggiorato.
 
 Le nostre possibilità di esplorazione ora sono le seguenti:
 \begin{align*}
-P_3 &= P_1 \cap x_4\leq \lfloor x_4^* \rfloor &\Rightarrow x_4 \leq 0 \\
-P_4 &= P_1 \cap x_4\geq \lceil x_4^* \rceil &\Rightarrow x_4 \geq 1
+P_3 &= P_1 \cap x_4\leq \left\lfloor x_4^* \right\rfloor &\Rightarrow x_4 \leq 0 \\
+P_4 &= P_1 \cap x_4\geq \left\lceil x_4^* \right\rceil &\Rightarrow x_4 \geq 1
 \end{align*}
 
 Cerchiamo di rappresentare graficamente i nuovi vincoli. Come al solito, prendiamo il vincolo iniziale e sfruttiamolo per ricavare disequazioni utilizzanti solo le variabili $x_1$ e $x_2$:
