@@ -493,7 +493,7 @@ Sia dato il seguente modello matematico di un problema di LP:
 
 \subsection{Problema in forma grafica}
 
-In figura \vref{fig:graph5} è rappresentato graficamente il problema presentato. In giallo è rappresentato il politopo $P$ e sono stati chiamati $\alpha,\beta,\gamma$ i suoi tre vertici, i quali sappiamo corrispondere ognuno ad una BFS.
+In figura \vref{fig:graph5} è rappresentato graficamente il problema presentato. Il vertice $\alpha$ è l'unico punto di intersezione tra le aree del problema.
 Il gradiente della funzione obiettivo vale
 \begin{equation*}
 \nabla(z)=\left(\frac{\partial z}{\partial x},\frac{\partial z}{\partial y}\right) = \left(2,1\right) \\
@@ -502,6 +502,7 @@ Poiché questa volta il problema è rappresentato sotto forma di minimo, saremo in
 \begin{equation*}
 \varphi = -z \Rightarrow \nabla\varphi = -\nabla z = (-2,-1)
 \end{equation*}
+In realtà, della direzione ci importa poco, dato che esiste un solo punto di intersezione.
 
 \begin{figure}[htbp]
 \centering
@@ -526,10 +527,10 @@ Poiché questa volta il problema è rappresentato sotto forma di minimo, saremo in
     	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
     	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
 
-\foreach \q in {1,...,6} {
-	\ifthenelse{\q < 2}{\newcommand{\x}{2}}{\newcommand{\x}{\q}}
-	\addplot [domain=(\x/2)-1:(\q/2), samples=10, ultra thin, purple] {-2*x+\q};
-	}
+%\foreach \q in {1,...,6} {
+%	\ifthenelse{\q < 2}{\newcommand{\x}{2}}{\newcommand{\x}{\q}}
+%	\addplot [domain=(\x/2)-1:(\q/2), samples=10, ultra thin, purple] {-2*x+\q};
+%	}
 
 \addplot
 [domain=0:2.01, samples=10, thick, blue, name path=xy2]
@@ -538,15 +539,15 @@ Poiché questa volta il problema è rappresentato sotto forma di minimo, saremo in
 \addplot
 [domain=0:3.01, samples=10, thick, red, name path=2x3y6]
 {-(2/3)*x+2} node [pos=0.5, pin={75:{\color{red}$2x_1+3x_2=6$}}, inner sep=0pt] {};
-\addplot[thick, fill=yellow, fill opacity=0.5] fill between [of=2x3y6 and AX];
-\addplot[white] fill between [of=xy2 and AX];
+%\addplot[thick, fill=yellow, fill opacity=0.5] fill between [of=2x3y6 and AX];
+%\addplot[white] fill between [of=xy2 and AX];
 %\addplot[pattern=north east lines, pattern color=red!10] fill between [reverse=true, of=AX and UP, soft clip={domain=0:5}];
-\addplot[pattern=north east lines, pattern color=blue!10] fill between [of=xy2 and UP];
-\addplot[pattern=vertical lines, pattern color=red!10] fill between [of=2x3y6 and AX];
+%\addplot[pattern=north east lines, pattern color=blue!10] fill between [of=xy2 and UP];
+%\addplot[pattern=vertical lines, pattern color=red!10] fill between [of=2x3y6 and AX];
 \intne{AY}{xy2}{$\alpha$}{alp};
-\intne{AX}{2x3y6}{$\beta$}{bet};
-\intne{xy2}{AX}{$\gamma$}{gam};
-\node at (axis cs:1.8,0.5) {$P$};
+%\intne{AX}{2x3y6}{$\beta$}{bet};
+%\intne{xy2}{AX}{$\gamma$}{gam};
+%\node at (axis cs:1.8,0.5) {$P$};
 \addplot[-latex, thick] coordinates
            {(2/2.236,1/2.236) (0,0)} node [pos=.3, anchor=south, label={45:{\small $\nabla\varphi$}}] {};
 \end{axis}
@@ -554,8 +555,6 @@ Poiché questa volta il problema è rappresentato sotto forma di minimo, saremo in
 \caption{Rappresentazione cartesiana del problema di programmazione lineare}
 \label{fig:graph5}
 \end{figure}
-
-Osservando il fascio di rette perpendicolari al gradiente si può intuire che la nostra soluzione ottima si troverà nel vertice $\alpha$.
 
 \subsection{Forma standard}
 
@@ -740,7 +739,7 @@ $R_2$ & $x^3$ 		& \Sc{0} 	& -\ut	& 0		& 1 	&\Sc{-\ut}& 0 \\
 \caption{Quarto tableau. Vertice $\alpha(0,2)$}
 \label{tab:tab57}
 \end{table}
-Il nostro lavoro si conclude qui in quanto $\OL{c_j}>0\quad\forall j>0$ e il vertice $\alpha$ è già quello della soluzione ottima, come d'altronde previsto durante la soluzione per via grafica. La base e la soluzione sono quelle già espresse in precedenza:
+Il nostro lavoro si conclude qui in quanto $\OL{c_j}>0\quad\forall j>0$ e il vertice $\alpha$ è già quello della soluzione ottima, come d'altronde previsto durante la soluzione per via grafica (si tratta dell'\textit{unico} punto della regione ammissibile). La base e la soluzione sono quelle già espresse in precedenza:
 \begin{align*}
 \mathcal{B}&=\{A_2,A_3\} \\
 x&=(0,2,0,0,0)
