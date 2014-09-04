@@ -59,10 +59,10 @@ Il politopo $P$ è, ovviamente, limitato nella direzione del gradiente (si fa not
     at={(ticklabel* cs:1.01)},
     anchor=south,
  },]
-    \path[name path=AX] 
+    \path[name path=AX]
         (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
         (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
-    \path[name path=AY] 
+    \path[name path=AY]
         (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
         (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
     \path[name path=UP]
@@ -274,7 +274,7 @@ Per fare pivoting sceglieremo la colonna $A_2$ in base alla regola di Bland (avr
 \vartheta_{\max}&=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}} \\
 \vartheta_{\max}&=\min\left(\frac{7}{2},\frac{5}{1}\right)=\frac{7}{2}=\frac{y_{10}}{\pmb{y_{12}}}
 \end{align*}
-Faremo pivoting sull'elemento $y_{12}$ (cerchiato in tabella \vref{tab:tab47}). 
+Faremo pivoting sull'elemento $y_{12}$ (cerchiato in tabella \vref{tab:tab47}).
 \begin{table}[htbp]
 \centering
 \begin{tabular}{rrccccccc}
@@ -517,10 +517,10 @@ In realtà, della direzione ci importa poco, dato che esiste un solo punto di int
     at={(ticklabel* cs:1.01)},
     anchor=south,
  },xtick={1,2,3}]
-    \path[name path=AX] 
+    \path[name path=AX]
         (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
         (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
-    \path[name path=AY] 
+    \path[name path=AY]
         (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
         (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
     \path[name path=UP]
@@ -873,10 +873,10 @@ In giallo è rappresentata l'area tra i due vincoli lineari di disuguaglianza. No
     anchor=south,
  },%xtick={1,2,3}
  ]
-    \path[name path=AX] 
+    \path[name path=AX]
         (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
         (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
-    \path[name path=AY] 
+    \path[name path=AY]
         (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
         (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
     \path[name path=UP]
@@ -1068,16 +1068,16 @@ In giallo è rappresentato il politopo $P$. Essendo un politopo, cioè limitato in
     anchor=south,
  },%xtick={1,2,3}
  ]
-    \path[name path=AX] 
+    \path[name path=AX]
         (axis cs:\pgfkeysvalueof{/pgfplots/xmin},0)--
         (axis cs:\pgfkeysvalueof{/pgfplots/xmax},0);
-    \path[name path=AY] 
+    \path[name path=AY]
         (axis cs:0,\pgfkeysvalueof{/pgfplots/ymin})--
         (axis cs:0,\pgfkeysvalueof{/pgfplots/ymax});
     \path[name path=UP]
     	(axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/ymax})--
     	(axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/ymax});
-        
+
 \addplot
 [domain=0:4, samples=10, thick, blue, name path=x3]
 (3,x) node [pos=0.4,pin={75:{\color{blue}$x_1=3$}}, inner sep=0pt] {};
@@ -1207,9 +1207,9 @@ Il nostro nuovo tableau diventa quindi quello in tabella \vref{tab:tab74}.
 \centering
 {
 	\newcommand{\uq}{$\frac{1}{4}$}
-	\newcommand{\tq}{$\frac{2}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
 	\newcommand{\muq}{$-\frac{1}{4}$}
-	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mtq}{$-\frac{3}{4}$}
 
 \begin{tabular}{rrccccccc}
  	  & 			&$-\psi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
@@ -1236,9 +1236,9 @@ Il tableau così ottenuto è quello in tabella \vref{tab:tab75}
 \centering
 {
 	\newcommand{\uq}{$\frac{1}{4}$}
-	\newcommand{\tq}{$\frac{2}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
 	\newcommand{\muq}{$-\frac{1}{4}$}
-	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mtq}{$-\frac{3}{4}$}
 
 \begin{tabular}{rrccccccc}
  	  & 			&$-\varphi$	& $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$	& $x^a$\\
@@ -1265,9 +1265,9 @@ Otteniamo quindi il tableau in tabella \vref{tab:tab76}.
 \centering
 {
 	\newcommand{\uq}{$\frac{1}{4}$}
-	\newcommand{\tq}{$\frac{2}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
 	\newcommand{\muq}{$-\frac{1}{4}$}
-	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mtq}{$-\frac{3}{4}$}
 	\newcommand{\mqq}{$-\frac{15}{4}$}
 
 \begin{tabular}{rrccccccc}
@@ -1287,14 +1287,14 @@ Per fare pivoting sceglieremo la colonna $A_2$, l'unica con un costo relativo ne
 \vartheta_{\max}&=\min_{i:y_{i2}>0}\frac{y_{i0}}{y_{i2}}=\frac{y_{i0}}{y_{\ell 2}} \\
 \vartheta_{\max}&=\min\left(\frac{3}{1},\frac{3}{\frac{3}{4}}\right)=\frac{3}{1}=\frac{y_{20}}{\pmb{y_{22}}}
 \end{align*}
-Faremo pivoting sull'elemento $y_{22}$ (cerchiato in tabella \vref{tab:tab77}). 
+Faremo pivoting sull'elemento $y_{22}$ (cerchiato in tabella \vref{tab:tab77}).
 \begin{table}[htbp]
 \centering
 {
 	\newcommand{\uq}{$\frac{1}{4}$}
-	\newcommand{\tq}{$\frac{2}{4}$}
+	\newcommand{\tq}{$\frac{3}{4}$}
 	\newcommand{\muq}{$-\frac{1}{4}$}
-	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mtq}{$-\frac{3}{4}$}
 	\newcommand{\mqq}{$-\frac{15}{4}$}
 
 \begin{tabular}{rrccccccc}
@@ -1324,7 +1324,7 @@ Otterremo il tableau in tabella \vref{tab:tab78}.
 	\newcommand{\qq}{$\frac{15}{4}$}
 	\newcommand{\nq}{$\frac{9}{4}$}
 	\newcommand{\muq}{$-\frac{1}{4}$}
-	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mtq}{$-\frac{3}{4}$}
 	\newcommand{\mqq}{$-\frac{15}{4}$}
 	\newcommand{\ttq}{$\frac{33}{4}$}
 
@@ -1412,7 +1412,7 @@ $R_3$ & $x^a$ 		& \Sc{12} 	& 4 	& 3 	& 0 	& 0 	&\Sc{-1}& 1 \\
 	\newcommand{\qq}{$\frac{15}{4}$}
 	\newcommand{\nq}{$\frac{9}{4}$}
 	\newcommand{\muq}{$-\frac{1}{4}$}
-	\newcommand{\mtq}{$-\frac{2}{4}$}
+	\newcommand{\mtq}{$-\frac{3}{4}$}
 	\newcommand{\mqq}{$-\frac{15}{4}$}
 	\newcommand{\ttq}{$\frac{33}{4}$}
 
